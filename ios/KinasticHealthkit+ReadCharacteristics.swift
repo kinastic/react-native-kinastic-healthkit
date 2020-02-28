@@ -11,83 +11,61 @@ extension KinasticHealthkit {
     @objc(getBiologicalSex:reject:)
     func getBiologicalSex(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         do {
-            if let sex = try self.healthKit.biologicalSex() {
-                resolve(self.sexString(sex: sex))
-            } else {
-                reject()
-            }
+            let sex = try self.healthKit.biologicalSex()
+            resolve(self.sexString(sex: sex))
         } catch {
-            reject("Unauthorized")
+            reject("Unauthorized", "error", nil)
         }
     }
 
     @objc(getBloodType:reject:)
     func getBloodType(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         do {
-            if let value = try self.healthKit.bloodType() {
-                resolve(bloodTypeString(bloodType: value))
-            } else {
-                reject()
-            }
-
+            let value = try self.healthKit.bloodType()
+            resolve(bloodTypeString(bloodType: value))
         } catch {
-            reject("Unauthorized")
+            reject("Unauthorized", "error", nil)
         }
     }
 
     @objc(getDateOfBirth:reject:)
     func getDateOfBirth(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         do {
-            if let value = try self.healthKit.dateOfBirth() {
-                resolve(buildISO8601StringFromDate(value))
-            } else {
-                reject()
-            }
-
+            let value = try self.healthKit.dateOfBirth()
+            resolve(buildISO8601StringFromDate(value))
         } catch {
-            reject("Unauthorized")
+            reject("Unauthorized", "error", nil)
         }
     }
 
     @objc(getEarliestPermittedSampleDate:reject:)
     func getEarliestPermittedSampleDate(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        do {
-            if let value = try self.healthKit.earliestPermittedSampleDate() {
-                resolve(buildISO8601StringFromDate(value))
-            } else {
-                reject()
-            }
-
-        } catch {
-            reject("Unauthorized")
-        }
+        let value = self.healthKit.earliestPermittedSampleDate()
+        resolve(buildISO8601StringFromDate(value))
     }
 
     @objc(getFitzpatrickSkinType:reject:)
     func getFitzpatrickSkinType(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         do {
-            if let value = try self.healthKit.fitzpatrickSkinType() {
-                resolve(fitzpatrickSkinTypeString(fitzpatrickSkinType: value))
-            } else {
-                reject()
-            }
-
+            let value = try self.healthKit.fitzpatrickSkinType()
+            resolve(fitzpatrickSkinTypeString(fitzpatrickSkinType: value))
         } catch {
-            reject("Unauthorized")
+            reject("Unauthorized", "error", nil)
         }
     }
 
     @objc(getWheelchairUse:reject:)
     func getWheelchairUse(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         do {
-            if let value = try self.healthKit.wheelchairUse() {
+            if #available(iOS 10.0, *) {
+                let value = try self.healthKit.wheelchairUse()
                 resolve(wheelchairUseString(wheelchairUse: value))
             } else {
-                reject()
+                resolve("notSet")
             }
 
         } catch {
-            reject("Unauthorized")
+            reject("Unauthorized", "error", nil)
         }
     }
 }

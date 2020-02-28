@@ -9,13 +9,13 @@ import HealthKit
 extension KinasticHealthkit {
 
     func parseSort(item: Any?) -> NSSortDescriptor? {
-        if let sortData = item as? Dictionary {
-            guard let key = item["key"] as? String else {
+        if let sortData = item as? Dictionary<String, Any> {
+            guard let key = sortData["key"] as? String else {
                 print("Missing sort 'key'")
                 return nil
             }
-
-            let ascending = item["ascending"] ? Bool(item["ascending"]) ?? true : true
+            
+            let ascending = sortData["ascending"] as? Bool ?? true
 
             return NSSortDescriptor(key: key, ascending: ascending)
         }
@@ -23,37 +23,44 @@ extension KinasticHealthkit {
     }
 
     func parseSortArray(value: Any?) -> [NSSortDescriptor]? {
-        if let sortArrayRaw = value as? Array {
-            sortArrayRaw.map { parseSort(item: $0) }
-                    .compactMap { $0 }
+        if let sortArrayRaw = value as? Array<Any> {
+            return sortArrayRaw.map { parseSort(item: $0) }
+                .compactMap { $0 }
         }
         return nil
     }
 
 
-    @objc(querySample:reject:)
-    func querySample(_ query: [String: Any?]) {
-        guard let sampleType = getObjectTypeFromString(query["sampleType"]) else {
-            reject("sampleType required")
+    @objc(querySample:resolve:reject:)
+    func querySample(_ query: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        
+        guard let sampleTypeSTring = query["sampleType"] as? String else {
+            reject("format", "sampleType required", nil)
+            return
+        }
+        
+        guard let sampleType = getSampleTypeFromString(perm: sampleTypeSTring) else {
+            reject("format", "sampleType required", nil)
             return
         }
 
         guard let startDate = parseStartDate(sample: query) else {
-            reject("sampleType required")
+            reject("format", "startDate required", nil)
             return
         }
 
-        let limit = parseInt(sample: query["limit"])
+        let limit = parseInt(sample: query["limit"]) ?? HKObjectQueryNoLimit
         let endDate = parseEndDate(sample: query, withDefault: Date())
         let predicate = predicateForSamplesBetweenDates(startDate: startDate, endDate: endDate)
         let unit = parseUnit(sample: query)
         let sort = parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
 
         let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sort) { query, samples, error in
-            if (error) {
-                reject("Error: \(error?.localizedDescription)")
-            } else if samples {
+            if nil != error {
+                reject("error", "Error: \(error?.localizedDescription)", error)
+            } else if samples != nil {
                 let json = samples.map { sampleToMap(sample: $0, unit: unit) }
+                resolve(json)
             } else {
                 resolve([])
             }
@@ -62,15 +69,15 @@ extension KinasticHealthkit {
         self.healthKit.execute(query)
     }
 
-    func sampleToMap(sample: HKSample, unit: HKUnit) -> Dictionary<String, Any?>? {
+    func sampleToMap(sample: HKSample, unit: HKUnit) -> [String: Any?]? {
         if sample is HKQuantitySample {
-            return quantitySampleToMap(sample: sample as HKQuantitySample, unit: unit)
+            return quantitySampleToMap(sample: sample as! HKQuantitySample, unit: unit)
         } else if sample is HKCorrelation {
-            return correlationToMap(sample: sample as HKCorrelation, unit: unit)
+            return correlationToMap(sample: sample as! HKCorrelation, unit: unit)
         } else if sample is HKWorkout {
-            return workoutToMap(sample: sample as HKWorkout, unit: unit)
+            return workoutToMap(sample: sample as! HKWorkout, unit: unit)
         } else if sample is HKCategorySample {
-            return categorySampleToMap(sample: sample)
+            return categorySampleToMap(sample: sample as! HKCategorySample)
         }
         return nil
     }
@@ -80,7 +87,6 @@ extension KinasticHealthkit {
             "sampleType": "category",
             "categoryType": sample.categoryType.identifier,
             "value": sample.value,
-            "source": sourceToMap(source: sample.source),
             "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
             "device": deviceToMap(device: sample.device),
             "metadata": sample.metadata
@@ -93,7 +99,6 @@ extension KinasticHealthkit {
             "workoutType": stringFromWorkoutActivityType(input: sample.workoutActivityType),
             "startDate": buildISO8601StringFromDate(sample.startDate),
             "endDate": buildISO8601StringFromDate(sample.endDate),
-            "source": sourceToMap(source: sample.source),
             "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
             "device": deviceToMap(device: sample.device),
             "workoutEvents": workoutEventsToMap(events: sample.workoutEvents),
@@ -101,73 +106,89 @@ extension KinasticHealthkit {
         ]
     }
 
-    func workoutEventsToMap(events: [HKWorkoutEvent]) -> [Dictionary<String, Any?>] {
-        events.map { workoutEventToMap(event: $0) }
+    func workoutEventsToMap(events: [HKWorkoutEvent]?) -> [[String: Any?]]? {
+        events?.map { workoutEventToMap(event: $0) }
     }
 
-    func workoutEventToMap(event: HKWorkoutEvent) -> Dictionary<String, Any?> {
-        [
+    func workoutEventToMap(event: HKWorkoutEvent) -> [String: Any?] {
+        var result = [
             "type": workoutEventTypeString(workoutEvent: event.type),
             "date": buildISO8601StringFromDate(event.date),
-            "startDate": buildISO8601StringFromDate(event.dateInterval.start),
-            "endDate": buildISO8601StringFromDate(event.dateInterval.end),
-            "duration": event.dateInterval.duration,
-            "metadata": event.metadata
-        ]
+        ] as [String : Any?]
+        
+        if #available(iOS 10, *) {
+            result["metadata"] = event.metadata
+        }
+        
+        if #available(iOS 11.0, *) {
+            result["startDate"] = buildISO8601StringFromDate(event.dateInterval.start)
+            result["endDate"] = buildISO8601StringFromDate(event.dateInterval.end)
+            result["duration"] = event.dateInterval.duration
+        }
+        
+        return result
     }
 
-    func correlationToMap(sample: HKCorrelation, unit: HKUnit) -> Dictionary<String, Any?> {
+    func correlationToMap(sample: HKCorrelation, unit: HKUnit) -> [String: Any?] {
         [
             "sampleType": "correlation",
             "correlationType": correlationTypeToString(value: sample.correlationType),
             "startDate": buildISO8601StringFromDate(sample.startDate),
             "endDate": buildISO8601StringFromDate(sample.endDate),
-            "source": sourceToMap(source: sample.source),
             "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
             "device": deviceToMap(device: sample.device),
             "objects": objectsToMap(objects: sample.objects, unit: unit),
             "metadata": sample.metadata
-        ]
+            ]
     }
 
-    func objectsToMap(objects: Set<HKSample>, unit: HKUnit) -> [Dictionary<String, Any?>] {
-        objects.map { sampleToMap(sample: $0, unit: unit) }
+    func objectsToMap(objects: Set<HKSample>, unit: HKUnit) -> [[String: Any?]] {
+        objects.map { sampleToMap(sample: $0, unit: unit) }.compactMap { $0 }
     }
 
-    func quantitySampleToMap(sample: HKQuantitySample, unit: HKUnit) {
-        return [
+    func quantitySampleToMap(sample: HKQuantitySample, unit: HKUnit) -> [String: Any?] {
+        var result = [
             "sampleType": "quantity",
             "quantityType": quantityTypeToString(value: sample.quantityType),
             "quantity": sample.quantity.doubleValue(for: unit),
             "startDate": buildISO8601StringFromDate(sample.startDate),
             "endDate": buildISO8601StringFromDate(sample.endDate),
-            "count": sample.count,
-            "source": sourceToMap(source: sample.source),
             "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
             "device": deviceToMap(device: sample.device),
             "metadata": sample.metadata
-        ]
+        ] as [String: Any?]
+        
+        if #available(iOS 12.0, *) {
+            result["count"] = sample.count
+        }
+        
+        return result
     }
 
-    func sourceToMap(source: HKSource) -> Dictionary<String, Any?> {
+    func sourceToMap(source: HKSource) -> Dictionary<String, Any> {
         [
             "name": source.name,
             "bundleIdentifier": source.bundleIdentifier
         ]
     }
 
-    func sourceRevisionToMap(sourceRevision: HKSourceRevision) -> Dictionary<String, Any?> {
-        [
+    func sourceRevisionToMap(sourceRevision: HKSourceRevision) -> [String: Any?] {
+        var result = [
             "source": sourceToMap(source: sourceRevision.source),
             "version": sourceRevision.version,
-            "productType": sourceRevision.productType,
-            "operatingSystemVersion": operatingSystemVersionToString(version: sourceRevision.operatingSystemVersion)
-        ]
+            ] as [String : Any?]
+        
+        if #available(iOS 11.0, *) {
+            result["productType"] = sourceRevision.productType
+            result["operatingSystemVersion"] = operatingSystemVersionToString(version: sourceRevision.operatingSystemVersion)
+        }
+        
+        return result
     }
 
-    func deviceToMap(device: HKDevice?) -> Dictionary<String, Any?>? {
+    func deviceToMap(device: HKDevice?) -> [String: Any?]? {
         if nil != device {
-            [
+            return [
                 "name": device?.name,
                 "manufacturer": device?.manufacturer,
                 "model": device?.model,

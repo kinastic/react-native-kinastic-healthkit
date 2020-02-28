@@ -13,32 +13,33 @@ import HealthKit
 class KinasticHealthkit: NSObject {
 
     let healthKit = HKHealthStore()
+    let iso8061Format = "yyyy-MM-ddTHH:mm:ss.SSSZ"
 
     @objc(isAvailable:reject:)
     func isAvailable(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         resolve(HKHealthStore.isHealthDataAvailable())
     }
 
-    @objc(requestAuthorization:resolve:reject:)
+    @objc(requestAuthorization:writePermissionsString:resolve:reject:)
     func requestAuthorization(_ readPermissionsString: [String], writePermissionsString: [String], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if (HKHealthStore.isHealthDataAvailable()) {
             if !readPermissionsString.isEmpty || !writePermissionsString.isEmpty {
                 let readPermissions = self.parsePermissions(readPermissionsString)
-                let writePermissions = self.parsePermissions(writePermissionsString)
+                let writePermissions = self.parseWritePermissions(permissions: writePermissionsString)
 
                 self.healthKit.requestAuthorization(toShare: writePermissions, read: readPermissions) { b, error in
                     if b {
                         resolve("success")
                     } else {
-                        reject("denied")
+                        reject("denied", "error", error)
                     }
                 }
 
             } else {
-                reject("Permissions missing")
+                reject("error", "Permissions missing", nil)
             }
         } else {
-            reject("Unavailable")
+            reject("error", "Unavailable", nil)
         }
     }
 
@@ -50,10 +51,10 @@ class KinasticHealthkit: NSObject {
                     getAuthorizationStatusString(self.healthKit.authorizationStatus(for: perm))
                 }
             } else {
-                reject("Permissions missing")
+                reject("error", "Permissions missing", nil)
             }
         } else {
-            reject("Unavailable")
+            reject("error", "Unavailable", nil)
         }
     }
 }

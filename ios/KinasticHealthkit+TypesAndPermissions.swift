@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import KinasticHealthkit
 import HealthKit
 
 extension KinasticHealthkit {
@@ -15,8 +14,16 @@ extension KinasticHealthkit {
     func getQuantityTypeFromString(_ perm: String?) -> HKQuantityType? {
         switch perm {
         case "activeEnergyBurned": return HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)
-        case "appleExerciseTime": return HKQuantityType.quantityType(forIdentifier: .appleExerciseTime)
-        case "appleStandTime": return HKQuantityType.quantityType(forIdentifier: .appleStandTime)
+        case "appleExerciseTime": if #available(iOS 9.3, *) {
+            return HKQuantityType.quantityType(forIdentifier: .appleExerciseTime)
+        } else {
+            return nil
+        }
+        case "appleStandTime": if #available(iOS 13.0, *) {
+            return HKQuantityType.quantityType(forIdentifier: .appleStandTime)
+        } else {
+            return nil
+        }
         case "basalBodyTemperature": return HKQuantityType.quantityType(forIdentifier: .basalBodyTemperature)
         case "basalEnergyBurned": return HKQuantityType.quantityType(forIdentifier: .basalEnergyBurned)
         case "bloodAlcoholContent": return HKQuantityType.quantityType(forIdentifier: .bloodAlcoholContent)
@@ -67,36 +74,88 @@ extension KinasticHealthkit {
         case "dietaryWater": return HKQuantityType.quantityType(forIdentifier: .dietaryWater)
         case "dietaryZinc": return HKQuantityType.quantityType(forIdentifier: .dietaryZinc)
         case "distanceCycling": return HKQuantityType.quantityType(forIdentifier: .distanceCycling)
-        case "distanceDownhillSnowSports": return HKQuantityType.quantityType(forIdentifier: .distanceDownhillSnowSports)
-        case "distanceSwimming": return HKQuantityType.quantityType(forIdentifier: .distanceSwimming)
+        case "distanceDownhillSnowSports": if #available(iOS 11.2, *) {
+            return HKQuantityType.quantityType(forIdentifier: .distanceDownhillSnowSports)
+        } else {
+            return nil
+        }
+        case "distanceSwimming": if #available(iOS 10.0, *) {
+            return HKQuantityType.quantityType(forIdentifier: .distanceSwimming)
+        } else {
+            return nil
+        }
         case "distanceWalkingRunning": return HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)
-        case "distanceWheelchair": return HKQuantityType.quantityType(forIdentifier: .distanceWheelchair)
+        case "distanceWheelchair": if #available(iOS 10.0, *) {
+            return HKQuantityType.quantityType(forIdentifier: .distanceWheelchair)
+        } else {
+            return nil
+        }
         case "electrodermalActivity": return HKQuantityType.quantityType(forIdentifier: .electrodermalActivity)
-        case "environmentalAudioExposure": return HKQuantityType.quantityType(forIdentifier: .environmentalAudioExposure)
+        case "environmentalAudioExposure": if #available(iOS 13.0, *) {
+            return HKQuantityType.quantityType(forIdentifier: .environmentalAudioExposure)
+        } else {
+            return nil
+        }
         case "flightsClimbed": return HKQuantityType.quantityType(forIdentifier: .flightsClimbed)
         case "forcedExpiratoryVolume1": return HKQuantityType.quantityType(forIdentifier: .forcedExpiratoryVolume1)
         case "forcedVitalCapacity": return HKQuantityType.quantityType(forIdentifier: .forcedVitalCapacity)
-        case "headphoneAudioExposure": return HKQuantityType.quantityType(forIdentifier: .headphoneAudioExposure)
+        case "headphoneAudioExposure": if #available(iOS 13.0, *) {
+            return HKQuantityType.quantityType(forIdentifier: .headphoneAudioExposure)
+        } else {
+            return nil
+        }
         case "heartRate": return HKQuantityType.quantityType(forIdentifier: .heartRate)
-        case "heartRateVariabilitySDNN": return HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)
+        case "heartRateVariabilitySDNN": if #available(iOS 11.0, *) {
+            return HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)
+        } else {
+            return nil
+        }
         case "height": return HKQuantityType.quantityType(forIdentifier: .height)
         case "inhalerUsage": return HKQuantityType.quantityType(forIdentifier: .inhalerUsage)
-        case "insulinDelivery": return HKQuantityType.quantityType(forIdentifier: .insulinDelivery)
+        case "insulinDelivery": if #available(iOS 11.0, *) {
+            return HKQuantityType.quantityType(forIdentifier: .insulinDelivery)
+        } else {
+            return nil
+        }
         case "leanBodyMass": return HKQuantityType.quantityType(forIdentifier: .leanBodyMass)
         case "nikeFuel": return HKQuantityType.quantityType(forIdentifier: .nikeFuel)
         case "numberOfTimesFallen": return HKQuantityType.quantityType(forIdentifier: .numberOfTimesFallen)
         case "oxygenSaturation": return HKQuantityType.quantityType(forIdentifier: .oxygenSaturation)
         case "peakExpiratoryFlowRate": return HKQuantityType.quantityType(forIdentifier: .peakExpiratoryFlowRate)
         case "peripheralPerfusionIndex": return HKQuantityType.quantityType(forIdentifier: .peripheralPerfusionIndex)
-        case "pushCount": return HKQuantityType.quantityType(forIdentifier: .pushCount)
+        case "pushCount": if #available(iOS 10.0, *) {
+            return HKQuantityType.quantityType(forIdentifier: .pushCount)
+        } else {
+            return nil
+        }
         case "respiratoryRate": return HKQuantityType.quantityType(forIdentifier: .respiratoryRate)
-        case "restingHeartRate": return HKQuantityType.quantityType(forIdentifier: .restingHeartRate)
+        case "restingHeartRate": if #available(iOS 11.0, *) {
+            return HKQuantityType.quantityType(forIdentifier: .restingHeartRate)
+        } else {
+            return nil
+        }
         case "stepCount": return HKQuantityType.quantityType(forIdentifier: .stepCount)
-        case "swimmingStrokeCount": return HKQuantityType.quantityType(forIdentifier: .swimmingStrokeCount)
+        case "swimmingStrokeCount": if #available(iOS 10.0, *) {
+            return HKQuantityType.quantityType(forIdentifier: .swimmingStrokeCount)
+        } else {
+            return nil
+        }
         case "uvExposure": return HKQuantityType.quantityType(forIdentifier: .uvExposure)
-        case "vo2Max": return HKQuantityType.quantityType(forIdentifier: .vo2Max)
-        case "waistCircumference": return HKQuantityType.quantityType(forIdentifier: .waistCircumference)
-        case "walkingHeartRateAverage": return HKQuantityType.quantityType(forIdentifier: .walkingHeartRateAverage)
+        case "vo2Max": if #available(iOS 11.0, *) {
+            return HKQuantityType.quantityType(forIdentifier: .vo2Max)
+        } else {
+            return nil
+        }
+        case "waistCircumference": if #available(iOS 11.0, *) {
+            return HKQuantityType.quantityType(forIdentifier: .waistCircumference)
+        } else {
+            return nil
+        }
+        case "walkingHeartRateAverage": if #available(iOS 11.0, *) {
+            return HKQuantityType.quantityType(forIdentifier: .walkingHeartRateAverage)
+        } else {
+            return nil
+        }
         default: return nil
         }
     }
@@ -104,19 +163,85 @@ extension KinasticHealthkit {
     func getCategoryTypeFromString(input: String?) -> HKCategoryType? {
         switch input {
         case "appleStandHour": return HKObjectType.categoryType(forIdentifier: .appleStandHour)
-        case "audioExposureEvent": return HKObjectType.categoryType(forIdentifier: .audioExposureEvent)
+        case "audioExposureEvent": if #available(iOS 13.0, *) {
+            return HKObjectType.categoryType(forIdentifier: .audioExposureEvent)
+        } else {
+            return nil
+        }
         case "cervicalMucusQuality": return HKObjectType.categoryType(forIdentifier: .cervicalMucusQuality)
-        case "highHeartRateEvent": return HKObjectType.categoryType(forIdentifier: .highHeartRateEvent)
-        case "highHeartRateEvent": return HKObjectType.categoryType(forIdentifier: .highHeartRateEvent)
+        case "highHeartRateEvent": if #available(iOS 12.2, *) {
+            return HKObjectType.categoryType(forIdentifier: .highHeartRateEvent)
+        } else {
+            return nil
+        }
         case "intermenstrualBleeding": return HKObjectType.categoryType(forIdentifier: .intermenstrualBleeding)
-        case "irregularHeartRhythmEvent": return HKObjectType.categoryType(forIdentifier: .irregularHeartRhythmEvent)
-        case "lowHeartRateEvent": return HKObjectType.categoryType(forIdentifier: .lowHeartRateEvent)
+        case "irregularHeartRhythmEvent": if #available(iOS 12.2, *) {
+            return HKObjectType.categoryType(forIdentifier: .irregularHeartRhythmEvent)
+        } else {
+            return nil
+        }
+        case "lowHeartRateEvent": if #available(iOS 12.2, *) {
+            return HKObjectType.categoryType(forIdentifier: .lowHeartRateEvent)
+        } else {
+            return nil
+        }
         case "menstrualFlow": return HKObjectType.categoryType(forIdentifier: .menstrualFlow)
-        case "mindfulSession": return HKObjectType.categoryType(forIdentifier: .mindfulSession)
+        case "mindfulSession": if #available(iOS 10.0, *) {
+            return HKObjectType.categoryType(forIdentifier: .mindfulSession)
+        } else {
+            return nil
+        }
         case "ovulationTestResult": return HKObjectType.categoryType(forIdentifier: .ovulationTestResult)
         case "sexualActivity": return HKObjectType.categoryType(forIdentifier: .sexualActivity)
         case "sleepAnalysis": return HKObjectType.categoryType(forIdentifier: .sleepAnalysis)
-        case "toothbrushingEvent": return HKObjectType.categoryType(forIdentifier: .toothbrushingEvent)
+        case "toothbrushingEvent": if #available(iOS 13.0, *) {
+            return HKObjectType.categoryType(forIdentifier: .toothbrushingEvent)
+        } else {
+            return nil
+        }
+        default: return nil
+        }
+    }
+
+    func getCategoryTypeIdentifierFromString(input: String?) -> HKCategoryTypeIdentifier? {
+        switch input {
+        case "appleStandHour": return .appleStandHour
+        case "audioExposureEvent": if #available(iOS 13.0, *) {
+            return .audioExposureEvent
+        } else {
+            return nil
+        }
+        case "cervicalMucusQuality": return .cervicalMucusQuality
+        case "highHeartRateEvent": if #available(iOS 12.2, *) {
+            return .highHeartRateEvent
+        } else {
+            return nil
+        }
+        case "intermenstrualBleeding": return .intermenstrualBleeding
+        case "irregularHeartRhythmEvent": if #available(iOS 12.2, *) {
+            return .irregularHeartRhythmEvent
+        } else {
+            return nil
+        }
+        case "lowHeartRateEvent": if #available(iOS 12.2, *) {
+            return .lowHeartRateEvent
+        } else {
+            return nil
+        }
+        case "menstrualFlow": return .menstrualFlow
+        case "mindfulSession": if #available(iOS 10.0, *) {
+            return .mindfulSession
+        } else {
+            return nil
+        }
+        case "ovulationTestResult": return .ovulationTestResult
+        case "sexualActivity": return .sexualActivity
+        case "sleepAnalysis": return .sleepAnalysis
+        case "toothbrushingEvent": if #available(iOS 13.0, *) {
+            return .toothbrushingEvent
+        } else {
+            return nil
+        }
         default: return nil
         }
     }
@@ -135,48 +260,100 @@ extension KinasticHealthkit {
         case "archery": return .archery
         case "australianFootball": return .australianFootball
         case "badminton": return .badminton
-        case "barre": return .barre
+        case "barre": if #available(iOS 10.0, *) {
+            return .barre
+        } else {
+            return nil
+        }
         case "baseball": return .baseball
         case "basketball": return .basketball
         case "bowling": return .bowling
         case "boxing": return .boxing
         case "climbing": return .climbing
-        case "coreTraining": return .coreTraining
+        case "coreTraining": if #available(iOS 10.0, *) {
+            return .coreTraining
+        } else {
+            return nil
+        }
         case "cricket": return .cricket
-        case "crossCountrySkiing": return .crossCountrySkiing
+        case "crossCountrySkiing": if #available(iOS 10.0, *) {
+            return .crossCountrySkiing
+        } else {
+            return nil
+        }
         case "crossTraining": return .crossTraining
         case "curling": return .curling
         case "cycling": return .cycling
         case "dance": return .dance
         case "danceInspiredTraining": return .danceInspiredTraining
-        case "discSports": return .discSports
-        case "downhillSkiing": return .downhillSkiing
+        case "discSports": if #available(iOS 13.0, *) {
+            return .discSports
+        } else {
+            return nil
+        }
+        case "downhillSkiing": if #available(iOS 10.0, *) {
+            return .downhillSkiing
+        } else {
+            return nil
+        }
         case "elliptical": return .elliptical
         case "equestrianSports": return .equestrianSports
         case "fencing": return .fencing
         case "fishing": return .fishing
-        case "fitnessGaming": return .fitnessGaming
-        case "flexibility": return .flexibility
+        case "fitnessGaming": if #available(iOS 13.0, *) {
+            return .fitnessGaming
+        } else {
+            return nil
+        }
+        case "flexibility": if #available(iOS 10.0, *) {
+            return .flexibility
+        } else {
+            return nil
+        }
         case "functionalStrengthTraining": return .functionalStrengthTraining
         case "golf": return .golf
         case "gymnastics": return .gymnastics
         case "handball": return .handball
-        case "handCycling": return .handCycling
-        case "highIntensityIntervalTraining": return .highIntensityIntervalTraining
+        case "handCycling": if #available(iOS 11.0, *) {
+            return .handCycling
+        } else {
+            return nil
+        }
+        case "highIntensityIntervalTraining": if #available(iOS 10.0, *) {
+            return .highIntensityIntervalTraining
+        } else {
+            return nil
+        }
         case "hiking": return .hiking
         case "hockey": return .hockey
         case "hunting": return .hunting
-        case "jumpRope": return .jumpRope
-        case "kickboxing": return .kickboxing
+        case "jumpRope": if #available(iOS 10.0, *) {
+            return .jumpRope
+        } else {
+            return nil
+        }
+        case "kickboxing": if #available(iOS 10.0, *) {
+            return .kickboxing
+        } else {
+            return nil
+        }
         case "lacrosse": return .lacrosse
         case "martialArts": return .martialArts
         case "mindAndBody": return .mindAndBody
-        case "mixedCardio": return .mixedCardio
+        case "mixedCardio": if #available(iOS 11.0, *) {
+            return .mixedCardio
+        } else {
+            return nil
+        }
         case "mixedMetabolicCardioTraining": return .mixedMetabolicCardioTraining
         case "none": return .none
         case "other": return .other
         case "paddleSports": return .paddleSports
-        case "pilates": return .pilates
+        case "pilates": if #available(iOS 10.0, *) {
+            return .pilates
+        } else {
+            return nil
+        }
         case "play": return .play
         case "preparationAndRecovery": return .preparationAndRecovery
         case "racquetball": return .racquetball
@@ -185,18 +362,34 @@ extension KinasticHealthkit {
         case "running": return .running
         case "sailing": return .sailing
         case "skatingSports": return .skatingSports
-        case "snowboarding": return .snowboarding
+        case "snowboarding": if #available(iOS 10.0, *) {
+            return .snowboarding
+        } else {
+            return nil
+        }
         case "snowSports": return .snowSports
         case "soccer": return .soccer
         case "softball": return .softball
         case "squash": return .squash
         case "stairClimbing": return .stairClimbing
-        case "stairs": return .stairs
-        case "stepTraining": return .stepTraining
+        case "stairs": if #available(iOS 10.0, *) {
+            return .stairs
+        } else {
+            return nil
+        }
+        case "stepTraining": if #available(iOS 10.0, *) {
+            return .stepTraining
+        } else {
+            return nil
+        }
         case "surfingSports": return .surfingSports
         case "swimming": return .swimming
         case "tableTennis": return .tableTennis
-        case "taiChi": return .taiChi
+        case "taiChi": if #available(iOS 11.0, *) {
+            return .taiChi
+        } else {
+            return nil
+        }
         case "tennis": return .tennis
         case "trackAndField": return .trackAndField
         case "traditionalStrengthTraining": return .traditionalStrengthTraining
@@ -205,26 +398,57 @@ extension KinasticHealthkit {
         case "waterFitness": return .waterFitness
         case "waterPolo": return .waterPolo
         case "waterSports": return .waterSports
-        case "wheelchairRunPace": return .wheelchairRunPace
-        case "wheelchairWalkPace": return .wheelchairWalkPace
+        case "wheelchairRunPace": if #available(iOS 10.0, *) {
+            return .wheelchairRunPace
+        } else {
+            return nil
+        }
+        case "wheelchairWalkPace": if #available(iOS 10.0, *) {
+            return .wheelchairWalkPace
+        } else {
+            return nil
+        }
         case "wrestling": return .wrestling
         case "yoga": return .yoga
         default: return nil
         }
     }
 
-    func getCharacteristicTypeFromString(input: String?) -> HKCharacteristicType {
+    func getCharacteristicTypeFromString(input: String?) -> HKCharacteristicType? {
         switch input {
         case "dateOfBirth": return HKObjectType.characteristicType(forIdentifier: .dateOfBirth)
         case "biologicalSex": return HKObjectType.characteristicType(forIdentifier: .biologicalSex)
         case "bloodType": return HKObjectType.characteristicType(forIdentifier: .bloodType)
         case "fitzpatrickSkinType": return HKObjectType.characteristicType(forIdentifier: .fitzpatrickSkinType)
-        case "wheelchairUse": return HKObjectType.characteristicType(forIdentifier: .wheelchairUse)
+        case "wheelchairUse": if #available(iOS 10.0, *) {
+            return HKObjectType.characteristicType(forIdentifier: .wheelchairUse)
+        } else {
+            return nil
+        }
         default: return nil
         }
     }
 
     func getObjectTypeFromString(_ perm: String?) -> HKObjectType? {
+        if let sampleType = getSampleTypeFromString(perm: perm) {
+            return sampleType
+        }
+
+        if let characteristic = getCharacteristicTypeFromString(input: perm) {
+            return characteristic
+        }
+
+        switch perm {
+        case "activitySummary": if #available(iOS 9.3, *) {
+            return HKObjectType.activitySummaryType()
+        } else {
+            return nil
+        }
+        default: return nil
+        }
+    }
+
+    func getSampleTypeFromString(perm: String?) -> HKSampleType? {
         if let quantityType = getQuantityTypeFromString(perm) {
             return quantityType
         }
@@ -237,29 +461,41 @@ extension KinasticHealthkit {
             return correlation
         }
 
-        if let characteristic = getCharacteristicTypeFromString(input: perm) {
-            return characteristic
-        }
-
         switch perm {
         case "workout": return HKObjectType.workoutType()
-        case "CDA": return HKObjectType.documentType(forIdentifier: .CDA)
-        case "activitySummary": return HKObjectType.activitySummaryType()
-        case "audiogram": return HKObjectType.audiogramSampleType()
+        case "CDA": if #available(iOS 10.0, *) {
+            return HKObjectType.documentType(forIdentifier: .CDA)
+        } else {
+            return nil
+        }
+        case "audiogram": if #available(iOS 13.0, *) {
+            return HKObjectType.audiogramSampleType()
+        } else {
+            return nil
+        }
         default: return nil
         }
     }
 
-    func getWorkoutEventTypeFromString(input: String?) -> HKWorkoutEventType {
+    @available(iOS 10.0, *)
+    func getWorkoutEventTypeFromString(input: String?) -> HKWorkoutEventType? {
         switch input {
         case "lap": return .lap
         case "marker": return .marker
         case "motionPaused": return .motionPaused
         case "motionResumed": return .motionResumed
         case "pause": return .pause
-        case "pauseOrResumeRequest": return .pauseOrResumeRequest
+        case "pauseOrResumeRequest": if #available(iOS 11.0, *) {
+            return .pauseOrResumeRequest
+        } else {
+            return nil
+        }
         case "resume": return .resume
-        case "segment": return .segment
+        case "segment": if #available(iOS 11.0, *) {
+            return .segment
+        } else {
+            return nil
+        }
         default: return nil
         }
     }
@@ -272,8 +508,16 @@ extension KinasticHealthkit {
         case "cup_imp": return .cupImperial()
         case "cup_us": return .cupUS()
         case "d": return .day()
-        case "dBASPL": return .decibelAWeightedSoundPressureLevel()
-        case "dBHL": return .decibelHearingLevel()
+        case "dBASPL": if #available(iOS 13.0, *) {
+            return .decibelAWeightedSoundPressureLevel()
+        } else {
+            return nil
+        }
+        case "dBHL": if #available(iOS 13.0, *) {
+            return .decibelHearingLevel()
+        } else {
+            return nil
+        }
         case "degC": return .degreeCelsius()
         case "degF": return .degreeFahrenheit()
         case "fl_oz_imp": return .fluidOunceImperial()
@@ -282,11 +526,23 @@ extension KinasticHealthkit {
         case "g": return .gram()
         case "kg": return .gramUnit(with: .kilo)
         case "mg": return .gramUnit(with: .milli)
-        case "Hz": return .hertz()
-        case "kHz": return .hertzUnit(with: .kilo)
+        case "Hz": if #available(iOS 13.0, *) {
+            return .hertz()
+        } else {
+            return nil
+        }
+        case "kHz": if #available(iOS 13.0, *) {
+            return .hertzUnit(with: .kilo)
+        } else {
+            return nil
+        }
         case "hr": return .hour()
         case "in": return .inch()
-        case "IU": return .internationalUnit()
+        case "IU": if #available(iOS 11.0, *) {
+            return .internationalUnit()
+        } else {
+            return nil
+        }
         case "J": return .joule()
         case "kJ": return .jouleUnit(with: .kilo)
         case "K": return .kelvin()
@@ -312,17 +568,32 @@ extension KinasticHealthkit {
         case "s": return .second()
         case "ms": return .secondUnit(with: .milli)
         case "S": return .siemen()
-        case "cal": return .smallCalorie()
+        case "cal": if #available(iOS 11.0, *) {
+            return .smallCalorie()
+        } else {
+            return .calorie()
+        }
         case "st": return .stone()
         case "yd": return .yard()
         case "mmol/L": return HKUnit.moleUnit(with: .milli, molarMass: HKUnitMolarMassBloodGlucose).unitDivided(by: .liter())
         case "mg/dL": return HKUnit(from: "mg/dL")
+        default: return nil
         }
     }
 
     func parsePermissions(_ permissions: [String]) -> Set<HKObjectType> {
-        Set(permissions.map { (perm) -> HKObjectType in
-            getObjectTypeFromString(perm)
+        Set(permissions.map {
+            getObjectTypeFromString($0)
+        }.compactMap {
+            $0
+        })
+    }
+
+    func parseWritePermissions(permissions: [String]) -> Set<HKSampleType> {
+        Set(permissions.map {
+            getSampleTypeFromString(perm: $0)
+        }.compactMap {
+            $0
         })
     }
 

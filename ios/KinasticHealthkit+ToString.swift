@@ -86,7 +86,6 @@ extension KinasticHealthkit {
         case .wheelchairWalkPace: return "wheelchairWalkPace"
         case .wrestling: return "wrestling"
         case .yoga: return "yoga"
-        default: return nil
         }
     }
 
@@ -126,6 +125,7 @@ extension KinasticHealthkit {
         }
     }
 
+    @available(iOS 10.0, *)
     func wheelchairUseString(wheelchairUse: HKWheelchairUseObject) -> String {
         switch (wheelchairUse.wheelchairUse) {
         case .no: return "no"

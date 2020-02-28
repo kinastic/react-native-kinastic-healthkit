@@ -8,8 +8,8 @@ import HealthKit
 
 extension KinasticHealthkit {
 
-    @objc(save:reject:)
-    func save(_ samples: [[String: Any?]]) {
+    @objc(save:resolve:reject:)
+    func save(_ samples: [[String: Any]], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         let objects = samples.map { dictionary -> HKObject? in
             parseSample(dictionary)
         }.compactMap { $0 }
@@ -19,11 +19,11 @@ extension KinasticHealthkit {
                 if (b) {
                     resolve("success")
                 } else {
-                    reject("Error: \(error?.localizedDescription)")
+                    reject("error", "Error: \(error?.localizedDescription)", error)
                 }
             }
         } else {
-            reject("empty")
+            reject("error", "empty", nil)
         }
     }
 }
