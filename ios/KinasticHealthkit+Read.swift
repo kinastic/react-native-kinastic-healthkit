@@ -110,7 +110,7 @@ extension KinasticHealthkit {
     }
 
     func workoutToMap(sample: HKWorkout) -> Dictionary<String, Any?> {
-        [
+        var result = [
             "sampleType": "workout",
             "workoutType": stringFromWorkoutActivityType(input: sample.workoutActivityType),
             "startDate": buildISO8601StringFromDate(sample.startDate),
@@ -118,8 +118,27 @@ extension KinasticHealthkit {
             "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
             "device": deviceToMap(device: sample.device),
             "workoutEvents": workoutEventsToMap(events: sample.workoutEvents),
+            "totalEnergyBurned": sample.totalEnergyBurned?.doubleValue(for: .kilocalorie()),
             "metadata": sample.metadata
-        ]
+        ] as [String: Any?]
+        
+        if let totalDistance = sample.totalDistance {
+            result["totalDistance"] = totalDistance.doubleValue(for: .meter())
+        }
+        
+        if #available(iOS 11.0, *) {
+            if let totalFlightsClimbed = sample.totalFlightsClimbed {
+                result["totalFlightsClimbed"] = totalFlightsClimbed.doubleValue(for: .count())
+            }
+        }
+        
+        if #available(iOS 10.0, *) {
+            if let totalSwimmingStrokeCount = sample.totalSwimmingStrokeCount {
+                result["totalSwimmingStrokeCount"] = totalSwimmingStrokeCount.doubleValue(for: .count())
+            }
+        }
+        
+        return result
     }
 
     func workoutEventsToMap(events: [HKWorkoutEvent]?) -> [[String: Any?]]? {
