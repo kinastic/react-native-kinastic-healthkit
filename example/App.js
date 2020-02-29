@@ -9,8 +9,15 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-import KinasticHealthkit from 'react-native-kinastic-healthkit';
+import {Platform, StyleSheet, Text, ScrollView } from 'react-native';
+import {
+  KinasticHealthkit,
+  HKObjectTypes,
+  HKSampleTypes,
+  HKQuantityTypes,
+  HKCharacteristicTypes,
+  HKCategoryTypes,
+} from 'react-native-kinastic-healthkit';
 
 export default class App extends Component<{}> {
   state = {
@@ -18,21 +25,33 @@ export default class App extends Component<{}> {
     message: '--',
   };
   componentDidMount() {
-    KinasticHealthkit.sampleMethod('Testing', 123, message => {
-      this.setState({
-        status: 'native callback received',
-        message,
-      });
+    KinasticHealthkit.requestAuthorization(HKObjectTypes, HKObjectTypes).then(
+      result => {
+        console.log('result', result);
+        this.read();
+      },
+    );
+  }
+
+  async read() {
+    const result0 = await KinasticHealthkit.querySample({
+      sampleType: 'workout',
+      unit: 'm',
+      limit: 1000,
+      startDate: new Date(2016, 4, 27).toISOString(),
+    }).then(results => {
+      console.log(JSON.stringify(results, null, 4));
     });
   }
+
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Text style={styles.welcome}>☆KinasticHealthkit example☆</Text>
         <Text style={styles.instructions}>STATUS: {this.state.status}</Text>
         <Text style={styles.welcome}>☆NATIVE CALLBACK MESSAGE☆</Text>
         <Text style={styles.instructions}>{this.state.message}</Text>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -40,8 +59,6 @@ export default class App extends Component<{}> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
   welcome: {

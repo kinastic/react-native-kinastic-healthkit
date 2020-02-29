@@ -599,7 +599,7 @@ extension KinasticHealthkit {
     }
 
     func parsePermissions(_ permissions: [String]) -> Set<HKObjectType> {
-        Set(permissions.map {
+        Set(permissions.filter { !readPermissionBlacklist.contains($0) }.map {
             getObjectTypeFromString($0)
         }.compactMap {
             $0
@@ -607,7 +607,7 @@ extension KinasticHealthkit {
     }
 
     func parseWritePermissions(permissions: [String]) -> Set<HKSampleType> {
-        Set(permissions.map {
+        Set(permissions.filter { !writePermissionBlacklist.contains($0) }.map {
             getSampleTypeFromString(perm: $0)
         }.compactMap {
             $0

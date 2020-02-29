@@ -34,12 +34,12 @@ extension KinasticHealthkit {
     @objc(querySample:resolve:reject:)
     func querySample(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         
-        guard let sampleTypeSTring = query["sampleType"] as? String else {
+        guard let sampleTypeString = query["sampleType"] as? String else {
             reject("format", "sampleType required", nil)
             return
         }
         
-        guard let sampleType = getSampleTypeFromString(perm: sampleTypeSTring) else {
+        guard let sampleType = getSampleTypeFromString(perm: sampleTypeString) else {
             reject("format", "sampleType required", nil)
             return
         }
@@ -49,12 +49,19 @@ extension KinasticHealthkit {
             return
         }
         
-        guard let unit = parseUnit(sample: query) else {
-            reject("format", "unit required (later release might be automatic)", nil)
-            return
+        let quantityType = getQuantityTypeFromString(sampleTypeString)
+        let correlationType = getCorrelationTypeFromString(input: sampleTypeString)
+        
+        var unit: HKUnit? = nil
+        if nil != quantityType || nil != correlationType {
+            guard let parsedUnit = parseUnit(sample: query) else {
+                reject("format", "unit required (later release might be automatic)", nil)
+                return
+            }
+            unit = parsedUnit
         }
 
-        let limit = parseInt(sample: query["limit"]) ?? HKObjectQueryNoLimit
+        let limit = query["limit"] as? Int ?? HKObjectQueryNoLimit
         let endDate = parseEndDate(sample: query, withDefault: Date()) ?? Date()
         let predicate = predicateForSamplesBetweenDates(startDate: startDate, endDate: endDate)
         
@@ -74,13 +81,17 @@ extension KinasticHealthkit {
         self.healthKit.execute(query)
     }
 
-    func sampleToMap(sample: HKSample, unit: HKUnit) -> [String: Any?]? {
+    func sampleToMap(sample: HKSample, unit: HKUnit?) -> [String: Any?]? {
         if sample is HKQuantitySample {
-            return quantitySampleToMap(sample: sample as! HKQuantitySample, unit: unit)
+            if let u = unit {
+                return quantitySampleToMap(sample: sample as! HKQuantitySample, unit: u)
+            }
         } else if sample is HKCorrelation {
-            return correlationToMap(sample: sample as! HKCorrelation, unit: unit)
+            if let u = unit {
+                return correlationToMap(sample: sample as! HKCorrelation, unit: u)
+            }
         } else if sample is HKWorkout {
-            return workoutToMap(sample: sample as! HKWorkout, unit: unit)
+            return workoutToMap(sample: sample as! HKWorkout)
         } else if sample is HKCategorySample {
             return categorySampleToMap(sample: sample as! HKCategorySample)
         }
@@ -98,9 +109,9 @@ extension KinasticHealthkit {
         ]
     }
 
-    func workoutToMap(sample: HKWorkout, unit: HKUnit) -> Dictionary<String, Any?> {
+    func workoutToMap(sample: HKWorkout) -> Dictionary<String, Any?> {
         [
-            "sampleType": "correlation",
+            "sampleType": "workout",
             "workoutType": stringFromWorkoutActivityType(input: sample.workoutActivityType),
             "startDate": buildISO8601StringFromDate(sample.startDate),
             "endDate": buildISO8601StringFromDate(sample.endDate),
@@ -151,23 +162,28 @@ extension KinasticHealthkit {
         objects.map { sampleToMap(sample: $0, unit: unit) }.compactMap { $0 }
     }
 
-    func quantitySampleToMap(sample: HKQuantitySample, unit: HKUnit) -> [String: Any?] {
-        var result = [
-            "sampleType": "quantity",
-            "quantityType": quantityTypeToString(value: sample.quantityType),
-            "quantity": sample.quantity.doubleValue(for: unit),
-            "startDate": buildISO8601StringFromDate(sample.startDate),
-            "endDate": buildISO8601StringFromDate(sample.endDate),
-            "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
-            "device": deviceToMap(device: sample.device),
-            "metadata": sample.metadata
-        ] as [String: Any?]
-        
-        if #available(iOS 12.0, *) {
-            result["count"] = sample.count
+    func quantitySampleToMap(sample: HKQuantitySample, unit: HKUnit) -> [String: Any?]? {
+        do {
+            var result = [
+                "sampleType": "quantity",
+                "quantityType": quantityTypeToString(value: sample.quantityType),
+                "quantity": try sample.quantity.doubleValue(for: unit),
+                "startDate": buildISO8601StringFromDate(sample.startDate),
+                "endDate": buildISO8601StringFromDate(sample.endDate),
+                "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
+                "device": deviceToMap(device: sample.device),
+                "metadata": sample.metadata
+            ] as [String: Any?]
+            
+            if #available(iOS 12.0, *) {
+                result["count"] = sample.count
+            }
+            
+            return result
+        } catch {
+            print("Unable to serialize sample")
         }
-        
-        return result
+        return nil
     }
 
     func sourceToMap(source: HKSource) -> Dictionary<String, Any> {

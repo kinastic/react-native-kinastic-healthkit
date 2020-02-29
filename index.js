@@ -1,5 +1,19 @@
-import { NativeModules } from 'react-native';
+import {NativeModules} from 'react-native';
+import HKCategoryTypes from './HKCategoryType';
+import HKCharacteristicTypes from './HKCharacteristicType';
+import HKCorrelationTypes from './HKCorrelationType';
+import HKQuantityTypes from './HKQuantityType';
+import HKSampleTypes from './HKSampleType';
+import HKObjectTypes from './HKObjectType';
 
-const { KinasticHealthkit } = NativeModules;
+const {KinasticHealthkit} = NativeModules;
 
-export default KinasticHealthkit;
+export {
+  KinasticHealthkit,
+  HKObjectTypes,
+  HKCategoryTypes,
+  HKCharacteristicTypes,
+  HKCorrelationTypes,
+  HKQuantityTypes,
+  HKSampleTypes,
+};

@@ -13,7 +13,25 @@ import HealthKit
 class KinasticHealthkit: RCTEventEmitter {
     
     let healthKit = HKHealthStore()
-    let iso8061Format = "yyyy-MM-ddTHH:mm:ss.SSSZ"
+    let iso8061Format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+    let readPermissionBlacklist = [
+        "food",
+        "bloodPressure"
+    ]
+    let writePermissionBlacklist = [
+        "irregularHeartRhythmEvent",
+        "walkingHeartRateAverage",
+        "appleStandTime",
+        "irregularHeartRhytmEvent",
+        "appleStandHour",
+        "food",
+        "nikeFuel",
+        "bloodPressure",
+        "audioExposureEvent",
+        "appleExerciseTime",
+        "lowHeartRateEvent",
+        "highHeartRateEvent"
+    ]
     
     @objc
     override func supportedEvents() -> [String] {
@@ -59,6 +77,7 @@ class KinasticHealthkit: RCTEventEmitter {
                 let status = self.parsePermissions(permissions).map { perm -> String in
                     getAuthorizationStatusString(self.healthKit.authorizationStatus(for: perm))
                 }
+                resolve(status)
             } else {
                 reject("error", "Permissions missing", nil)
             }
@@ -66,4 +85,13 @@ class KinasticHealthkit: RCTEventEmitter {
             reject("error", "Unavailable", nil)
         }
     }
+    
+    /*
+     func getHealthkit(): HKHealthStore? {
+         if HKHealthStore.isHealthDataAvailable() {
+             self.healthKit = self.healthKit ?? HKHealthStore()
+         }
+         return self.healthKit
+     }
+     */
 }

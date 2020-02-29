@@ -51,5 +51,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Get better coaching by allowing us access to your health kit data and to better understand you.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>To save your activity history in health kit we need to access your health kit</string>
 </dict>
 </plist>
