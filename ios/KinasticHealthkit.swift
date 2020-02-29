@@ -10,10 +10,19 @@ import Foundation
 import HealthKit
 
 @objc(KinasticHealthkit)
-class KinasticHealthkit: NSObject {
-
+class KinasticHealthkit: RCTEventEmitter {
+    
     let healthKit = HKHealthStore()
     let iso8061Format = "yyyy-MM-ddTHH:mm:ss.SSSZ"
+    
+    @objc
+    override func supportedEvents() -> [String] {
+        return []
+    }
+    
+    @objc override class func requiresMainQueueSetup() -> Bool {
+        return true
+    }
 
     @objc(isAvailable:reject:)
     func isAvailable(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {

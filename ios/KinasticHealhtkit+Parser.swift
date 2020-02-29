@@ -29,7 +29,12 @@ extension KinasticHealthkit {
 
         let unitComponents = unitString.components(separatedBy: "/")
 
-        if let unit = getUnitFromString(input: unitString) {
+        if let unit = getUnitFromString(input: unitComponents[0]) {
+            if unitComponents.count > 1 {
+                if let secondUnit = getUnitFromString(input: unitComponents[1]) {
+                    return unit.unitDivided(by: secondUnit)
+                }
+            }
             return unit
         }
         

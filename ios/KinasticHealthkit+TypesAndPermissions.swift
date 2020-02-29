@@ -477,25 +477,42 @@ extension KinasticHealthkit {
         }
     }
 
-    @available(iOS 10.0, *)
+
     func getWorkoutEventTypeFromString(input: String?) -> HKWorkoutEventType? {
         switch input {
-        case "lap": return .lap
-        case "marker": return .marker
-        case "motionPaused": return .motionPaused
-        case "motionResumed": return .motionResumed
-        case "pause": return .pause
+        case "lap": if #available(iOS 10.0, *) {
+            return .lap
+        } else {
+            return .resume
+        }
+        case "marker": if #available(iOS 10.0, *) {
+            return .marker
+        } else {
+            return .pause
+        }
+        case "motionPaused": if #available(iOS 10.0, *) {
+            return .motionPaused
+        } else {
+            return .pause
+        }
+        case "motionResumed": if #available(iOS 10.0, *) {
+            return .motionResumed
+        } else {
+            return .resume
+        }
+
         case "pauseOrResumeRequest": if #available(iOS 11.0, *) {
             return .pauseOrResumeRequest
         } else {
-            return nil
+            return .pause
         }
-        case "resume": return .resume
         case "segment": if #available(iOS 11.0, *) {
             return .segment
         } else {
-            return nil
+            return .resume
         }
+        case "resume": return .resume
+        case "pause": return .pause
         default: return nil
         }
     }

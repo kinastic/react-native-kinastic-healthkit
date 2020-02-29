@@ -15,19 +15,18 @@ extension KinasticHealthkit {
         return nil
     }
 
-    @available(iOS 10.0, *)
     func parseWorkoutEvents(sample: [String: Any]) -> [HKWorkoutEvent]? {
         if let events = sample["workoutEvents"] as? [Any] {
-            return events.map { parseEvent(input: $0) }
+            return events.map { parseEvent(input: $0) }.compactMap { $0 }
         }
         return nil
     }
 
-    @available(iOS 10.0, *)
     func parseEvent(input: Any?) -> HKWorkoutEvent? {
         if let sample = input as? [String: Any?] {
             guard let eventTypeString = sample["eventType"] as? String else {
                 print("Missing 'eventType' of HKWorkoutEventType'")
+                return nil
             }
             
             guard let eventType = getWorkoutEventTypeFromString(input: eventTypeString) else {
@@ -51,8 +50,10 @@ extension KinasticHealthkit {
             if #available(iOS 11.0, *) {
                 let interval = DateInterval(start: startDate, end: endDate)
                 return HKWorkoutEvent(type: eventType, dateInterval: interval, metadata: metadata)
-            } else if let metadata = sample["metadata"] as? [String: Any] {
-                return HKWorkoutEvent(type: eventType, date: startDate, metadata: metadata)
+            } else if #available(iOS 10.0, *) {
+                if let metadata = sample["metadata"] as? [String: Any] {
+                    return HKWorkoutEvent(type: eventType, date: startDate, metadata: metadata)
+                }
             }
                   
             return HKWorkoutEvent(type: eventType, date: startDate)
@@ -93,9 +94,9 @@ extension KinasticHealthkit {
             return nil
         }
 
+        let workoutEvents = parseWorkoutEvents(sample: sample)
         let totalEnergyBurned = parseTotalEnergyBurned(sample: sample)
-        let totalFlightsClimbed = parseTotalFlightsClimbed(sample: sample)
-        let totalSwimmingStrokeCount = parseTotalEnergyBurned(sample: sample)
+        
         let totalDistance = parseTotalDistance(sample: sample)
 
         var endDate = self.parseISO8601DateFromString(sample["endDate"] as? String, withDefault: startDate) ?? startDate
@@ -105,22 +106,25 @@ extension KinasticHealthkit {
         }
 
         let device = parseDevice(sample["device"])
-        let metadata = sample["metadata"]
+        let metadata = sample["metadata"] as? [String: Any]
 
-        let workout = HKWorkout(activityType: type, start: startDate, end: endDate)
-        workout.totalSwimmingStrokeCount = totalSwimmingStrokeCount
-        workout.totalFlightsClimbed = totalFlightsClimbed
-        workout.totalDistance = totalDistance
-        workout.totalEnergyBurned = totalEnergyBurned
-        workout.device = device
-        workout.metadata = metadata
+//        HKWorkout(activityType: <#T##HKWorkoutActivityType#>, start: <#T##Date#>, end: <#T##Date#>)
+//        HKWorkout(activityType: <#T##HKWorkoutActivityType#>, start: <#T##Date#>, end: <#T##Date#>, duration: <#T##TimeInterval#>, totalEnergyBurned: <#T##HKQuantity?#>, totalDistance: <#T##HKQuantity?#>, device: <#T##HKDevice?#>, metadata: <#T##[String : Any]?#>)
+//        HKWorkout(activityType: <#T##HKWorkoutActivityType#>, start: <#T##Date#>, end: <#T##Date#>, duration: <#T##TimeInterval#>, totalEnergyBurned: <#T##HKQuantity?#>, totalDistance: <#T##HKQuantity?#>, metadata: <#T##[String : Any]?#>)
+//        HKWorkout(activityType: <#T##HKWorkoutActivityType#>, start: <#T##Date#>, end: <#T##Date#>, workoutEvents: <#T##[HKWorkoutEvent]?#>, totalEnergyBurned: <#T##HKQuantity?#>, totalDistance: <#T##HKQuantity?#>, metadata: <#T##[String : Any]?#>)
+        
         
         if #available(iOS 10.0, *) {
-            workout.workoutEvents = parseWorkoutEvents(sample: sample)
-        } else {
-            // Fallback on earlier versions
+            if #available(iOS 11.0, *) {
+                if let totalFlightsClimbed = parseTotalFlightsClimbed(sample: sample) {
+                    return HKWorkout(activityType: type, start: startDate, end: endDate, workoutEvents: workoutEvents, totalEnergyBurned: totalEnergyBurned, totalDistance: totalDistance, totalFlightsClimbed: totalFlightsClimbed, device: device, metadata: metadata)
+                }
+            }
+            if let totalSwimmingStrokeCount = parseTotalEnergyBurned(sample: sample) {
+                return HKWorkout(activityType: type, start: startDate, end: endDate, workoutEvents: workoutEvents, totalEnergyBurned: totalEnergyBurned, totalDistance: totalDistance, totalSwimmingStrokeCount: totalSwimmingStrokeCount, device: device, metadata: metadata)
+            }
         }
 
-        return workout
+        return HKWorkout(activityType: type, start: startDate, end: endDate, workoutEvents: workoutEvents, totalEnergyBurned: totalEnergyBurned, totalDistance: totalDistance, device: device, metadata: metadata)
     }
 }

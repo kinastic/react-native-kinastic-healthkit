@@ -8,20 +8,20 @@
  * https://github.com/facebook/react-native
  */
 
-import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import React, {Component} from 'react';
+import {Platform, StyleSheet, Text, View} from 'react-native';
 import KinasticHealthkit from 'react-native-kinastic-healthkit';
 
 export default class App extends Component<{}> {
   state = {
     status: 'starting',
-    message: '--'
+    message: '--',
   };
   componentDidMount() {
-    KinasticHealthkit.sampleMethod('Testing', 123, (message) => {
+    KinasticHealthkit.sampleMethod('Testing', 123, message => {
       this.setState({
         status: 'native callback received',
-        message
+        message,
       });
     });
   }

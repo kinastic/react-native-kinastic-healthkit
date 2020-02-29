@@ -32,7 +32,7 @@ extension KinasticHealthkit {
 
 
     @objc(querySample:resolve:reject:)
-    func querySample(_ query: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    func querySample(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         
         guard let sampleTypeSTring = query["sampleType"] as? String else {
             reject("format", "sampleType required", nil)
@@ -48,18 +48,23 @@ extension KinasticHealthkit {
             reject("format", "startDate required", nil)
             return
         }
+        
+        guard let unit = parseUnit(sample: query) else {
+            reject("format", "unit required (later release might be automatic)", nil)
+            return
+        }
 
         let limit = parseInt(sample: query["limit"]) ?? HKObjectQueryNoLimit
-        let endDate = parseEndDate(sample: query, withDefault: Date())
+        let endDate = parseEndDate(sample: query, withDefault: Date()) ?? Date()
         let predicate = predicateForSamplesBetweenDates(startDate: startDate, endDate: endDate)
-        let unit = parseUnit(sample: query)
+        
         let sort = parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
 
         let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sort) { query, samples, error in
             if nil != error {
                 reject("error", "Error: \(error?.localizedDescription)", error)
-            } else if samples != nil {
-                let json = samples.map { sampleToMap(sample: $0, unit: unit) }
+            } else if let data = samples {
+                let json = data.map { self.sampleToMap(sample: $0, unit: unit) }
                 resolve(json)
             } else {
                 resolve([])

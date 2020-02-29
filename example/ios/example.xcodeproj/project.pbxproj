@@ -16,6 +16,7 @@
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		787E28CA1671A6552DB7B530 /* libPods-example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FE9E8594A65D996FB337D16 /* libPods-example.a */; };
 		B5F2894C2409914800583C0C /* Dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F2894B2409914800583C0C /* Dummy.swift */; };
+		B5F2894F240A441600583C0C /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5F2894E240A441600583C0C /* HealthKit.framework */; };
 		B99F54E05BCA8524C7AA0DB2 /* libPods-example-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6ED1D4EF416844D37098DD7C /* libPods-example-tvOS.a */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,8 @@
 		A7E9E01419EE8857C6520401 /* Pods-exampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-exampleTests.release.xcconfig"; path = "Target Support Files/Pods-exampleTests/Pods-exampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		B5F2894A2409914800583C0C /* example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "example-Bridging-Header.h"; sourceTree = "<group>"; };
 		B5F2894B2409914800583C0C /* Dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Dummy.swift; path = example/Dummy.swift; sourceTree = "<group>"; };
+		B5F2894D240A441600583C0C /* Kinastic HealthKit Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "Kinastic HealthKit Example.entitlements"; path = "example/Kinastic HealthKit Example.entitlements"; sourceTree = "<group>"; };
+		B5F2894E240A441600583C0C /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		B6C5E2B4218DCE12E7D6ED3E /* Pods-example-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-example-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-example-tvOS/Pods-example-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		CC122AE39E76A81392E83DDE /* libPods-example-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-example-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7520283D1ADDF5601942186 /* Pods-exampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-exampleTests.debug.xcconfig"; path = "Target Support Files/Pods-exampleTests/Pods-exampleTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -55,6 +58,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				787E28CA1671A6552DB7B530 /* libPods-example.a in Frameworks */,
+				B5F2894F240A441600583C0C /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +93,7 @@
 		13B07FAE1A68108700A75B9A /* example */ = {
 			isa = PBXGroup;
 			children = (
+				B5F2894D240A441600583C0C /* Kinastic HealthKit Example.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -120,6 +125,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B5F2894E240A441600583C0C /* HealthKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				6FE9E8594A65D996FB337D16 /* libPods-example.a */,
@@ -214,6 +220,7 @@
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = XBF2NP7PW5;
 						LastSwiftMigration = 1130;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -416,8 +423,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "example/Kinastic HealthKit Example.entitlements";
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = XBF2NP7PW5;
 				INFOPLIST_FILE = example/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -441,7 +450,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "example/Kinastic HealthKit Example.entitlements";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XBF2NP7PW5;
 				INFOPLIST_FILE = example/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -86,6 +86,7 @@ extension KinasticHealthkit {
         case .wheelchairWalkPace: return "wheelchairWalkPace"
         case .wrestling: return "wrestling"
         case .yoga: return "yoga"
+        default: return "\(input.rawValue)"
         }
     }
 
@@ -144,6 +145,7 @@ extension KinasticHealthkit {
         case .lap: return "lap"
         case .motionResumed: return "motionResumed"
         case .resume: return "resume"
+        default: return "\(workoutEvent.rawValue)"
         }
     }
 
