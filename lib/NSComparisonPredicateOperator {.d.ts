@@ -1,0 +1,21 @@
+export declare enum NSComparisonPredicateOperator {
+    beginsWith = "beginsWith",
+    between = "between",
+    contains = "contains",
+    customSelector = "customSelector",
+    endsWith = "endsWith",
+    equalTo = "eq",
+    eq = "eq",
+    greaterThan = "gt",
+    gt = "gt",
+    greaterThanOrEqualTo = "gte",
+    gte = "gte",
+    in = "in",
+    lessThan = "lt",
+    lt = "lt",
+    lessThanOrEqualTo = "lte",
+    lte = "lte",
+    like = "like",
+    matches = "matches",
+    notEqualTo = "notEqualTo"
+}

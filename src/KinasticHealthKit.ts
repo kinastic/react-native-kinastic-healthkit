@@ -15,7 +15,7 @@ import HKAnchoredObjectQueryResult from './HKAnchoredObjectQueryResult';
 
 const { KinasticHealthkit: RNHealthkit } = NativeModules;
 
-export default class KinasticHealthKit {
+export class KinasticHealthKit {
   static requestAuthorization(
     readPermissions: string[],
     writePermissions: string[],

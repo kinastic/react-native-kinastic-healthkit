@@ -1,0 +1,37 @@
+import { NSPredicateType } from './NSPredicateType';
+import { NSComparisonPredicateOperator } from './NSComparisonPredicateOperator {';
+import HKSource from './HKSource';
+import HKWorkout from './HKWorkout';
+import HKDevice from './HKDevice';
+import HKSourceRevision from './HKSourceRevision';
+import { HKQueryOptions } from './HKQueryOptions';
+import { HKFHIRResourceType } from './HKFHIRResourceType';
+import { HKWorkoutActivityType } from './HKWorkoutActivityType';
+export default class NSPredicate {
+    type: NSPredicateType;
+    operator?: NSComparisonPredicateOperator;
+    value?: number;
+    fhirResourceType?: HKFHIRResourceType;
+    source?: HKSource;
+    identifier?: string;
+    uuid?: string;
+    workout?: HKWorkout;
+    device?: HKDevice[];
+    sourceRevisions?: HKSourceRevision[];
+    uuids?: string[];
+    deviceProperty?: string;
+    allowedValues?: string[];
+    metadataKey?: string[];
+    unit?: string;
+    startDate?: Date;
+    endDate?: Date;
+    options?: HKQueryOptions;
+    activityType?: HKWorkoutActivityType;
+    duration?: number;
+    totalDistance?: number;
+    totalEnergyBurned?: number;
+    totalSwimmingStrokeCount?: number;
+    totalFlightsClimbed?: number;
+    constructor(json?: any);
+    toJS(): any;
+}
