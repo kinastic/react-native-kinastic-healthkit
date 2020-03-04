@@ -8,15 +8,8 @@ import HealthKit
 
 extension KinasticHealthkit {
 
-    func parseCategoryType(sample: [String: Any]) -> HKCategoryType? {
-        if let value = sample["categoryType"] as? String {
-            return self.getCategoryTypeFromString(input: value)
-        }
-        return nil
-    }
-
     func parseCategoryTypeIdentifier(sample: [String: Any]) -> HKCategoryTypeIdentifier? {
-        if let value = sample["categoryType"] as? String {
+        if let value = sample["sampleType"] as? String {
             return self.getCategoryTypeIdentifierFromString(input: value)
         }
         return nil
@@ -87,7 +80,7 @@ extension KinasticHealthkit {
     func parseCervicalMucusQuality(value: Any?) -> HKCategoryValueCervicalMucusQuality? {
         if let input = value as? String {
             switch input {
-            case "stood": return .creamy
+            case "creamy": return .creamy
             case "dry": return .dry
             case "eggWhite": return .eggWhite
             case "sticky": return .sticky

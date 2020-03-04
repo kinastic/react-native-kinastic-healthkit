@@ -8,20 +8,29 @@ import HealthKit
 
 extension KinasticHealthkit {
 
-    func parseQuantityType(sample: [String: Any]) -> HKQuantityType? {
-        if let typeString = sample["quantityType"] as? String {
-            return getQuantityTypeFromString(typeString)
-        }
-        print("Invalid 'quantityType' from HKQuantityType")
-        return nil
-    }
-
     func parseSampleQuantity(sample: [String: Any]) -> HKQuantitySample? {
-        guard let type = parseQuantityType(sample: sample) else {
+        guard let typeIdentifier = getQuantityTypeIdentifierFromString(type: sample["sampleType"] as? String) else {
+            print("Missing/Invalid 'sampleType' from HKQuantityType")
             return nil
         }
 
-        guard let quantity = parseQuantity(input: sample) else {
+        guard let type = HKQuantityType.quantityType(forIdentifier: typeIdentifier) else {
+            print("Invalid 'sampleType' from HKQuantityType")
+            return nil
+        }
+
+        guard let value = sample["value"] as? Double else {
+            print("Missing 'value' (Double)")
+            return nil
+        }
+
+        guard let unit = parseUnit(sample: sample) ?? determineUnit(type: typeIdentifier) else {
+            print("Cannot parse or determine unit for \(type.identifier)")
+            return nil
+        }
+
+        guard type.is(compatibleWith: unit) else {
+            print("Type \(type.identifier) is incompatible with unit \(unit.unitString)")
             return nil
         }
 
@@ -30,6 +39,7 @@ extension KinasticHealthkit {
         }
 
         var endDate = parseEndDate(sample: sample, withDefault: Date()) ?? startDate
+        let quantity = HKQuantity(unit: unit, doubleValue: value)
 
         if startDate > endDate {
             endDate = startDate

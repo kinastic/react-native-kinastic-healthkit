@@ -149,12 +149,16 @@ extension KinasticHealthkit {
         }
     }
 
-    func unitString(unit: HKUnit) -> String {
-        unit.unitString
+    func unitString(unit: HKUnit?) -> String? {
+        unit?.unitString
+    }
+    
+    func sampleTypeToString(value: HKSampleType) -> String {
+        return value.identifier.replacingOccurrences(of: "HKQuantityTypeIdentifier", with: "").lowercasingFirstLetter()
     }
 
     func quantityTypeToString(value: HKQuantityType) -> String {
-        value.identifier
+        return value.identifier.replacingOccurrences(of: "HKQuantityTypeIdentifier", with: "").lowercasingFirstLetter()
     }
 
     func correlationTypeToString(value: HKCorrelationType) -> String {
@@ -163,5 +167,23 @@ extension KinasticHealthkit {
 
     func operatingSystemVersionToString(version: OperatingSystemVersion) -> String {
         "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
+    }
+}
+
+extension String {
+    func capitalizingFirstLetter() -> String {
+        return prefix(1).lowercased() + dropFirst()
+    }
+
+    mutating func capitalizeFirstLetter() {
+        self = self.capitalizingFirstLetter()
+    }
+    
+    func lowercasingFirstLetter() -> String {
+        return prefix(1).lowercased() + dropFirst()
+    }
+
+    mutating func lowercasingFirstLetter() {
+        self = self.lowercasingFirstLetter()
     }
 }

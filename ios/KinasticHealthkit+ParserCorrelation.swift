@@ -9,11 +9,11 @@ import HealthKit
 extension KinasticHealthkit {
 
     func parseCorrelationType(sample: [String: Any]) -> HKCorrelationType? {
-        if let typeString = sample["correlationType"] as? String {
+        if let typeString = sample["sampleType"] as? String {
             return self.getCorrelationTypeFromString(input: typeString)
         }
 
-        print("Invalid 'categoryType' from HKCategoryType")
+        print("Invalid 'sampleType' from HKCategoryType")
         return nil
     }
 

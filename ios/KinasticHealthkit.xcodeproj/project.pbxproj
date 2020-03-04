@@ -12,6 +12,7 @@
 		1A9983C2ADB1312C8DCD1A80 /* KinasticHealhtkit+Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A998D949A94372737DC5C51 /* KinasticHealhtkit+Parser.swift */; };
 		1A9985404340718CB16F8F18 /* KinasticHealthkit+Read.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9988FBC3988F4096395672 /* KinasticHealthkit+Read.swift */; };
 		1A99867CCF56B45CFC66C53D /* KinasticHealthkit+ParserCorrelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9989BD00B73911C64A97C8 /* KinasticHealthkit+ParserCorrelation.swift */; };
+		1A9986CE1C92E42CAACC80CA /* KinasticHealthkit+ParserPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9983B4B9687FD717BB2EF0 /* KinasticHealthkit+ParserPredicate.swift */; };
 		1A99879342047D3D0920824D /* KinasticHealthkit+ReadCharacteristics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A998C863ABEBF79101A0B8C /* KinasticHealthkit+ReadCharacteristics.swift */; };
 		1A9988E2BDE4E2B479621004 /* KinasticHealthkit+ParserQuantity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A998AEFCD544EDAF21E68F7 /* KinasticHealthkit+ParserQuantity.swift */; };
 		1A998B6899105AD0B1CFE66D /* KinasticHealthkit+ParserCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A998C7A84EBF4691F3D86CA /* KinasticHealthkit+ParserCategory.swift */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libKinasticHealthkit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKinasticHealthkit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A9983B4B9687FD717BB2EF0 /* KinasticHealthkit+ParserPredicate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KinasticHealthkit+ParserPredicate.swift"; sourceTree = "<group>"; };
 		1A998683B8D4D14A1653D0D6 /* KinasticHealthkit+Write.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KinasticHealthkit+Write.swift"; sourceTree = "<group>"; };
 		1A9988FBC3988F4096395672 /* KinasticHealthkit+Read.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KinasticHealthkit+Read.swift"; sourceTree = "<group>"; };
 		1A998949A28A050C761A5870 /* KinasticHealthkit+ParserWorkout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KinasticHealthkit+ParserWorkout.swift"; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 				1A9988FBC3988F4096395672 /* KinasticHealthkit+Read.swift */,
 				1A998C863ABEBF79101A0B8C /* KinasticHealthkit+ReadCharacteristics.swift */,
 				1A998683B8D4D14A1653D0D6 /* KinasticHealthkit+Write.swift */,
+				1A9983B4B9687FD717BB2EF0 /* KinasticHealthkit+ParserPredicate.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -163,6 +166,7 @@
 				1A9985404340718CB16F8F18 /* KinasticHealthkit+Read.swift in Sources */,
 				1A99879342047D3D0920824D /* KinasticHealthkit+ReadCharacteristics.swift in Sources */,
 				1A99832FF1B92C844690A0AB /* KinasticHealthkit+Write.swift in Sources */,
+				1A9986CE1C92E42CAACC80CA /* KinasticHealthkit+ParserPredicate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

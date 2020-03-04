@@ -11,153 +11,164 @@ import HealthKit
 
 extension KinasticHealthkit {
 
+    func getQuantityTypeIdentifierFromString(type: String?) -> HKQuantityTypeIdentifier? {
+        if type != nil {
+            switch type {
+            case "activeEnergyBurned": return .activeEnergyBurned
+            case "appleExerciseTime": if #available(iOS 9.3, *) {
+                return .appleExerciseTime
+            } else {
+                return nil
+            }
+            case "appleStandTime": if #available(iOS 13.0, *) {
+                return .appleStandTime
+            } else {
+                return nil
+            }
+            case "basalBodyTemperature": return .basalBodyTemperature
+            case "basalEnergyBurned": return .basalEnergyBurned
+            case "bloodAlcoholContent": return .bloodAlcoholContent
+            case "bloodGlucose": return .bloodGlucose
+            case "bloodPressureDiastolic": return .bloodPressureDiastolic
+            case "bloodPressureSystolic": return .bloodPressureSystolic
+            case "bodyFatPercentage": return .bodyFatPercentage
+            case "bodyMass": return .bodyMass
+            case "bodyMassIndex": return .bodyMassIndex
+            case "bodyTemperature": return .bodyTemperature
+            case "dietaryBiotin": return .dietaryBiotin
+            case "dietaryCaffeine": return .dietaryCaffeine
+            case "dietaryCalcium": return .dietaryCalcium
+            case "dietaryCarbohydrates": return .dietaryCarbohydrates
+            case "dietaryChloride": return .dietaryChloride
+            case "dietaryCholesterol": return .dietaryCholesterol
+            case "dietaryChromium": return .dietaryChromium
+            case "dietaryCopper": return .dietaryCopper
+            case "dietaryEnergyConsumed": return .dietaryEnergyConsumed
+            case "dietaryFatMonounsaturated": return .dietaryFatMonounsaturated
+            case "dietaryFatPolyunsaturated": return .dietaryFatPolyunsaturated
+            case "dietaryFatSaturated": return .dietaryFatSaturated
+            case "dietaryFatTotal": return .dietaryFatTotal
+            case "dietaryFiber": return .dietaryFiber
+            case "dietaryFolate": return .dietaryFolate
+            case "dietaryIodine": return .dietaryIodine
+            case "dietaryIron": return .dietaryIron
+            case "dietaryMagnesium": return .dietaryMagnesium
+            case "dietaryManganese": return .dietaryManganese
+            case "dietaryMolybdenum": return .dietaryMolybdenum
+            case "dietaryNiacin": return .dietaryNiacin
+            case "dietaryPantothenicAcid": return .dietaryPantothenicAcid
+            case "dietaryPhosphorus": return .dietaryPhosphorus
+            case "dietaryPotassium": return .dietaryPotassium
+            case "dietaryProtein": return .dietaryProtein
+            case "dietaryRiboflavin": return .dietaryRiboflavin
+            case "dietarySelenium": return .dietarySelenium
+            case "dietarySodium": return .dietarySodium
+            case "dietarySugar": return .dietarySugar
+            case "dietaryThiamin": return .dietaryThiamin
+            case "dietaryVitaminA": return .dietaryVitaminA
+            case "dietaryVitaminB6": return .dietaryVitaminB6
+            case "dietaryVitaminB12": return .dietaryVitaminB12
+            case "dietaryVitaminC": return .dietaryVitaminC
+            case "dietaryVitaminD": return .dietaryVitaminD
+            case "dietaryVitaminE": return .dietaryVitaminE
+            case "dietaryVitaminK": return .dietaryVitaminK
+            case "dietaryWater": return .dietaryWater
+            case "dietaryZinc": return .dietaryZinc
+            case "distanceCycling": return .distanceCycling
+            case "distanceDownhillSnowSports": if #available(iOS 11.2, *) {
+                return .distanceDownhillSnowSports
+            } else {
+                return nil
+            }
+            case "distanceSwimming": if #available(iOS 10.0, *) {
+                return .distanceSwimming
+            } else {
+                return nil
+            }
+            case "distanceWalkingRunning": return .distanceWalkingRunning
+            case "distanceWheelchair": if #available(iOS 10.0, *) {
+                return .distanceWheelchair
+            } else {
+                return nil
+            }
+            case "electrodermalActivity": return .electrodermalActivity
+            case "environmentalAudioExposure": if #available(iOS 13.0, *) {
+                return .environmentalAudioExposure
+            } else {
+                return nil
+            }
+            case "flightsClimbed": return .flightsClimbed
+            case "forcedExpiratoryVolume1": return .forcedExpiratoryVolume1
+            case "forcedVitalCapacity": return .forcedVitalCapacity
+            case "headphoneAudioExposure": if #available(iOS 13.0, *) {
+                return .headphoneAudioExposure
+            } else {
+                return nil
+            }
+            case "heartRate": return .heartRate
+            case "heartRateVariabilitySDNN": if #available(iOS 11.0, *) {
+                return .heartRateVariabilitySDNN
+            } else {
+                return nil
+            }
+            case "height": return .height
+            case "inhalerUsage": return .inhalerUsage
+            case "insulinDelivery": if #available(iOS 11.0, *) {
+                return .insulinDelivery
+            } else {
+                return nil
+            }
+            case "leanBodyMass": return .leanBodyMass
+            case "nikeFuel": return .nikeFuel
+            case "numberOfTimesFallen": return .numberOfTimesFallen
+            case "oxygenSaturation": return .oxygenSaturation
+            case "peakExpiratoryFlowRate": return .peakExpiratoryFlowRate
+            case "peripheralPerfusionIndex": return .peripheralPerfusionIndex
+            case "pushCount": if #available(iOS 10.0, *) {
+                return .pushCount
+            } else {
+                return nil
+            }
+            case "respiratoryRate": return .respiratoryRate
+            case "restingHeartRate": if #available(iOS 11.0, *) {
+                return .restingHeartRate
+            } else {
+                return nil
+            }
+            case "stepCount": return .stepCount
+            case "swimmingStrokeCount": if #available(iOS 10.0, *) {
+                return .swimmingStrokeCount
+            } else {
+                return nil
+            }
+            case "uvExposure": return .uvExposure
+            case "vo2Max": if #available(iOS 11.0, *) {
+                return .vo2Max
+            } else {
+                return nil
+            }
+            case "waistCircumference": if #available(iOS 11.0, *) {
+                return .waistCircumference
+            } else {
+                return nil
+            }
+            case "walkingHeartRateAverage": if #available(iOS 11.0, *) {
+                return .walkingHeartRateAverage
+            } else {
+                return nil
+            }
+            default: return nil
+            }
+        }
+        return nil
+    }
+
     func getQuantityTypeFromString(_ perm: String?) -> HKQuantityType? {
-        switch perm {
-        case "activeEnergyBurned": return HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)
-        case "appleExerciseTime": if #available(iOS 9.3, *) {
-            return HKQuantityType.quantityType(forIdentifier: .appleExerciseTime)
-        } else {
-            return nil
+        if let identifier = getQuantityTypeIdentifierFromString(type: perm) {
+            return HKQuantityType.quantityType(forIdentifier: identifier)
         }
-        case "appleStandTime": if #available(iOS 13.0, *) {
-            return HKQuantityType.quantityType(forIdentifier: .appleStandTime)
-        } else {
-            return nil
-        }
-        case "basalBodyTemperature": return HKQuantityType.quantityType(forIdentifier: .basalBodyTemperature)
-        case "basalEnergyBurned": return HKQuantityType.quantityType(forIdentifier: .basalEnergyBurned)
-        case "bloodAlcoholContent": return HKQuantityType.quantityType(forIdentifier: .bloodAlcoholContent)
-        case "bloodGlucose": return HKQuantityType.quantityType(forIdentifier: .bloodGlucose)
-        case "bloodPressureDiastolic": return HKQuantityType.quantityType(forIdentifier: .bloodPressureDiastolic)
-        case "bloodPressureSystolic": return HKQuantityType.quantityType(forIdentifier: .bloodPressureSystolic)
-        case "bodyFatPercentage": return HKQuantityType.quantityType(forIdentifier: .bodyFatPercentage)
-        case "bodyMass": return HKQuantityType.quantityType(forIdentifier: .bodyMass)
-        case "bodyMassIndex": return HKQuantityType.quantityType(forIdentifier: .bodyMassIndex)
-        case "bodyTemperature": return HKQuantityType.quantityType(forIdentifier: .bodyTemperature)
-        case "dietaryBiotin": return HKQuantityType.quantityType(forIdentifier: .dietaryBiotin)
-        case "dietaryCaffeine": return HKQuantityType.quantityType(forIdentifier: .dietaryCaffeine)
-        case "dietaryCalcium": return HKQuantityType.quantityType(forIdentifier: .dietaryCalcium)
-        case "dietaryCarbohydrates": return HKQuantityType.quantityType(forIdentifier: .dietaryCarbohydrates)
-        case "dietaryChloride": return HKQuantityType.quantityType(forIdentifier: .dietaryChloride)
-        case "dietaryCholesterol": return HKQuantityType.quantityType(forIdentifier: .dietaryCholesterol)
-        case "dietaryChromium": return HKQuantityType.quantityType(forIdentifier: .dietaryChromium)
-        case "dietaryCopper": return HKQuantityType.quantityType(forIdentifier: .dietaryCopper)
-        case "dietaryEnergyConsumed": return HKQuantityType.quantityType(forIdentifier: .dietaryEnergyConsumed)
-        case "dietaryFatMonounsaturated": return HKQuantityType.quantityType(forIdentifier: .dietaryFatMonounsaturated)
-        case "dietaryFatPolyunsaturated": return HKQuantityType.quantityType(forIdentifier: .dietaryFatPolyunsaturated)
-        case "dietaryFatSaturated": return HKQuantityType.quantityType(forIdentifier: .dietaryFatSaturated)
-        case "dietaryFatTotal": return HKQuantityType.quantityType(forIdentifier: .dietaryFatTotal)
-        case "dietaryFiber": return HKQuantityType.quantityType(forIdentifier: .dietaryFiber)
-        case "dietaryFolate": return HKQuantityType.quantityType(forIdentifier: .dietaryFolate)
-        case "dietaryIodine": return HKQuantityType.quantityType(forIdentifier: .dietaryIodine)
-        case "dietaryIron": return HKQuantityType.quantityType(forIdentifier: .dietaryIron)
-        case "dietaryMagnesium": return HKQuantityType.quantityType(forIdentifier: .dietaryMagnesium)
-        case "dietaryManganese": return HKQuantityType.quantityType(forIdentifier: .dietaryManganese)
-        case "dietaryMolybdenum": return HKQuantityType.quantityType(forIdentifier: .dietaryMolybdenum)
-        case "dietaryNiacin": return HKQuantityType.quantityType(forIdentifier: .dietaryNiacin)
-        case "dietaryPantothenicAcid": return HKQuantityType.quantityType(forIdentifier: .dietaryPantothenicAcid)
-        case "dietaryPhosphorus": return HKQuantityType.quantityType(forIdentifier: .dietaryPhosphorus)
-        case "dietaryPotassium": return HKQuantityType.quantityType(forIdentifier: .dietaryPotassium)
-        case "dietaryProtein": return HKQuantityType.quantityType(forIdentifier: .dietaryProtein)
-        case "dietaryRiboflavin": return HKQuantityType.quantityType(forIdentifier: .dietaryRiboflavin)
-        case "dietarySelenium": return HKQuantityType.quantityType(forIdentifier: .dietarySelenium)
-        case "dietarySodium": return HKQuantityType.quantityType(forIdentifier: .dietarySodium)
-        case "dietarySugar": return HKQuantityType.quantityType(forIdentifier: .dietarySugar)
-        case "dietaryThiamin": return HKQuantityType.quantityType(forIdentifier: .dietaryThiamin)
-        case "dietaryVitaminA": return HKQuantityType.quantityType(forIdentifier: .dietaryVitaminA)
-        case "dietaryVitaminB6": return HKQuantityType.quantityType(forIdentifier: .dietaryVitaminB6)
-        case "dietaryVitaminB12": return HKQuantityType.quantityType(forIdentifier: .dietaryVitaminB12)
-        case "dietaryVitaminC": return HKQuantityType.quantityType(forIdentifier: .dietaryVitaminC)
-        case "dietaryVitaminD": return HKQuantityType.quantityType(forIdentifier: .dietaryVitaminD)
-        case "dietaryVitaminE": return HKQuantityType.quantityType(forIdentifier: .dietaryVitaminE)
-        case "dietaryVitaminK": return HKQuantityType.quantityType(forIdentifier: .dietaryVitaminK)
-        case "dietaryWater": return HKQuantityType.quantityType(forIdentifier: .dietaryWater)
-        case "dietaryZinc": return HKQuantityType.quantityType(forIdentifier: .dietaryZinc)
-        case "distanceCycling": return HKQuantityType.quantityType(forIdentifier: .distanceCycling)
-        case "distanceDownhillSnowSports": if #available(iOS 11.2, *) {
-            return HKQuantityType.quantityType(forIdentifier: .distanceDownhillSnowSports)
-        } else {
-            return nil
-        }
-        case "distanceSwimming": if #available(iOS 10.0, *) {
-            return HKQuantityType.quantityType(forIdentifier: .distanceSwimming)
-        } else {
-            return nil
-        }
-        case "distanceWalkingRunning": return HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)
-        case "distanceWheelchair": if #available(iOS 10.0, *) {
-            return HKQuantityType.quantityType(forIdentifier: .distanceWheelchair)
-        } else {
-            return nil
-        }
-        case "electrodermalActivity": return HKQuantityType.quantityType(forIdentifier: .electrodermalActivity)
-        case "environmentalAudioExposure": if #available(iOS 13.0, *) {
-            return HKQuantityType.quantityType(forIdentifier: .environmentalAudioExposure)
-        } else {
-            return nil
-        }
-        case "flightsClimbed": return HKQuantityType.quantityType(forIdentifier: .flightsClimbed)
-        case "forcedExpiratoryVolume1": return HKQuantityType.quantityType(forIdentifier: .forcedExpiratoryVolume1)
-        case "forcedVitalCapacity": return HKQuantityType.quantityType(forIdentifier: .forcedVitalCapacity)
-        case "headphoneAudioExposure": if #available(iOS 13.0, *) {
-            return HKQuantityType.quantityType(forIdentifier: .headphoneAudioExposure)
-        } else {
-            return nil
-        }
-        case "heartRate": return HKQuantityType.quantityType(forIdentifier: .heartRate)
-        case "heartRateVariabilitySDNN": if #available(iOS 11.0, *) {
-            return HKQuantityType.quantityType(forIdentifier: .heartRateVariabilitySDNN)
-        } else {
-            return nil
-        }
-        case "height": return HKQuantityType.quantityType(forIdentifier: .height)
-        case "inhalerUsage": return HKQuantityType.quantityType(forIdentifier: .inhalerUsage)
-        case "insulinDelivery": if #available(iOS 11.0, *) {
-            return HKQuantityType.quantityType(forIdentifier: .insulinDelivery)
-        } else {
-            return nil
-        }
-        case "leanBodyMass": return HKQuantityType.quantityType(forIdentifier: .leanBodyMass)
-        case "nikeFuel": return HKQuantityType.quantityType(forIdentifier: .nikeFuel)
-        case "numberOfTimesFallen": return HKQuantityType.quantityType(forIdentifier: .numberOfTimesFallen)
-        case "oxygenSaturation": return HKQuantityType.quantityType(forIdentifier: .oxygenSaturation)
-        case "peakExpiratoryFlowRate": return HKQuantityType.quantityType(forIdentifier: .peakExpiratoryFlowRate)
-        case "peripheralPerfusionIndex": return HKQuantityType.quantityType(forIdentifier: .peripheralPerfusionIndex)
-        case "pushCount": if #available(iOS 10.0, *) {
-            return HKQuantityType.quantityType(forIdentifier: .pushCount)
-        } else {
-            return nil
-        }
-        case "respiratoryRate": return HKQuantityType.quantityType(forIdentifier: .respiratoryRate)
-        case "restingHeartRate": if #available(iOS 11.0, *) {
-            return HKQuantityType.quantityType(forIdentifier: .restingHeartRate)
-        } else {
-            return nil
-        }
-        case "stepCount": return HKQuantityType.quantityType(forIdentifier: .stepCount)
-        case "swimmingStrokeCount": if #available(iOS 10.0, *) {
-            return HKQuantityType.quantityType(forIdentifier: .swimmingStrokeCount)
-        } else {
-            return nil
-        }
-        case "uvExposure": return HKQuantityType.quantityType(forIdentifier: .uvExposure)
-        case "vo2Max": if #available(iOS 11.0, *) {
-            return HKQuantityType.quantityType(forIdentifier: .vo2Max)
-        } else {
-            return nil
-        }
-        case "waistCircumference": if #available(iOS 11.0, *) {
-            return HKQuantityType.quantityType(forIdentifier: .waistCircumference)
-        } else {
-            return nil
-        }
-        case "walkingHeartRateAverage": if #available(iOS 11.0, *) {
-            return HKQuantityType.quantityType(forIdentifier: .walkingHeartRateAverage)
-        } else {
-            return nil
-        }
-        default: return nil
-        }
+        
+        return nil
     }
 
     func getCategoryTypeFromString(input: String?) -> HKCategoryType? {
@@ -460,11 +471,22 @@ extension KinasticHealthkit {
         if let correlation = getCorrelationTypeFromString(input: perm) {
             return correlation
         }
+        
+        if #available(iOS 10.0, *) {
+            if let document = getDocumentTypeFromString(input: perm) {
+                return document
+            }
+        }
 
         switch perm {
         case "workout": return HKObjectType.workoutType()
-        case "CDA": if #available(iOS 10.0, *) {
-            return HKObjectType.documentType(forIdentifier: .CDA)
+        case "workoutRoute": if #available(iOS 11.0, *) {
+            return HKSeriesType.workoutRoute()
+        } else {
+            return nil
+        }
+        case "heartbeat": if #available(iOS 13.0, *) {
+            return HKSeriesType.heartbeat()
         } else {
             return nil
         }
@@ -475,6 +497,14 @@ extension KinasticHealthkit {
         }
         default: return nil
         }
+    }
+    
+    @available(iOS 10.0, *)
+    func getDocumentTypeFromString(input: String?) -> HKDocumentType? {
+        if input == "CDA" {
+            return HKObjectType.documentType(forIdentifier: .CDA)
+        }
+        return nil
     }
 
 
@@ -518,88 +548,104 @@ extension KinasticHealthkit {
     }
 
     func getUnitFromString(input: String?) -> HKUnit? {
-        switch input {
-        case "atm": return .atmosphere()
-        case "cmAq": return .centimeterOfWater()
-        case "count": return .count()
-        case "cup_imp": return .cupImperial()
-        case "cup_us": return .cupUS()
-        case "d": return .day()
-        case "dBASPL": if #available(iOS 13.0, *) {
-            return .decibelAWeightedSoundPressureLevel()
-        } else {
-            return nil
+        if let data = input {
+            return HKUnit(from: data)
         }
-        case "dBHL": if #available(iOS 13.0, *) {
-            return .decibelHearingLevel()
-        } else {
-            return nil
-        }
-        case "degC": return .degreeCelsius()
-        case "degF": return .degreeFahrenheit()
-        case "fl_oz_imp": return .fluidOunceImperial()
-        case "fl_oz_us": return .fluidOunceUS()
-        case "ft": return .foot()
-        case "g": return .gram()
-        case "kg": return .gramUnit(with: .kilo)
-        case "mg": return .gramUnit(with: .milli)
-        case "Hz": if #available(iOS 13.0, *) {
-            return .hertz()
-        } else {
-            return nil
-        }
-        case "kHz": if #available(iOS 13.0, *) {
-            return .hertzUnit(with: .kilo)
-        } else {
-            return nil
-        }
-        case "hr": return .hour()
-        case "in": return .inch()
-        case "IU": if #available(iOS 11.0, *) {
-            return .internationalUnit()
-        } else {
-            return nil
-        }
-        case "J": return .joule()
-        case "kJ": return .jouleUnit(with: .kilo)
-        case "K": return .kelvin()
-        case "kcal": return .kilocalorie()
-        case "L": return .liter()
-        case "mL": return .literUnit(with: .milli)
-        case "dL": return .literUnit(with: .deci)
-        case "m": return .meter()
-        case "km": return .meterUnit(with: .kilo)
-        case "cm": return .meterUnit(with: .centi)
-        case "mm": return .meterUnit(with: .milli)
-        case "mi": return .mile()
-        case "mmHg": return .millimeterOfMercury()
-        case "min": return .minute()
-        case "oz": return .ounce()
-        case "Pa": return .pascal()
-        case "kPa": return .pascalUnit(with: .kilo)
-        case "hPa": return .pascalUnit(with: .hecto)
-        case "%": return .percent()
-        case "pt_imp": return .pintImperial()
-        case "pt_us": return .pintUS()
-        case "lb": return .pound()
-        case "s": return .second()
-        case "ms": return .secondUnit(with: .milli)
-        case "S": return .siemen()
-        case "cal": if #available(iOS 11.0, *) {
-            return .smallCalorie()
-        } else {
-            return .calorie()
-        }
-        case "st": return .stone()
-        case "yd": return .yard()
-        case "mmol/L": return HKUnit.moleUnit(with: .milli, molarMass: HKUnitMolarMassBloodGlucose).unitDivided(by: .liter())
-        case "mg/dL": return HKUnit(from: "mg/dL")
-        default: return nil
+        return nil
+//        switch input {
+//        case "atm": return .atmosphere()
+//        case "cmAq": return .centimeterOfWater()
+//        case "count": return .count()
+//        case "cup_imp": return .cupImperial()
+//        case "cup_us": return .cupUS()
+//        case "d": return .day()
+//        case "dBASPL": if #available(iOS 13.0, *) {
+//            return .decibelAWeightedSoundPressureLevel()
+//        } else {
+//            return nil
+//        }
+//        case "dBHL": if #available(iOS 13.0, *) {
+//            return .decibelHearingLevel()
+//        } else {
+//            return nil
+//        }
+//        case "degC": return .degreeCelsius()
+//        case "degF": return .degreeFahrenheit()
+//        case "fl_oz_imp": return .fluidOunceImperial()
+//        case "fl_oz_us": return .fluidOunceUS()
+//        case "ft": return .foot()
+//        case "g": return .gram()
+//        case "kg": return .gramUnit(with: .kilo)
+//        case "mg": return .gramUnit(with: .milli)
+//        case "Hz": if #available(iOS 13.0, *) {
+//            return .hertz()
+//        } else {
+//            return nil
+//        }
+//        case "kHz": if #available(iOS 13.0, *) {
+//            return .hertzUnit(with: .kilo)
+//        } else {
+//            return nil
+//        }
+//        case "hr": return .hour()
+//        case "in": return .inch()
+//        case "IU": if #available(iOS 11.0, *) {
+//            return .internationalUnit()
+//        } else {
+//            return nil
+//        }
+//        case "J": return .joule()
+//        case "kJ": return .jouleUnit(with: .kilo)
+//        case "K": return .kelvin()
+//        case "kcal": return .kilocalorie()
+//        case "L": return .liter()
+//        case "mL": return .literUnit(with: .milli)
+//        case "dL": return .literUnit(with: .deci)
+//        case "m": return .meter()
+//        case "km": return .meterUnit(with: .kilo)
+//        case "cm": return .meterUnit(with: .centi)
+//        case "mm": return .meterUnit(with: .milli)
+//        case "mi": return .mile()
+//        case "mmHg": return .millimeterOfMercury()
+//        case "min": return .minute()
+//        case "oz": return .ounce()
+//        case "Pa": return .pascal()
+//        case "kPa": return .pascalUnit(with: .kilo)
+//        case "hPa": return .pascalUnit(with: .hecto)
+//        case "%": return .percent()
+//        case "pt_imp": return .pintImperial()
+//        case "pt_us": return .pintUS()
+//        case "lb": return .pound()
+//        case "s": return .second()
+//        case "ms": return .secondUnit(with: .milli)
+//        case "S": return .siemen()
+//        case "cal": if #available(iOS 11.0, *) {
+//            return .smallCalorie()
+//        } else {
+//            return .calorie()
+//        }
+//        case "st": return .stone()
+//        case "yd": return .yard()
+//        case "mmol/L": return HKUnit.moleUnit(with: .milli, molarMass: HKUnitMolarMassBloodGlucose).unitDivided(by: .liter())
+//        case "mg/dL": return HKUnit(from: "mg/dL")
+//        default: return nil
+//        }
+    }
+
+    func getFrequencyFromString(_ frequency: String?) -> HKUpdateFrequency? {
+        switch frequency {
+        case "daily": return .daily
+        case "hourly": return .hourly
+        case "immediate": return .immediate
+        case "weekly": return .weekly
+        default: return .immediate
         }
     }
 
     func parsePermissions(_ permissions: [String]) -> Set<HKObjectType> {
-        Set(permissions.filter { !readPermissionBlacklist.contains($0) }.map {
+        Set(permissions.filter {
+            !readPermissionBlacklist.contains($0)
+        }.map {
             getObjectTypeFromString($0)
         }.compactMap {
             $0
@@ -607,7 +653,9 @@ extension KinasticHealthkit {
     }
 
     func parseWritePermissions(permissions: [String]) -> Set<HKSampleType> {
-        Set(permissions.filter { !writePermissionBlacklist.contains($0) }.map {
+        Set(permissions.filter {
+            !writePermissionBlacklist.contains($0)
+        }.map {
             getSampleTypeFromString(perm: $0)
         }.compactMap {
             $0

@@ -9,7 +9,7 @@ import HealthKit
 extension KinasticHealthkit {
 
     func parseSample(_ sample: [String: Any]) -> HKSample? {
-        if let type = sample["sampleType"] as? String {
+        if let type = sample["entityType"] as? String {
             switch type {
             case "quantity": return parseSampleQuantity(sample: sample)
             case "category": return parseSampleCategory(sample: sample)
@@ -21,20 +21,13 @@ extension KinasticHealthkit {
         return nil
     }
 
-    func parseUnit(sample: [String: Any]) -> HKUnit? {
+    func parseUnit(sample: [String: Any?]) -> HKUnit? {
         guard let unitString = sample["unit"] as? String else {
             print("Missing 'unit'")
             return nil
         }
 
-        let unitComponents = unitString.components(separatedBy: "/")
-
-        if let unit = getUnitFromString(input: unitComponents[0]) {
-            if unitComponents.count > 1 {
-                if let secondUnit = getUnitFromString(input: unitComponents[1]) {
-                    return unit.unitDivided(by: secondUnit)
-                }
-            }
+        if let unit = getUnitFromString(input: unitString) {
             return unit
         }
         
@@ -50,27 +43,29 @@ extension KinasticHealthkit {
     }
 
 
-    func parseValue(sample: [String: Any]) -> Double? {
-        if let valueString = sample["value"] as? String {
+    func parseValue(sample: [String: Any?]) -> Double? {
+        if let value = sample["value"] as? Double {
+          return value
+        } else if let valueString = sample["value"] as? String {
             return Double(valueString)
         }
         print("Missing 'value'")
         return nil
     }
 
-    func parseQuantity(input: [String: Any]) -> HKQuantity? {
+    func parseQuantity(input: [String: Any?], defaultUnit: HKUnit? = nil) -> HKQuantity? {
         guard let value = parseValue(sample: input) else {
             return nil
         }
 
-        guard let unit = parseUnit(sample: input) else {
+        guard let unit = (parseUnit(sample: input) ?? defaultUnit) else {
             return nil
         }
 
         return HKQuantity(unit: unit, doubleValue: value)
     }
 
-    func parseStartDate(sample: [String: Any]) -> Date? {
+    func parseStartDate(sample: [String: Any?]) -> Date? {
         if let startDate = parseDate(input: sample["startDate"], withDefault: Date()) {
             return startDate
         }
@@ -87,6 +82,10 @@ extension KinasticHealthkit {
             return parseISO8601DateFromString(dateString, withDefault: withDefault)
         }
         return nil
+    }
+
+    func parseDevices(input: [Any]) -> Set<HKDevice> {
+        return Set(input.map { parseDevice($0) }.compactMap { $0 })
     }
 
     func parseDevice(_ input: Any?) -> HKDevice? {

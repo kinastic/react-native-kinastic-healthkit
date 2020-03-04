@@ -22,7 +22,6 @@ class KinasticHealthkit: RCTEventEmitter {
         "irregularHeartRhythmEvent",
         "walkingHeartRateAverage",
         "appleStandTime",
-        "irregularHeartRhytmEvent",
         "appleStandHour",
         "food",
         "nikeFuel",
