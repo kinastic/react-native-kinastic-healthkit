@@ -1,7 +1,7 @@
-import HKSample from './HKSample';
+import { HKSample } from './HKSample';
 import { HKQuantityType } from './HKQuantityType';
-import HKMetadata from './HKMetadata';
-export default class HKQuantitySample extends HKSample {
+import { HKMetadata } from './HKMetadata';
+export declare class HKQuantitySample extends HKSample {
     value: number;
     unit?: string;
     constructor(json?: any);

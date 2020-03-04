@@ -6,7 +6,7 @@ export interface HKCorrelationQuerySamplePredicates {
   [key: string]: NSPredicate;
 }
 
-export default class HKCorrelationQuery extends HKQuery<HKCorrelationType> {
+export class HKCorrelationQuery extends HKQuery<HKCorrelationType> {
   samplePredicates?: HKCorrelationQuerySamplePredicates;
 
   constructor(

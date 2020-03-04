@@ -2,7 +2,7 @@ import HKQuery from './HKQuery';
 import { HKSampleType } from './HKSampleType';
 import NSPredicate from './NSPredicate';
 
-export default class HKAnchoredObjectQuery extends HKQuery<HKSampleType> {
+export class HKAnchoredObjectQuery extends HKQuery<HKSampleType> {
   limit: number = 0;
   anchor?: number;
 

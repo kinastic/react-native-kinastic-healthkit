@@ -5,7 +5,7 @@ import HKMetadata from './HKMetadata';
 import { HKMetadataKey } from './HKMetadataKey';
 import {EntityType} from "./EntityType";
 
-export default class HKCorrelation extends HKSample {
+export class HKCorrelation extends HKSample {
   objects: HKSample[] = [];
 
   constructor(json?: any) {

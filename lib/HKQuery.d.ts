@@ -1,13 +1,13 @@
 import { HKObjectType } from './HKObjectType';
-import NSPredicate from './NSPredicate';
+import { NSPredicate } from './NSPredicate';
 import { NSComparisonPredicateOperator } from './NSComparisonPredicateOperator {';
 import { HKFHIRResourceType } from './HKFHIRResourceType';
-import HKSource from './HKSource';
-import HKDevice from './HKDevice';
-import HKSourceRevision from './HKSourceRevision';
+import { HKSource } from './HKSource';
+import { HKDevice } from './HKDevice';
+import { HKSourceRevision } from './HKSourceRevision';
 import { HKQueryOptions } from './HKQueryOptions';
 import { HKWorkoutActivityType } from './HKWorkoutActivityType';
-export default class HKQuery<T> {
+export declare class HKQuery<T> {
     objectType?: HKObjectType;
     sampleType?: T;
     predicate?: NSPredicate;

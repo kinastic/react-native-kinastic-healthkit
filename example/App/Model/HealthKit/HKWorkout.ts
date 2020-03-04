@@ -7,7 +7,7 @@ import { EntityType } from './EntityType';
 import HKSampleBuilder from './HKSampleBuilder';
 import HKWorkoutRoute from './HKWorkoutRoute';
 
-export default class HKWorkout extends HKSample {
+export class HKWorkout extends HKSample {
   activityType: HKWorkoutActivityType = HKWorkoutActivityType.americanFootball;
   workoutEvents: HKWorkoutEvent[] = [];
   totalEnergyBurned?: number;

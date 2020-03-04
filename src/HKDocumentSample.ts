@@ -1,7 +1,7 @@
-import HKSample from './HKSample';
+import { HKSample } from './HKSample';
 import { EntityType } from './EntityType';
 
-export default class HKDocumentSample extends HKSample {
+export class HKDocumentSample extends HKSample {
   constructor(json?: any) {
     super(json);
   }

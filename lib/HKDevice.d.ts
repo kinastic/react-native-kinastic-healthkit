@@ -1,4 +1,4 @@
-export default class HKDevice {
+export declare class HKDevice {
     name?: string;
     manufacturer?: string;
     model?: string;

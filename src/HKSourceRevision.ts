@@ -1,6 +1,6 @@
-import HKSource from './HKSource';
+import { HKSource } from './HKSource';
 
-export default class HKSourceRevision {
+export class HKSourceRevision {
   source: HKSource = new HKSource();
   version?: string;
   productType?: string;

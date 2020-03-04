@@ -1,7 +1,7 @@
 import HKSample from './HKSample';
 import { EntityType } from './EntityType';
 
-export default class HKCategorySample extends HKSample {
+export class HKCategorySample extends HKSample {
   value: number = 0;
 
   constructor(json?: any) {

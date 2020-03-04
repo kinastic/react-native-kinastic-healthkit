@@ -1,4 +1,4 @@
-export default class NSSortDescriptor {
+export class NSSortDescriptor {
   key: string = 'startDate';
   ascending: boolean = true;
 

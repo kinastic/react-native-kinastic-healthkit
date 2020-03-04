@@ -1,5 +1,5 @@
-import HKWorkoutEventType from './HKWorkoutEventType';
-import HKMetadata from './HKMetadata';
+import { HKWorkoutEventType } from './HKWorkoutEventType';
+import { HKMetadata } from './HKMetadata';
 
 export class HKWorkoutEvent {
   type: HKWorkoutEventType = HKWorkoutEventType.pause;

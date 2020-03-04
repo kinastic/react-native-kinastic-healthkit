@@ -1,6 +1,6 @@
 import HKSample from './HKSample';
 
-export default class HKSeriesSample extends HKSample {
+export class HKSeriesSample extends HKSample {
   count: number = 0;
 
   constructor(json?: any) {

@@ -1,17 +1,17 @@
-import HKSample from './HKSample';
+import { HKSample } from './HKSample';
 import { NativeModules } from 'react-native';
-import HKWorkout from './HKWorkout';
-import HKQuantitySample from './HKQuantitySample';
-import HKCorrelation from './HKCorrelation';
-import HKCategorySample from './HKCategorySample';
-import HKSampleQuery from './HKSampleQuery';
-import HKSampleBuilder from './HKSampleBuilder';
-import HKDocumentSample from './HKDocumentSample';
-import CLLocation from './CLLocation';
-import HKCorrelationQuery from './HKCorrelationQuery';
-import HKDocumentQuery from './HKDocumentQuery';
-import HKAnchoredObjectQuery from './HKAnchoredObjectQuery';
-import HKAnchoredObjectQueryResult from './HKAnchoredObjectQueryResult';
+import { HKWorkout } from './HKWorkout';
+import { HKQuantitySample } from './HKQuantitySample';
+import { HKCorrelation } from './HKCorrelation';
+import { HKCategorySample } from './HKCategorySample';
+import { HKSampleQuery } from './HKSampleQuery';
+import { HKSampleBuilder } from './HKSampleBuilder';
+import { HKDocumentSample } from './HKDocumentSample';
+import { CLLocation } from './CLLocation';
+import { HKCorrelationQuery } from './HKCorrelationQuery';
+import { HKDocumentQuery } from './HKDocumentQuery';
+import { HKAnchoredObjectQuery } from './HKAnchoredObjectQuery';
+import { HKAnchoredObjectQueryResult } from './HKAnchoredObjectQueryResult';
 
 const { KinasticHealthkit: RNHealthkit } = NativeModules;
 

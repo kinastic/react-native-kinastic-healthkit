@@ -1,4 +1,4 @@
-declare enum HKWorkoutEventType {
+export declare enum HKWorkoutEventType {
     pause = "pause",
     resume = "resume",
     lap = "lap",
@@ -8,4 +8,3 @@ declare enum HKWorkoutEventType {
     segment = "segment",
     pauseOrResumeRequest = "pauseOrResumeRequest"
 }
-export default HKWorkoutEventType;

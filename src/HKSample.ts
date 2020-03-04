@@ -1,8 +1,8 @@
-import {HKSampleType} from './HKSampleType';
-import HKObject from './HKObject';
-import {EntityType} from './EntityType';
+import { HKSampleType } from './HKSampleType';
+import { HKObject } from './HKObject';
+import { EntityType } from './EntityType';
 
-export default class HKSample extends HKObject {
+export class HKSample extends HKObject {
   sampleType?: HKSampleType;
 
   // not from healthkit. Used to determine the right class.

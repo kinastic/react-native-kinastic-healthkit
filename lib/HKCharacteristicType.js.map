@@ -1,0 +1,1 @@
+{"version":3,"file":"HKCharacteristicType.js","sourceRoot":"","sources":["../src/HKCharacteristicType.ts"],"names":[],"mappings":"AAAA,MAAM,CAAN,IAAY,oBAMX;AAND,WAAY,oBAAoB;IAC9B,mDAA2B,CAAA;IAC3B,uDAA+B,CAAA;IAC/B,+CAAuB,CAAA;IACvB,mEAA2C,CAAA;IAC3C,uDAA+B,CAAA;AACjC,CAAC,EANW,oBAAoB,KAApB,oBAAoB,QAM/B;AAED,MAAM,CAAC,MAAM,qBAAqB,GAAa,MAAM,CAAC,IAAI,CAAC,oBAAoB,CAAC,CAAC"}

@@ -1,6 +1,6 @@
 import { HKQuantityType } from './HKQuantityType';
 
-export default class HKUnit {
+export class HKUnit {
   static determineUnit(type: HKQuantityType): string | undefined {
     switch (type) {
       case 'appleExerciseTime':

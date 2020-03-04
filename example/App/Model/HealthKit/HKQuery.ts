@@ -9,7 +9,7 @@ import HKSourceRevision from './HKSourceRevision';
 import { HKQueryOptions } from './HKQueryOptions';
 import { HKWorkoutActivityType } from './HKWorkoutActivityType';
 
-export default class HKQuery<T> {
+export class HKQuery<T> {
   objectType?: HKObjectType;
   sampleType?: T;
   predicate?: NSPredicate;

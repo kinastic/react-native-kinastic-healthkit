@@ -1,7 +1,7 @@
-import HKSample from './HKSample';
 import { HKCorrelationType } from './HKCorrelationType';
-import HKMetadata from './HKMetadata';
-export default class HKCorrelation extends HKSample {
+import { HKMetadata } from './HKMetadata';
+import { HKSample } from './HKSample';
+export declare class HKCorrelation extends HKSample {
     objects: HKSample[];
     constructor(json?: any);
     toJS(): any;

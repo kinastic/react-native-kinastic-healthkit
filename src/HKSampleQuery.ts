@@ -1,9 +1,9 @@
-import HKQuery from './HKQuery';
-import NSSortDescriptor from './NSSortDescriptor';
+import { HKQuery } from './HKQuery';
+import { NSSortDescriptor } from './NSSortDescriptor';
 import {HKSampleType} from "./HKSampleType";
-import NSPredicate from "./NSPredicate";
+import { NSPredicate } from "./NSPredicate";
 
-export default class HKSampleQuery extends HKQuery<HKSampleType> {
+export class HKSampleQuery extends HKQuery<HKSampleType> {
   limit: number = 0;
   sort?: NSSortDescriptor[];
 

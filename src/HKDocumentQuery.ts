@@ -1,9 +1,9 @@
-import HKQuery from './HKQuery';
+import { HKQuery } from './HKQuery';
 import { HKDocumentType } from './HKDocumentType';
-import NSSortDescriptor from './NSSortDescriptor';
-import NSPredicate from './NSPredicate';
+import { NSSortDescriptor } from './NSSortDescriptor';
+import { NSPredicate } from './NSPredicate';
 
-export default class HKDocumentQuery extends HKQuery<HKDocumentType> {
+export class HKDocumentQuery extends HKQuery<HKDocumentType> {
   limit: number = 0;
   sort?: NSSortDescriptor[];
   includeDocumentData: boolean = false;

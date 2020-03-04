@@ -1,8 +1,8 @@
-import HKSample from './HKSample';
-import HKDeletedObject from './HKDeletedObject';
-import HKSampleBuilder from './HKSampleBuilder';
+import { HKSample } from './HKSample';
+import { HKDeletedObject } from './HKDeletedObject';
+import { HKSampleBuilder } from './HKSampleBuilder';
 
-export default class HKAnchoredObjectQueryResult {
+export class HKAnchoredObjectQueryResult {
   samples: HKSample[] = [];
   deleted: HKDeletedObject[] = [];
   anchor?: any;

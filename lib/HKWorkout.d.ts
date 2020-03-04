@@ -1,9 +1,9 @@
 import { HKWorkoutActivityType } from './HKWorkoutActivityType';
-import HKSample from './HKSample';
+import { HKSample } from './HKSample';
 import { HKWorkoutEvent } from './HKWorkoutEvent';
-import HKMetadata from './HKMetadata';
-import HKWorkoutRoute from './HKWorkoutRoute';
-export default class HKWorkout extends HKSample {
+import { HKMetadata } from './HKMetadata';
+import { HKWorkoutRoute } from './HKWorkoutRoute';
+export declare class HKWorkout extends HKSample {
     activityType: HKWorkoutActivityType;
     workoutEvents: HKWorkoutEvent[];
     totalEnergyBurned?: number;

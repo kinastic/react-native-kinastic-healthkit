@@ -1,4 +1,4 @@
-export default class HKSource {
+export class HKSource {
   name: string = '';
   bundleIdentifier: string = '';
 

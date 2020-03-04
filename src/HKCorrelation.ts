@@ -1,11 +1,11 @@
-import HKSample from './HKSample';
-import HKSampleBuilder from './HKSampleBuilder';
 import { HKCorrelationType } from './HKCorrelationType';
-import HKMetadata from './HKMetadata';
+import { HKMetadata } from './HKMetadata';
 import { HKMetadataKey } from './HKMetadataKey';
-import {EntityType} from "./EntityType";
+import { EntityType } from './EntityType';
+import { HKSample } from './HKSample';
+import { HKSampleBuilder } from './HKSampleBuilder';
 
-export default class HKCorrelation extends HKSample {
+export class HKCorrelation extends HKSample {
   objects: HKSample[] = [];
 
   constructor(json?: any) {

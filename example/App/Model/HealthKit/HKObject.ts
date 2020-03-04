@@ -3,7 +3,7 @@ import HKSource from "./HKSource";
 import HKSourceRevision from "./HKSourceRevision";
 import HKDevice from "./HKDevice";
 
-export default class HKObject {
+export class HKObject {
     uuid: string = '';
 
     /**

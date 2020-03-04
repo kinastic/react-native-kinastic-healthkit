@@ -1,4 +1,4 @@
-enum HKWorkoutEventType {
+export enum HKWorkoutEventType {
   pause = 'pause',
   resume = 'resume',
 
@@ -20,5 +20,3 @@ enum HKWorkoutEventType {
   // iOS > 11.0
   pauseOrResumeRequest = 'pauseOrResumeRequest',
 }
-
-export default HKWorkoutEventType;

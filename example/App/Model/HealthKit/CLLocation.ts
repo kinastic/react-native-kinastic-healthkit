@@ -1,5 +1,5 @@
 
-export default class CLLocation {
+export class CLLocation {
     alt?: number;
     hAcc?: number = -1;
     vAcc?: number = -1;

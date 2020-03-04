@@ -1,4 +1,4 @@
-export default class NSSortDescriptor {
+export declare class NSSortDescriptor {
     key: string;
     ascending: boolean;
     constructor(json?: any);

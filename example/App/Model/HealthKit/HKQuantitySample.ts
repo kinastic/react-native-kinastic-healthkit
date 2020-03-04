@@ -4,7 +4,7 @@ import HKMetadata from './HKMetadata';
 import { EntityType } from './EntityType';
 import { HKMetadataKey } from './HKMetadataKey';
 
-export default class HKQuantitySample extends HKSample {
+export class HKQuantitySample extends HKSample {
   value: number = 0;
   unit?: string;
 

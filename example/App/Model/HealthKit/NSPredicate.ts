@@ -8,7 +8,7 @@ import { HKQueryOptions } from './HKQueryOptions';
 import { HKFHIRResourceType } from './HKFHIRResourceType';
 import { HKWorkoutActivityType } from './HKWorkoutActivityType';
 
-export default class NSPredicate {
+export class NSPredicate {
   type: NSPredicateType = NSPredicateType.quantitySamples;
   operator?: NSComparisonPredicateOperator;
   value?: number;

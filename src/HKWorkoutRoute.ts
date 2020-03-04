@@ -1,8 +1,8 @@
-import CLLocation from './CLLocation';
-import HKMetadata from './HKMetadata';
-import HKSeriesSample from './HKSeriesSample';
+import { CLLocation } from './CLLocation';
+import { HKMetadata } from './HKMetadata';
+import { HKSeriesSample } from './HKSeriesSample';
 
-export default class HKWorkoutRoute extends HKSeriesSample {
+export class HKWorkoutRoute extends HKSeriesSample {
   locations: CLLocation[] = [];
   metadata?: HKMetadata;
 

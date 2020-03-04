@@ -1,4 +1,4 @@
 import { HKQuantityType } from './HKQuantityType';
-export default class HKUnit {
+export declare class HKUnit {
     static determineUnit(type: HKQuantityType): string | undefined;
 }

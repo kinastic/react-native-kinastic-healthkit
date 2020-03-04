@@ -1,5 +1,3 @@
-interface HKMetadata {
+export interface HKMetadata {
   [key: string]: any;
 }
-
-export default HKMetadata;

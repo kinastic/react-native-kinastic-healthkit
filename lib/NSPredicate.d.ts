@@ -1,13 +1,13 @@
 import { NSPredicateType } from './NSPredicateType';
 import { NSComparisonPredicateOperator } from './NSComparisonPredicateOperator {';
-import HKSource from './HKSource';
-import HKWorkout from './HKWorkout';
-import HKDevice from './HKDevice';
-import HKSourceRevision from './HKSourceRevision';
+import { HKSource } from './HKSource';
+import { HKWorkout } from './HKWorkout';
+import { HKDevice } from './HKDevice';
+import { HKSourceRevision } from './HKSourceRevision';
 import { HKQueryOptions } from './HKQueryOptions';
 import { HKFHIRResourceType } from './HKFHIRResourceType';
 import { HKWorkoutActivityType } from './HKWorkoutActivityType';
-export default class NSPredicate {
+export declare class NSPredicate {
     type: NSPredicateType;
     operator?: NSComparisonPredicateOperator;
     value?: number;

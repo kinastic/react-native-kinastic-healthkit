@@ -1,12 +1,12 @@
-import HKSample from './HKSample';
+import { HKSample } from './HKSample';
 import { EntityType } from './EntityType';
-import HKWorkout from './HKWorkout';
-import HKQuantitySample from './HKQuantitySample';
-import HKCorrelation from './HKCorrelation';
-import HKCategorySample from "./HKCategorySample";
-import HKDocumentSample from "./HKDocumentSample";
+import { HKWorkout } from './HKWorkout';
+import { HKQuantitySample } from './HKQuantitySample';
+import { HKCorrelation } from './HKCorrelation';
+import { HKCategorySample } from "./HKCategorySample";
+import { HKDocumentSample } from "./HKDocumentSample";
 
-export default class HKSampleBuilder {
+export class HKSampleBuilder {
   static build(json?: any): HKSample | undefined {
     if (json) {
       switch (json.entityType) {

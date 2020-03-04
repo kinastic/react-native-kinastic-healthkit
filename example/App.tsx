@@ -17,7 +17,7 @@ import HKSampleQuery from './App/Model/HealthKit/HKSampleQuery';
 import { HKObjectSampleType } from './App/Model/HealthKit';
 import { HKWorkoutActivityType } from './App/Model/HealthKit';
 
-export default class App extends Component<{}> {
+export class App extends Component<{}> {
   state = {
     status: 'starting',
     message: '--',

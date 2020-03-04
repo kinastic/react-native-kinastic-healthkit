@@ -6,7 +6,7 @@ import HKCorrelation from './HKCorrelation';
 import HKCategorySample from "./HKCategorySample";
 import HKDocumentSample from "./HKDocumentSample";
 
-export default class HKSampleBuilder {
+export class HKSampleBuilder {
   static build(json?: any): HKSample | undefined {
     if (json) {
       switch (json.entityType) {

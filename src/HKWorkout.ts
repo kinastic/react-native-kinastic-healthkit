@@ -1,13 +1,13 @@
 import { HKWorkoutActivityType } from './HKWorkoutActivityType';
-import HKSample from './HKSample';
+import { HKSample } from './HKSample';
 import { HKWorkoutEvent } from './HKWorkoutEvent';
-import HKMetadata from './HKMetadata';
+import { HKMetadata } from './HKMetadata';
 import { HKMetadataKey } from './HKMetadataKey';
 import { EntityType } from './EntityType';
-import HKSampleBuilder from './HKSampleBuilder';
-import HKWorkoutRoute from './HKWorkoutRoute';
+import { HKSampleBuilder } from './HKSampleBuilder';
+import { HKWorkoutRoute } from './HKWorkoutRoute';
 
-export default class HKWorkout extends HKSample {
+export class HKWorkout extends HKSample {
   activityType: HKWorkoutActivityType = HKWorkoutActivityType.americanFootball;
   workoutEvents: HKWorkoutEvent[] = [];
   totalEnergyBurned?: number;

@@ -3,10 +3,10 @@
   "title": "React Native Kinastic Healthkit",
   "version": "1.0.0",
   "description": "TODO",
-  "main": "lib/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "rm -rf lib/ && tsc"
   },
   "repository": {
     "type": "git",
@@ -27,8 +27,14 @@
     "react": "^16.8.1",
     "react-native": ">=0.60.0-rc.0 <1.0.x"
   },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 100
+  },
   "devDependencies": {
     "@types/react-native": "^0.61.17",
+    "prettier": "^1.19.1",
     "react": "^16.9.0",
     "react-native": "^0.61.5",
     "typescript": "^3.8.3"

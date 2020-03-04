@@ -1,4 +1,4 @@
-export default class HKSource {
+export declare class HKSource {
     name: string;
     bundleIdentifier: string;
     constructor(json?: any);

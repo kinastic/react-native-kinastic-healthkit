@@ -1,6 +1,6 @@
-import HKMetadata from './HKMetadata';
+import { HKMetadata } from './HKMetadata';
 
-export default class HKDeletedObject {
+export class HKDeletedObject {
   uuid: string = '';
   metadata?: HKMetadata;
 

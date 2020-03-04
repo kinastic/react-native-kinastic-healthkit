@@ -1,10 +1,10 @@
-import HKSample from './HKSample';
+import { HKSample } from './HKSample';
 import { HKQuantityType } from './HKQuantityType';
-import HKMetadata from './HKMetadata';
+import { HKMetadata } from './HKMetadata';
 import { EntityType } from './EntityType';
 import { HKMetadataKey } from './HKMetadataKey';
 
-export default class HKQuantitySample extends HKSample {
+export class HKQuantitySample extends HKSample {
   value: number = 0;
   unit?: string;
 
