@@ -25,7 +25,7 @@ export class KinasticHealthKit {
     return RNHealthkit.requestAuthorization(readPermissions, writePermissions);
   }
 
-  static authorizationStatus(permissions: string[]): Promise<HKAuthorizationStatus> {
+  static authorizationStatus(permissions: string[]): Promise<HKAuthorizationStatus[]> {
     return RNHealthkit.authorizationStatus(permissions);
   }
 
