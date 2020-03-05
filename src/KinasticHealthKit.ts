@@ -25,7 +25,7 @@ export class KinasticHealthKit {
     return RNHealthkit.requestAuthorization(readPermissions, writePermissions);
   }
 
-  static authorizationStatus(permissions: string[]): Promise<HKAuthorizationStatus[]> {
+  static authorizationStatus(permissions: string[]): Promise<HKAuthorizationStatus> {
     return RNHealthkit.authorizationStatus(permissions);
   }
 
@@ -35,6 +35,17 @@ export class KinasticHealthKit {
 
   static async querySample(query: HKSampleQuery): Promise<HKSample[]> {
     const result = await RNHealthkit.querySample(query.toJS());
+    return (result || []).map((r: any) => HKSampleBuilder.build(r));
+  }
+
+  static async querySampleByWorkout(query: HKSampleQuery, workout: string | HKWorkout): Promise<HKSample[]> {
+    const json = query.toJS();
+    if (workout instanceof HKWorkout) {
+      json.workoutUuid = workout.uuid;
+    } else {
+      json.workoutUuid = workout;
+    }
+    const result = await RNHealthkit.querySampleByWorkout(json);
     return (result || []).map((r: any) => HKSampleBuilder.build(r));
   }
 

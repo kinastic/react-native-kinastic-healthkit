@@ -50,10 +50,21 @@ extension KinasticHealthkit {
         }
         return nil
     }
+    
+    func predicateForObjectsWorkout(workoutUuid: String, completion: @escaping (_: NSPredicate?) -> Void) {
+        queryByUUID(sampleType: .workoutType(), uuid: workoutUuid) { (sample) in
+            if let workout = sample as? HKWorkout {
+                completion(HKQuery.predicateForObjects(from: workout))
+            } else {
+                completion(nil)
+            }
+        }
+    }
 
     func predicateForObjects(data: [String: Any?]) -> NSPredicate? {
 
         if let workoutData = data["workout"] as? [String: Any?] {
+            // TODO not supported
             if let workout = parseSampleWorkout(sample: workoutData) {
                 return HKQuery.predicateForObjects(from: workout)
             }

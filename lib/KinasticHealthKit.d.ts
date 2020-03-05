@@ -14,9 +14,10 @@ import { HKAuthorizationStatus } from './HKAuthorizationStatus';
 import { HKAuthorizationRequestStatus } from './HKAuthorizationRequestStatus';
 export declare class KinasticHealthKit {
     static requestAuthorization(readPermissions: string[], writePermissions?: string[]): Promise<any>;
-    static authorizationStatus(permissions: string[]): Promise<HKAuthorizationStatus[]>;
+    static authorizationStatus(permissions: string[]): Promise<HKAuthorizationStatus>;
     static getRequestStatusForAuthorization(readPermissions: string[], writePermissions?: string[]): Promise<HKAuthorizationRequestStatus>;
     static querySample(query: HKSampleQuery): Promise<HKSample[]>;
+    static querySampleByWorkout(query: HKSampleQuery, workout: string | HKWorkout): Promise<HKSample[]>;
     static queryCorrelation(query: HKCorrelationQuery): Promise<HKCorrelation[]>;
     static queryDocument(query: HKDocumentQuery): Promise<HKDocumentSample[]>;
     static queryAnchored(query: HKAnchoredObjectQuery): Promise<HKAnchoredObjectQueryResult>;

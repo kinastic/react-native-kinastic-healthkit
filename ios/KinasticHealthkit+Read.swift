@@ -70,6 +70,47 @@ extension KinasticHealthkit {
 
         self.healthKit.execute(query)
     }
+    
+    @objc(querySampleByWorkout:resolve:reject:)
+    func querySampleByWorkout(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+
+        guard let typeString = query["sampleType"] as? String, let sampleType = getSampleTypeFromString(perm: typeString) else {
+            reject("format", "sampleType required", nil)
+            return
+        }
+        
+        guard let workoutUuid = query["workoutUuid"] as? String else {
+            reject("format", "workoutUuid missing", nil)
+            return
+        }
+
+        let limit = query["limit"] as? Int ?? HKObjectQueryNoLimit
+        
+        predicateForObjectsWorkout(workoutUuid: workoutUuid) { (predicate) in
+            guard let predicate = predicate else {
+                reject("notFound", "workout with \(workoutUuid) not found", nil)
+                return
+            }
+         
+            let sort = self.parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
+
+            let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sort) { query, samples, error in
+                if nil != error {
+                    reject("error", "Error: \(error?.localizedDescription)", error)
+                } else if let data = samples {
+                    let json = data.map {
+                        self.sampleToMap(sample: $0)
+                    }
+                    
+                    resolve(json)
+                } else {
+                    resolve([])
+                }
+            }
+
+            self.healthKit.execute(query)
+        }
+    }
 
     @objc(queryCorrelation:resolve:reject:)
     func queryCorrelation(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
