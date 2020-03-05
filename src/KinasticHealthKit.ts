@@ -12,15 +12,25 @@ import { HKCorrelationQuery } from './HKCorrelationQuery';
 import { HKDocumentQuery } from './HKDocumentQuery';
 import { HKAnchoredObjectQuery } from './HKAnchoredObjectQuery';
 import { HKAnchoredObjectQueryResult } from './HKAnchoredObjectQueryResult';
+import { HKAuthorizationStatus } from './HKAuthorizationStatus';
+import { HKAuthorizationRequestStatus } from './HKAuthorizationRequestStatus';
 
 const { KinasticHealthkit: RNHealthkit } = NativeModules;
 
 export class KinasticHealthKit {
   static requestAuthorization(
     readPermissions: string[],
-    writePermissions: string[],
+    writePermissions: string[] = [],
   ): Promise<any> {
     return RNHealthkit.requestAuthorization(readPermissions, writePermissions);
+  }
+
+  static authorizationStatus(permissions: string[]): Promise<HKAuthorizationStatus> {
+    return RNHealthkit.authorizationStatus(permissions);
+  }
+
+  static getRequestStatusForAuthorization(readPermissions: string[], writePermissions: string[] = [],): Promise<HKAuthorizationRequestStatus> {
+    return RNHealthkit.authorizationStatus(readPermissions, writePermissions);
   }
 
   static async querySample(query: HKSampleQuery): Promise<HKSample[]> {
