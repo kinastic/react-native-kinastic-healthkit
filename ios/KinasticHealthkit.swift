@@ -85,6 +85,29 @@ class KinasticHealthkit: RCTEventEmitter {
         }
     }
     
+    @objc(getRequestStatusForAuthorization:writePermissionsString:resolve:reject:)
+    func getRequestStatusForAuthorization(_ readPermissionsString: [String], writePermissionsString: [String], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        if (HKHealthStore.isHealthDataAvailable()) {
+            if !readPermissionsString.isEmpty || !writePermissionsString.isEmpty {
+                let readPermissions = self.parsePermissions(readPermissionsString)
+                let writePermissions = self.parseWritePermissions(permissions: writePermissionsString)
+
+                if #available(iOS 12.0, *) {
+                    self.healthKit.getRequestStatusForAuthorization(toShare: writePermissions, read: readPermissions) { (status, error) in
+                        resolve(self.getAuthorizationStatusString(status))
+                    }
+                } else {
+                    reject("unavailable", "iOS >= 12.0", nil)
+                }
+
+            } else {
+                reject("error", "Permissions missing", nil)
+            }
+        } else {
+            reject("error", "Unavailable", nil)
+        }
+    }
+    
     /*
      func getHealthkit(): HKHealthStore? {
          if HKHealthStore.isHealthDataAvailable() {

@@ -669,4 +669,14 @@ extension KinasticHealthkit {
         default: return "notDetermined"
         }
     }
+    
+    @available(iOS 12.0, *)
+    func getAuthorizationStatusString(_ status: HKAuthorizationRequestStatus) -> String {
+        switch status {
+        case .shouldRequest: return "shouldRequest"
+        case .unknown: return "unknown"
+        case .unnecessary: return "unnecessary"
+        default: return "unknown"
+        }
+    }
 }
