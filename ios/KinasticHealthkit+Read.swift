@@ -386,7 +386,11 @@ extension KinasticHealthkit {
     func queryByUUID(sampleType: HKSampleType, uuid: UUID, completion: @escaping (_: HKSample?) -> Void) {
         let predicate = HKQuery.predicateForObject(with: uuid)
         let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: 1, sortDescriptors: nil) { (query, samples, error) in
-            completion(samples?[0])
+            if let samples = samples, samples.count > 0  {
+                completion(samples[0])
+            } else {
+                completion(nil)
+            }
         }
         
         self.healthKit.execute(query)
