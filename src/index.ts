@@ -3,6 +3,8 @@ export * from './CLLocation';
 export * from './EntityType';
 export * from './HKAnchoredObjectQuery';
 export * from './HKAnchoredObjectQueryResult';
+export * from './HKAuthorizationStatus';
+export * from './HKAuthorizationRequestStatus';
 export * from './HKBloodGlucoseMealTime';
 export * from './HKBodyTemperatureSensorLocation';
 export * from './HKCategorySample';
