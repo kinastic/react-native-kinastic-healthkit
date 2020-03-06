@@ -27,7 +27,7 @@ RCT_EXTERN_METHOD(queryAnchored:(NSDictionary *)query resolve:(RCTPromiseResolve
 
 RCT_EXTERN_METHOD(queryObserver:(NSString *)sampleTypeString predicate:(NSDictionary *)predicate resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock) reject)
 RCT_EXTERN_METHOD(completeTask:(NSString *)taskId)
-RCT_EXTERN_METHOD(completeAllTasks:(NSString *)taskId)
+RCT_EXTERN_METHOD(completeAllTasks)
 
 RCT_EXTERN_METHOD(enableBackgroundDelivery:(NSString *)objectType frequency:(NSString *)frequency resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock) reject)
 RCT_EXTERN_METHOD(disableBackgroundDelivery:(NSString *)NSString resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock) reject)
