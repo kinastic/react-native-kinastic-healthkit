@@ -90,6 +90,175 @@ extension KinasticHealthkit {
         }
     }
 
+    func stringFromQuantityTypeIdentifier(type: HKQuantityTypeIdentifier) -> String? {
+        if #available(iOS 9.3, *) {
+            if type == .appleExerciseTime {
+                return "appleExerciseTime"
+            }
+        }
+
+        if #available(iOS 10.0, *) {
+            if type == .distanceSwimming {
+                return "distanceSwimming"
+            } else if type == .distanceWheelchair {
+                return "distanceWheelchair"
+            } else if type == .pushCount {
+                return "pushCount"
+            } else if type == .swimmingStrokeCount {
+                return "swimmingStrokeCount"
+            }
+        }
+
+        if #available(iOS 11.0, *) {
+            if type == .heartRateVariabilitySDNN {
+                return "heartRateVariabilitySDNN"
+            } else if type == .insulinDelivery {
+                return "insulinDelivery"
+            } else if type == .restingHeartRate {
+                return "restingHeartRate"
+            } else if type == .vo2Max {
+                return "vo2Max"
+            } else if type == .waistCircumference {
+                return "waistCircumference"
+            } else if type == .walkingHeartRateAverage {
+                return "walkingHeartRateAverage"
+            }
+        }
+
+        if #available(iOS 11.2, *) {
+            if type == .distanceDownhillSnowSports {
+                return "distanceDownhillSnowSports"
+            }
+        }
+
+        if #available(iOS 13.0, *) {
+            if type == .appleStandTime {
+                return "appleStandTime"
+            } else if type == .environmentalAudioExposure {
+                return "environmentalAudioExposure"
+            } else if type == .headphoneAudioExposure {
+                return "headphoneAudioExposure"
+            }
+        }
+
+        switch type {
+        case .activeEnergyBurned: return "activeEnergyBurned"
+        case .basalBodyTemperature: return "basalBodyTemperature"
+        case .basalEnergyBurned: return "basalEnergyBurned"
+        case .bloodAlcoholContent: return "bloodAlcoholContent"
+        case .bloodGlucose: return "bloodGlucose"
+        case .bloodPressureDiastolic: return "bloodPressureDiastolic"
+        case .bloodPressureSystolic: return "bloodPressureSystolic"
+        case .bodyFatPercentage: return "bodyFatPercentage"
+        case .bodyMass: return "bodyMass"
+        case .bodyMassIndex: return "bodyMassIndex"
+        case .bodyTemperature: return "bodyTemperature"
+        case .dietaryBiotin: return "dietaryBiotin"
+        case .dietaryCaffeine: return "dietaryCaffeine"
+        case .dietaryCalcium: return "dietaryCalcium"
+        case .dietaryCarbohydrates: return "dietaryCarbohydrates"
+        case .dietaryChloride: return "dietaryChloride"
+        case .dietaryCholesterol: return "dietaryCholesterol"
+        case .dietaryChromium: return "dietaryChromium"
+        case .dietaryCopper: return "dietaryCopper"
+        case .dietaryEnergyConsumed: return "dietaryEnergyConsumed"
+        case .dietaryFatMonounsaturated: return "dietaryFatMonounsaturated"
+        case .dietaryFatPolyunsaturated: return "dietaryFatPolyunsaturated"
+        case .dietaryFatSaturated: return "dietaryFatSaturated"
+        case .dietaryFatTotal: return "dietaryFatTotal"
+        case .dietaryFiber: return "dietaryFiber"
+        case .dietaryFolate: return "dietaryFolate"
+        case .dietaryIodine: return "dietaryIodine"
+        case .dietaryIron: return "dietaryIron"
+        case .dietaryMagnesium: return "dietaryMagnesium"
+        case .dietaryManganese: return "dietaryManganese"
+        case .dietaryMolybdenum: return "dietaryMolybdenum"
+        case .dietaryNiacin: return "dietaryNiacin"
+        case .dietaryPantothenicAcid: return "dietaryPantothenicAcid"
+        case .dietaryPhosphorus: return "dietaryPhosphorus"
+        case .dietaryPotassium: return "dietaryPotassium"
+        case .dietaryProtein: return "dietaryProtein"
+        case .dietaryRiboflavin: return "dietaryRiboflavin"
+        case .dietarySelenium: return "dietarySelenium"
+        case .dietarySodium: return "dietarySodium"
+        case .dietarySugar: return "dietarySugar"
+        case .dietaryThiamin: return "dietaryThiamin"
+        case .dietaryVitaminA: return "dietaryVitaminA"
+        case .dietaryVitaminB6: return "dietaryVitaminB6"
+        case .dietaryVitaminB12: return "dietaryVitaminB12"
+        case .dietaryVitaminC: return "dietaryVitaminC"
+        case .dietaryVitaminD: return "dietaryVitaminD"
+        case .dietaryVitaminE: return "dietaryVitaminE"
+        case .dietaryVitaminK: return "dietaryVitaminK"
+        case .dietaryWater: return "dietaryWater"
+        case .dietaryZinc: return "dietaryZinc"
+        case .distanceCycling: return "distanceCycling"
+        case .distanceWalkingRunning: return "distanceWalkingRunning"
+        case .electrodermalActivity: return "electrodermalActivity"
+        case .flightsClimbed: return "flightsClimbed"
+        case .forcedExpiratoryVolume1: return "forcedExpiratoryVolume1"
+        case .forcedVitalCapacity: return "forcedVitalCapacity"
+        case .heartRate: return "heartRate"
+        case .height: return "height"
+        case .inhalerUsage: return "inhalerUsage"
+        case .leanBodyMass: return "leanBodyMass"
+        case .nikeFuel: return "nikeFuel"
+        case .numberOfTimesFallen: return "numberOfTimesFallen"
+        case .oxygenSaturation: return "oxygenSaturation"
+        case .peakExpiratoryFlowRate: return "peakExpiratoryFlowRate"
+        case .peripheralPerfusionIndex: return "peripheralPerfusionIndex"
+        case .respiratoryRate: return "respiratoryRate"
+        case .stepCount: return "stepCount"
+        case .uvExposure: return "uvExposure"
+        default: return nil
+        }
+    }
+
+    func stringFromCategoryTypeIdentifier(input: HKCategoryTypeIdentifier) -> String? {
+        if #available(iOS 10.0, *) {
+            if input == .mindfulSession {
+                return "mindfulSession"
+            }
+        }
+
+        if #available(iOS 12.2, *) {
+            if input == .lowHeartRateEvent {
+                return "lowHeartRateEvent"
+            } else if input == .irregularHeartRhythmEvent {
+                return "irregularHeartRhythmEvent"
+            } else if input == .highHeartRateEvent {
+                return "highHeartRateEvent"
+            }
+        }
+
+        if #available(iOS 13.0, *) {
+            if input == .audioExposureEvent {
+                return "audioExposureEvent"
+            } else if input == .toothbrushingEvent {
+                return "toothbrushingEvent"
+            }
+        }
+
+        switch input {
+        case .appleStandHour: return "appleStandHour"
+        case .cervicalMucusQuality: return "cervicalMucusQuality"
+        case .intermenstrualBleeding: return "intermenstrualBleeding"
+        case .menstrualFlow: return "menstrualFlow"
+        case .ovulationTestResult: return "ovulationTestResult"
+        case .sexualActivity: return "sexualActivity"
+        case .sleepAnalysis: return "sleepAnalysis"
+        default: return nil
+        }
+    }
+
+    func stringFromCorrelationTypeIdentifier(input: HKCorrelationTypeIdentifier) -> String? {
+        switch input {
+        case .bloodPressure: return "bloodPressure"
+        case .food: return "food"
+        default: return nil
+        }
+    }
+
     func sexString(sex: HKBiologicalSexObject) -> String {
         switch (sex.biologicalSex) {
         case .notSet:return "unknown"
@@ -152,17 +321,47 @@ extension KinasticHealthkit {
     func unitString(unit: HKUnit?) -> String? {
         unit?.unitString
     }
-    
-    func sampleTypeToString(value: HKSampleType) -> String {
-        return value.identifier.replacingOccurrences(of: "HKQuantityTypeIdentifier", with: "").lowercasingFirstLetter()
+
+    func sampleTypeToString(value: HKSampleType) -> String? {
+        if let correlation = value as? HKCorrelationType {
+            return correlationTypeToString(value: correlation)
+        } else if let quantity = value as? HKQuantityType {
+            return quantityTypeToString(value: quantity)
+        } else if let category = value as? HKCategoryType {
+            return categoryTypeToString(value: category)
+        } else if #available(iOS 10.0, *), let _ = value as? HKDocumentType {
+            return "CDA"
+        } else if let _ = value as? HKWorkoutType {
+            return "workout"
+        } else if #available(iOS 11.0, *), let series = value as? HKSeriesType {
+            return seriesTypeToString(value: series)
+        }
+        return nil
     }
 
     func quantityTypeToString(value: HKQuantityType) -> String {
-        return value.identifier.replacingOccurrences(of: "HKQuantityTypeIdentifier", with: "").lowercasingFirstLetter()
+        return stringFromQuantityTypeIdentifier(type: HKQuantityTypeIdentifier(rawValue: value.identifier)) ??
+                value.identifier.replacingOccurrences(of: "HKQuantityTypeIdentifier", with: "").lowercasingFirstLetter()
+    }
+
+    func categoryTypeToString(value: HKCategoryType) -> String {
+        return stringFromCategoryTypeIdentifier(input: HKCategoryTypeIdentifier(rawValue: value.identifier)) ??
+                value.identifier.replacingOccurrences(of: "HKCategoryTypeIdentifier", with: "").lowercasingFirstLetter()
     }
 
     func correlationTypeToString(value: HKCorrelationType) -> String {
-        value.identifier
+        return stringFromCorrelationTypeIdentifier(input: HKCorrelationTypeIdentifier(rawValue: value.identifier)) ??
+                value.identifier.replacingOccurrences(of: "HKCorrelationTypeIdentifier", with: "").lowercasingFirstLetter()
+    }
+
+    @available(iOS 11.0, *)
+    func seriesTypeToString(value: HKSeriesType) -> String? {
+        if value.identifier == HKSeriesType.workoutRoute().identifier {
+            return "workoutRoute"
+        } else if #available(iOS 13.0, *), value.identifier == HKSeriesType.heartbeat().identifier {
+            return "heartbeat"
+        }
+        return nil
     }
 
     func operatingSystemVersionToString(version: OperatingSystemVersion) -> String {
@@ -178,7 +377,7 @@ extension String {
     mutating func capitalizeFirstLetter() {
         self = self.capitalizingFirstLetter()
     }
-    
+
     func lowercasingFirstLetter() -> String {
         return prefix(1).lowercased() + dropFirst()
     }

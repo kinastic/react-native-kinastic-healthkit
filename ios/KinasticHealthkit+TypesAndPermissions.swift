@@ -167,51 +167,25 @@ extension KinasticHealthkit {
         if let identifier = getQuantityTypeIdentifierFromString(type: perm) {
             return HKQuantityType.quantityType(forIdentifier: identifier)
         }
-        
+
+        return nil
+    }
+
+    @available(iOS 11.0, *)
+    func getSeriesTypeFromString(_ perm: String?) -> HKSeriesType? {
+        if perm == "heartbeat", #available(iOS 13.0, *) {
+            return .heartbeat()
+        } else if perm == "workoutRoute" {
+            return .workoutRoute()
+        }
         return nil
     }
 
     func getCategoryTypeFromString(input: String?) -> HKCategoryType? {
-        switch input {
-        case "appleStandHour": return HKObjectType.categoryType(forIdentifier: .appleStandHour)
-        case "audioExposureEvent": if #available(iOS 13.0, *) {
-            return HKObjectType.categoryType(forIdentifier: .audioExposureEvent)
-        } else {
-            return nil
+        if let type = getCategoryTypeIdentifierFromString(input: input) {
+            return HKObjectType.categoryType(forIdentifier: type)
         }
-        case "cervicalMucusQuality": return HKObjectType.categoryType(forIdentifier: .cervicalMucusQuality)
-        case "highHeartRateEvent": if #available(iOS 12.2, *) {
-            return HKObjectType.categoryType(forIdentifier: .highHeartRateEvent)
-        } else {
-            return nil
-        }
-        case "intermenstrualBleeding": return HKObjectType.categoryType(forIdentifier: .intermenstrualBleeding)
-        case "irregularHeartRhythmEvent": if #available(iOS 12.2, *) {
-            return HKObjectType.categoryType(forIdentifier: .irregularHeartRhythmEvent)
-        } else {
-            return nil
-        }
-        case "lowHeartRateEvent": if #available(iOS 12.2, *) {
-            return HKObjectType.categoryType(forIdentifier: .lowHeartRateEvent)
-        } else {
-            return nil
-        }
-        case "menstrualFlow": return HKObjectType.categoryType(forIdentifier: .menstrualFlow)
-        case "mindfulSession": if #available(iOS 10.0, *) {
-            return HKObjectType.categoryType(forIdentifier: .mindfulSession)
-        } else {
-            return nil
-        }
-        case "ovulationTestResult": return HKObjectType.categoryType(forIdentifier: .ovulationTestResult)
-        case "sexualActivity": return HKObjectType.categoryType(forIdentifier: .sexualActivity)
-        case "sleepAnalysis": return HKObjectType.categoryType(forIdentifier: .sleepAnalysis)
-        case "toothbrushingEvent": if #available(iOS 13.0, *) {
-            return HKObjectType.categoryType(forIdentifier: .toothbrushingEvent)
-        } else {
-            return nil
-        }
-        default: return nil
-        }
+        return nil
     }
 
     func getCategoryTypeIdentifierFromString(input: String?) -> HKCategoryTypeIdentifier? {
@@ -464,6 +438,10 @@ extension KinasticHealthkit {
             return quantityType
         }
 
+        if #available(iOS 11.0, *), let seriesType = getSeriesTypeFromString(perm) {
+            return seriesType
+        }
+
         if let category = getCategoryTypeFromString(input: perm) {
             return category
         }
@@ -471,7 +449,7 @@ extension KinasticHealthkit {
         if let correlation = getCorrelationTypeFromString(input: perm) {
             return correlation
         }
-        
+
         if #available(iOS 10.0, *) {
             if let document = getDocumentTypeFromString(input: perm) {
                 return document
@@ -480,16 +458,6 @@ extension KinasticHealthkit {
 
         switch perm {
         case "workout": return HKObjectType.workoutType()
-        case "workoutRoute": if #available(iOS 11.0, *) {
-            return HKSeriesType.workoutRoute()
-        } else {
-            return nil
-        }
-        case "heartbeat": if #available(iOS 13.0, *) {
-            return HKSeriesType.heartbeat()
-        } else {
-            return nil
-        }
         case "audiogram": if #available(iOS 13.0, *) {
             return HKObjectType.audiogramSampleType()
         } else {
@@ -498,7 +466,7 @@ extension KinasticHealthkit {
         default: return nil
         }
     }
-    
+
     @available(iOS 10.0, *)
     func getDocumentTypeFromString(input: String?) -> HKDocumentType? {
         if input == "CDA" {
@@ -669,7 +637,7 @@ extension KinasticHealthkit {
         default: return "notDetermined"
         }
     }
-    
+
     @available(iOS 12.0, *)
     func getAuthorizationStatusString(_ status: HKAuthorizationRequestStatus) -> String {
         switch status {

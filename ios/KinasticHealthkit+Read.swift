@@ -37,20 +37,20 @@ extension KinasticHealthkit {
 
     @objc(queryObserver:prediate:resolve:reject:)
     func queryObserver(_ sampleTypeString: String, predicate: [String: Any]?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        
+
         guard let sampleType = getSampleTypeFromString(perm: sampleTypeString) else {
             reject("format", "invalid sampleType '\(sampleTypeString)'", nil)
             return
         }
-        
+
         let predicate = parsePredicate(data: predicate)
-        
+
         let query = HKObserverQuery(sampleType: sampleType, predicate: predicate) { (query, completionHandler, error) in
             guard error == nil else {
                 completionHandler()
                 return
             }
-            
+
             guard let sampleType = query.sampleType else {
                 completionHandler()
                 return
@@ -61,10 +61,10 @@ extension KinasticHealthkit {
             ]
             self.sendEvent(withName: "sampleTypeChanged", body: json)
         }
-        
+
         self.healthKit.execute(query)
     }
-    
+
     @objc(completeTask:)
     func completeTask(_ taskId: String) {
         defer {
@@ -101,7 +101,7 @@ extension KinasticHealthkit {
                 let json = data.map {
                     self.sampleToMap(sample: $0)
                 }
-                
+
                 resolve(json)
             } else {
                 resolve([])
@@ -110,7 +110,7 @@ extension KinasticHealthkit {
 
         self.healthKit.execute(query)
     }
-    
+
     @objc(querySampleByWorkout:resolve:reject:)
     func querySampleByWorkout(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
 
@@ -118,20 +118,20 @@ extension KinasticHealthkit {
             reject("format", "sampleType required", nil)
             return
         }
-        
+
         guard let workoutUuid = query["workoutUuid"] as? String else {
             reject("format", "workoutUuid missing", nil)
             return
         }
 
         let limit = query["limit"] as? Int ?? HKObjectQueryNoLimit
-        
+
         predicateForObjectsWorkout(workoutUuid: workoutUuid) { (predicate) in
             guard let predicate = predicate else {
                 reject("notFound", "workout with \(workoutUuid) not found", nil)
                 return
             }
-         
+
             let sort = self.parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
 
             let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sort) { query, samples, error in
@@ -141,7 +141,7 @@ extension KinasticHealthkit {
                     let json = data.map {
                         self.sampleToMap(sample: $0)
                     }
-                    
+
                     resolve(json)
                 } else {
                     resolve([])
@@ -164,10 +164,10 @@ extension KinasticHealthkit {
             reject("format", "invalid type", nil)
             return
         }
-        
+
         let predicate = parsePredicate(data: query["predicate"] as? [String: Any?])
         let samplePredicates = parsePredicates(queryParams: query)
-        
+
         let query = HKCorrelationQuery(type: sampleType, predicate: predicate, samplePredicates: samplePredicates) { query, samples, error in
             if nil != error {
                 reject("error", "Error: \(error?.localizedDescription)", error)
@@ -183,7 +183,7 @@ extension KinasticHealthkit {
 
         self.healthKit.execute(query)
     }
-    
+
     @objc(queryDocument:resolve:reject:)
     func queryDocument(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         if #available(iOS 10.0, *) {
@@ -196,14 +196,14 @@ extension KinasticHealthkit {
                 reject("format", "invalid type", nil)
                 return
             }
-            
+
             let limit = query["limit"] as? Int ?? HKObjectQueryNoLimit
             let predicate = parsePredicate(data: query["predicate"] as? [String: Any?])
             let includeDocumentData = query["includeDocumentData"] as? Bool ?? false
             let sort = parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
-            
+
             var allDocuments: [HKDocumentSample] = []
-            
+
             let query = HKDocumentQuery(documentType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sort, includeDocumentData: includeDocumentData) { (query, documents, done, error) in
                 if nil != error {
                     reject("error", "Error: \(error?.localizedDescription)", error)
@@ -211,7 +211,7 @@ extension KinasticHealthkit {
                 if let data = documents {
                     allDocuments += data
                 }
-                
+
                 if done {
                     let json = allDocuments.map {
                         self.sampleToMap(sample: $0)
@@ -225,7 +225,7 @@ extension KinasticHealthkit {
             reject("unavailable", "iOS >= 10.0 required", nil)
         }
     }
-    
+
     @objc(queryAnchored:resolve:reject:)
     func queryAnchored(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
 
@@ -238,11 +238,11 @@ extension KinasticHealthkit {
             reject("format", "invalid type", nil)
             return
         }
-        
+
         let anchor = parseAnchor(data: query["anchor"])
         let predicate = parsePredicate(data: query["predicate"] as? [String: Any?])
         let limit = query["limit"] as? Int ?? HKObjectQueryNoLimit
-    
+
         let query = HKAnchoredObjectQuery(type: sampleType, predicate: predicate, anchor: anchor, limit: limit) { (query, samples, deleted, anchor, error) in
             if nil != error {
                 reject("error", "Error: \(error?.localizedDescription)", error)
@@ -253,20 +253,20 @@ extension KinasticHealthkit {
                 let deletedObjects = deleted?.map {
                     self.deletedObjectToMap(object: $0)
                 } ?? []
-                
+
                 let json = [
                     "samples": newSamples,
                     "deleted": deletedObjects,
                     "anchor": anchor
                 ] as [String: Any?]
-                
+
                 resolve(json)
             }
         }
 
         self.healthKit.execute(query)
     }
-    
+
     @objc(querySource:resolve:reject:)
     func querySource(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
 
@@ -291,7 +291,7 @@ extension KinasticHealthkit {
                 let json = data.map {
                     self.sourceToMap(source: $0)
                 }
-                
+
                 resolve(json)
             } else {
                 resolve([])
@@ -300,36 +300,36 @@ extension KinasticHealthkit {
 
         self.healthKit.execute(query)
     }
-    
+
     @objc(queryWorkoutRoute:resolve:reject:)
     func queryWorkoutRoute(_ queryParams: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        
+
         if #available(iOS 11.0, *) {
             guard let uuidString = queryParams["uuid"] as? String else {
                 reject("format", "missing 'uuid' of HKWorkout", nil)
                 return
             }
-            
+
             queryByUUID(sampleType: .workoutType(), uuid: uuidString) { (sample) in
                 guard let workout = sample as? HKWorkout else {
                     resolve([])
                     return
                 }
-                
+
                 let predicate = HKQuery.predicateForObjects(from: workout)
-                
+
                 let sort = [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]
                 let query = HKSampleQuery(sampleType: HKSeriesType.workoutRoute(), predicate: predicate, limit: 1, sortDescriptors: sort) { (query, samples, error) in
                     guard error == nil else {
                         reject("error", error?.localizedDescription, error)
                         return
                     }
-                    
+
                     guard let samples = samples, samples.count > 0 else {
                         resolve([])
                         return
                     }
-                    
+
                     let first = samples[0]
                     if let routeSample = first as? HKWorkoutRoute {
                         self.queryWorkoutRoute(route: routeSample, resolve: resolve, reject: reject)
@@ -341,6 +341,12 @@ extension KinasticHealthkit {
             reject("unavailable", "iOS >= 11.0", nil)
         }
     }
+
+//    @objc(queryHeartbeatSeries:)
+//    func queryHeartbeatSeries(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+//
+//        let query = HKHeartbeatSeriesQuery(heartbeatSeries: <#T##HKHeartbeatSeriesSample##HealthKit.HKHeartbeatSeriesSample#>, dataHandler: <#T##@escaping (HKHeartbeatSeriesQuery, TimeInterval, Bool, Bool, Error?) -> Void##@escaping (HealthKit.HKHeartbeatSeriesQuery, Foundation.TimeInterval, Swift.Bool, Swift.Bool, Swift.Error?) -> Swift.Void#>)
+//    }
 
     @objc(enableBackgroundDelivery:frequency:resolve:reject:)
     func enableBackgroundDelivery(_ objectType: String, frequency: String?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
@@ -392,11 +398,11 @@ extension KinasticHealthkit {
             resolve("success")
         }
     }
-    
+
     @available(iOS 11.0, *)
     func queryWorkoutRoute(route: HKWorkoutRoute, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         var allLocations: [CLLocation] = []
-        
+
         let query = HKWorkoutRouteQuery(route: route) { (query: HKWorkoutRouteQuery, locations: [CLLocation]?, done: Bool, error: Error?) in
             if nil != error {
                 reject("error", error?.localizedDescription, error)
@@ -404,38 +410,40 @@ extension KinasticHealthkit {
                 if let data = locations {
                     allLocations += data
                 }
-                
+
                 if done {
-                    let json = allLocations.map { self.locationToJson(location: $0) }
+                    let json = allLocations.map {
+                        self.locationToJson(location: $0)
+                    }
                     resolve(json)
                 }
             }
         }
-        
+
         self.healthKit.execute(query)
     }
-    
+
     func queryByUUID(sampleType: HKSampleType, uuid: String, completion: @escaping (_: HKSample?) -> Void) {
         guard let uuid = UUID(uuidString: uuid) else {
             return
         }
-        
+
         queryByUUID(sampleType: sampleType, uuid: uuid, completion: completion)
     }
-    
+
     func queryByUUID(sampleType: HKSampleType, uuid: UUID, completion: @escaping (_: HKSample?) -> Void) {
         let predicate = HKQuery.predicateForObject(with: uuid)
         let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: 1, sortDescriptors: nil) { (query, samples, error) in
-            if let samples = samples, samples.count > 0  {
+            if let samples = samples, samples.count > 0 {
                 completion(samples[0])
             } else {
                 completion(nil)
             }
         }
-        
+
         self.healthKit.execute(query)
     }
-    
+
     func parseAnchor(data: Any?) -> HKQueryAnchor? {
         if let value = data as? Int {
             return HKQueryAnchor(fromValue: value)
@@ -444,10 +452,7 @@ extension KinasticHealthkit {
     }
 
     func determineUnit(type: HKQuantityType) -> HKUnit? {
-        if let identifier = getQuantityTypeIdentifierFromString(type: quantityTypeToString(value: type)) {
-            return determineUnit(type: identifier)
-        }
-        return nil
+        return determineUnit(type: HKQuantityTypeIdentifier(rawValue: type.identifier))
     }
 
     func determineUnit(type: HKQuantityTypeIdentifier) -> HKUnit? {
@@ -572,7 +577,7 @@ extension KinasticHealthkit {
         default: return nil
         }
     }
-    
+
     func locationToJson(location: CLLocation) -> [String: Any?] {
         return [
             "alt": location.altitude,
@@ -583,9 +588,9 @@ extension KinasticHealthkit {
             "time": buildISO8601StringFromDate(location.timestamp)
         ]
     }
-    
+
     func deletedObjectToMap(object: HKDeletedObject) -> [String: Any?]? {
-        var result =  [
+        var result = [
             "uuid": object.uuid.uuidString
         ] as [String: Any?]
 
@@ -599,6 +604,8 @@ extension KinasticHealthkit {
     func sampleToMap(sample: HKSample) -> [String: Any?]? {
         if sample is HKQuantitySample {
             return quantitySampleToMap(sample: sample as! HKQuantitySample)
+        } else if sample is HKSeriesSample {
+            return seriesSampleToMap(sample: sample as! HKSeriesSample)
         } else if sample is HKCorrelation {
             return correlationToMap(sample: sample as! HKCorrelation)
         } else if sample is HKWorkout {
@@ -606,16 +613,16 @@ extension KinasticHealthkit {
         } else if sample is HKCategorySample {
             return categorySampleToMap(sample: sample as! HKCategorySample)
         }
-        
+
         if #available(iOS 10.0, *) {
             if sample is HKDocumentSample {
                 return documentSampleToMap(sample: sample as! HKDocumentSample)
             }
         }
-        
+
         return nil
     }
-    
+
     @available(iOS 10.0, *)
     func documentSampleToMap(sample: HKDocumentSample) -> [String: Any?] {
         return [
@@ -733,13 +740,32 @@ extension KinasticHealthkit {
     func quantitySampleToMap(sample: HKQuantitySample) -> [String: Any?]? {
         let unit = determineUnit(type: sample.quantityType)
         let value = quantitySampleValue(sample: sample, unit: unit)
-        
+
         var result = [
             "uuid": sample.uuid.uuidString,
             "entityType": "quantity",
             "sampleType": sampleTypeToString(value: sample.sampleType),
             "value": value,
             "unit": unitString(unit: unit),
+            "startDate": buildISO8601StringFromDate(sample.startDate),
+            "endDate": buildISO8601StringFromDate(sample.endDate),
+            "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
+            "device": deviceToMap(data: sample.device),
+            "metadata": sample.metadata
+        ] as [String: Any?]
+
+        if #available(iOS 12.0, *) {
+            result["count"] = sample.count
+        }
+
+        return result
+    }
+
+    func seriesSampleToMap(sample: HKSeriesSample) -> [String: Any?]? {
+        var result = [
+            "uuid": sample.uuid.uuidString,
+            "entityType": "quantity",
+            "sampleType": sampleTypeToString(value: sample.sampleType),
             "startDate": buildISO8601StringFromDate(sample.startDate),
             "endDate": buildISO8601StringFromDate(sample.endDate),
             "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
