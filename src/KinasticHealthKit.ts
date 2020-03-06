@@ -1,5 +1,5 @@
 import { HKSample } from './HKSample';
-import { NativeModules } from 'react-native';
+import { NativeModules, NativeEventEmitter, EmitterSubscription } from 'react-native';
 import { HKWorkout } from './HKWorkout';
 import { HKQuantitySample } from './HKQuantitySample';
 import { HKCorrelation } from './HKCorrelation';
@@ -14,10 +14,17 @@ import { HKAnchoredObjectQuery } from './HKAnchoredObjectQuery';
 import { HKAnchoredObjectQueryResult } from './HKAnchoredObjectQueryResult';
 import { HKAuthorizationStatus } from './HKAuthorizationStatus';
 import { HKAuthorizationRequestStatus } from './HKAuthorizationRequestStatus';
+import { HKSampleType } from './HKSampleType';
+import { NSPredicate } from './NSPredicate';
+import { HKObjectType } from './HKObjectType';
+import { HKUpdateFrequency } from './HKUpdateFrequency';
 
 const { KinasticHealthkit: RNHealthkit } = NativeModules;
 
 export class KinasticHealthKit {
+
+  private static emitter = new NativeEventEmitter(RNHealthkit);
+
   static requestAuthorization(
     readPermissions: string[],
     writePermissions: string[] = [],
@@ -47,6 +54,30 @@ export class KinasticHealthKit {
     }
     const result = await RNHealthkit.querySampleByWorkout(json);
     return (result || []).map((r: any) => HKSampleBuilder.build(r));
+  }
+
+  static async queryObserver(sampleType: HKSampleType, predicate?: NSPredicate): Promise<any> {
+    return RNHealthkit.queryObserver(sampleType, predicate?.toJS());
+  }
+
+  /**
+   * It is very important to call this method after the event emitter sent a "smapleTypeChanged" event.
+   * @param taskId taskId provided from the event emitter
+   */
+  static completeTask(taskId: string) {
+    RNHealthkit.completeTask(taskId);
+  }
+
+  static async enableBackgroundDelivery(objectType: HKObjectType, frequency: HKUpdateFrequency): Promise<any> {
+    return RNHealthkit.enableBackgroundDelivery(objectType, frequency);
+  }
+
+  static async disableBackgroundDelivery(objectType: HKObjectType): Promise<any> {
+    return RNHealthkit.disableBackgroundDelivery(objectType);
+  }
+
+  static async disableAllBackgroundDelivery(): Promise<any> {
+    return RNHealthkit.disableAllBackgroundDelivery();
   }
 
   static async queryCorrelation(query: HKCorrelationQuery): Promise<HKCorrelation[]> {
@@ -92,5 +123,9 @@ export class KinasticHealthKit {
   static saveWorkout(samples: HKWorkout[]): Promise<any> {
     const json = samples.map((s: HKWorkout) => s.toJS());
     return RNHealthkit.saveWorkout(json);
+  }
+
+  static subscribe(event: string, callback: (data: any) => void): EmitterSubscription {
+    return this.emitter.addListener(event, callback);
   }
 }

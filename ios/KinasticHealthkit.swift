@@ -11,6 +11,8 @@ import HealthKit
 
 @objc(KinasticHealthkit)
 class KinasticHealthkit: RCTEventEmitter {
+    var hasSubscribers = false
+    var backgroundTasks: [String: HKObserverQueryCompletionHandler] = [:]
     
     let healthKit = HKHealthStore()
     let iso8061Format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
@@ -34,7 +36,9 @@ class KinasticHealthkit: RCTEventEmitter {
     
     @objc
     override func supportedEvents() -> [String] {
-        return []
+        return [
+            "sampleTypeChanged"
+        ]
     }
     
     @objc override class func requiresMainQueueSetup() -> Bool {

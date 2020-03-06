@@ -40,6 +40,7 @@ export * from './HKSource';
 export * from './HKSourceRevision';
 export * from './HKSwimmingStrokeStyle';
 export * from './HKUnit';
+export * from './HKUpdateFrequency';
 export * from './HKVO2MaxTestType';
 export * from './HKWeatherCondition';
 export * from './HKWorkout';

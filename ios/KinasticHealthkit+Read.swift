@@ -35,6 +35,46 @@ extension KinasticHealthkit {
         return nil
     }
 
+    @objc(queryObserver:prediate:resolve:reject:)
+    func queryObserver(sampleTypeString: String, predicate: [String: Any]?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        
+        guard let sampleType = getSampleTypeFromString(perm: sampleTypeString) else {
+            reject("format", "invalid sampleType '\(sampleTypeString)'", nil)
+            return
+        }
+        
+        let predicate = parsePredicate(data: predicate)
+        
+        let query = HKObserverQuery(sampleType: sampleType, predicate: predicate) { (query, completionHandler, error) in
+            guard error == nil else {
+                completionHandler()
+                return
+            }
+            
+            guard let sampleType = query.sampleType else {
+                completionHandler()
+                return
+            }
+            let json: [String: Any] = [
+                "taskId": UUID().uuidString,
+                "sampleType": self.sampleTypeToString(value: sampleType)
+            ]
+            self.sendEvent(withName: "sampleTypeChanged", body: json)
+        }
+        
+        self.healthKit.execute(query)
+    }
+    
+    @objc(completeTask:)
+    func completeTask(taskId: String) {
+        defer {
+            backgroundTasks.removeValue(forKey: taskId)
+        }
+        guard let task = backgroundTasks[taskId] else {
+            return
+        }
+        task()
+    }
 
     @objc(querySample:resolve:reject:)
     func querySample(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
