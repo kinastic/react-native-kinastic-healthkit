@@ -15,4 +15,11 @@ export class NSSortDescriptor {
       ascending: this.ascending,
     };
   }
+
+  static build(sortKey: string = 'startDate', ascending: boolean = true): NSSortDescriptor {
+    return new NSSortDescriptor({
+      key: sortKey,
+      ascending
+    });
+  }
 }

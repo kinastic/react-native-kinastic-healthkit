@@ -3,4 +3,5 @@ export declare class NSSortDescriptor {
     ascending: boolean;
     constructor(json?: any);
     toJS(): any;
+    static build(sortKey?: string, ascending?: boolean): NSSortDescriptor;
 }
