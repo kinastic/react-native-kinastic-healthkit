@@ -55,11 +55,13 @@ extension KinasticHealthkit {
                 completionHandler()
                 return
             }
+            let taskId = UUID().uuidString
             let json: [String: Any] = [
-                "taskId": UUID().uuidString,
+                "taskId": taskId,
                 "sampleType": strongSelf.sampleTypeToString(value: sampleType)
             ]
             strongSelf.sendEvent(withName: "sampleTypeChanged", body: json)
+            strongSelf.backgroundTasks[taskId] = completionHandler
         }
 
         self.healthKit.execute(query)
@@ -73,6 +75,9 @@ extension KinasticHealthkit {
         guard let task = backgroundTasks[taskId] else {
             return
         }
+        
+        print("Completing task \(taskId)")
+        
         task()
     }
 
