@@ -99,7 +99,7 @@ extension KinasticHealthkit {
                 reject("error", "Error: \(error?.localizedDescription)", error)
             } else if let data = samples {
                 let json = data.map {
-                    self.sampleToMap(sample: $0)
+                    self.anySampleToMap(sample: $0)
                 }
 
                 resolve(json)
@@ -139,7 +139,7 @@ extension KinasticHealthkit {
                     reject("error", "Error: \(error?.localizedDescription)", error)
                 } else if let data = samples {
                     let json = data.map {
-                        self.sampleToMap(sample: $0)
+                        self.anySampleToMap(sample: $0)
                     }
 
                     resolve(json)
@@ -173,7 +173,7 @@ extension KinasticHealthkit {
                 reject("error", "Error: \(error?.localizedDescription)", error)
             } else if let data = samples {
                 let json = data.map {
-                    self.sampleToMap(sample: $0)
+                    self.correlationToMap(sample: $0)
                 }
                 resolve(json)
             } else {
@@ -214,7 +214,7 @@ extension KinasticHealthkit {
 
                 if done {
                     let json = allDocuments.map {
-                        self.sampleToMap(sample: $0)
+                        self.documentSampleToMap(sample: $0)
                     }
                     resolve(json)
                 }
@@ -248,7 +248,7 @@ extension KinasticHealthkit {
                 reject("error", "Error: \(error?.localizedDescription)", error)
             } else {
                 let newSamples = samples?.map {
-                    self.sampleToMap(sample: $0)
+                    self.anySampleToMap(sample: $0)
                 }
                 let deletedObjects = deleted?.map {
                     self.deletedObjectToMap(object: $0)
@@ -342,11 +342,46 @@ extension KinasticHealthkit {
         }
     }
 
-//    @objc(queryHeartbeatSeries:)
-//    func queryHeartbeatSeries(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-//
-//        let query = HKHeartbeatSeriesQuery(heartbeatSeries: <#T##HKHeartbeatSeriesSample##HealthKit.HKHeartbeatSeriesSample#>, dataHandler: <#T##@escaping (HKHeartbeatSeriesQuery, TimeInterval, Bool, Bool, Error?) -> Void##@escaping (HealthKit.HKHeartbeatSeriesQuery, Foundation.TimeInterval, Swift.Bool, Swift.Bool, Swift.Error?) -> Swift.Void#>)
-//    }
+    @objc(queryHeartbeatSeries:resolve:reject:)
+    func queryHeartbeatSeries(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+        if #available(iOS 13.0, *) {
+            let predicate = parsePredicate(data: query["predicate"] as? [String: Any?])
+            let sort = parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
+
+            let sampleQuery = HKSampleQuery(sampleType: HKSeriesType.heartbeat(), predicate: predicate, limit: 1, sortDescriptors: sort) { query, samples, error in
+                guard error == nil else {
+                    reject("error", error?.localizedDescription, error)
+                    return
+                }
+
+                guard let samples = samples, let sample = samples.first as? HKHeartbeatSeriesSample else {
+                    resolve(nil)
+                    return
+                }
+
+                var data: [[String: Any]] = []
+                let query = HKHeartbeatSeriesQuery(heartbeatSeries: sample) { query, interval, precededByGap, done, error in
+                    data.append([
+                        "intervalSinceStart": interval,
+                        "precededByGap": precededByGap
+                    ])
+
+                    if done {
+                        var json = self.heartbeatSeriesSampleToMap(sample: sample)
+                        json["data"] = data
+                        resolve(json)
+                    }
+                }
+
+                self.healthKit.execute(query)
+            }
+
+            self.healthKit.execute(sampleQuery)
+
+        } else {
+            reject("unavailable", "iOS >= 13.0", nil)
+        }
+    }
 
     @objc(enableBackgroundDelivery:frequency:resolve:reject:)
     func enableBackgroundDelivery(_ objectType: String, frequency: String?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
@@ -360,7 +395,8 @@ extension KinasticHealthkit {
             return
         }
 
-        healthKit.enableBackgroundDelivery(for: objectType, frequency: frequency) { b, error in
+        healthKit.enableBackgroundDelivery(for: objectType, frequency: frequency) {
+            b, error in
             guard error == nil else {
                 reject("error", error?.localizedDescription, error)
                 return
@@ -377,7 +413,8 @@ extension KinasticHealthkit {
             return
         }
 
-        healthKit.disableBackgroundDelivery(for: objectType) { b, error in
+        healthKit.disableBackgroundDelivery(for: objectType) {
+            b, error in
             guard error == nil else {
                 reject("error", error?.localizedDescription, error)
                 return
@@ -389,7 +426,8 @@ extension KinasticHealthkit {
 
     @objc(disableAllBackgroundDelivery:reject:)
     func disableAllBackgroundDelivery(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        healthKit.disableAllBackgroundDelivery { b, error in
+        healthKit.disableAllBackgroundDelivery {
+            b, error in
             guard error == nil else {
                 reject("error", error?.localizedDescription, error)
                 return
@@ -433,7 +471,8 @@ extension KinasticHealthkit {
 
     func queryByUUID(sampleType: HKSampleType, uuid: UUID, completion: @escaping (_: HKSample?) -> Void) {
         let predicate = HKQuery.predicateForObject(with: uuid)
-        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: 1, sortDescriptors: nil) { (query, samples, error) in
+        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: 1, sortDescriptors: nil) {
+            (query, samples, error) in
             if let samples = samples, samples.count > 0 {
                 completion(samples[0])
             } else {
@@ -449,6 +488,231 @@ extension KinasticHealthkit {
             return HKQueryAnchor(fromValue: value)
         }
         return nil
+    }
+
+    func locationToJson(location: CLLocation) -> [String: Any?] {
+        return [
+            "alt": location.altitude,
+            "lat": location.coordinate.latitude,
+            "lon": location.coordinate.longitude,
+            "speed": location.speed,
+            "course": location.course,
+            "time": buildISO8601StringFromDate(location.timestamp)
+        ]
+    }
+
+    func deletedObjectToMap(object: HKDeletedObject) -> [String: Any?]? {
+        var result = [
+            "uuid": object.uuid.uuidString
+        ] as [String: Any?]
+
+        if #available(iOS 11.0, *) {
+            result["metadata"] = object.metadata
+        }
+
+        return result
+    }
+
+    func anySampleToMap(sample: HKSample) -> [String: Any?]? {
+        if sample is HKQuantitySample {
+            return quantitySampleToMap(sample: sample as! HKQuantitySample)
+        } else if sample is HKSeriesSample {
+            return seriesSampleToMap(sample: sample as! HKSeriesSample)
+        } else if sample is HKCorrelation {
+            return correlationToMap(sample: sample as! HKCorrelation)
+        } else if sample is HKWorkout {
+            return workoutToMap(sample: sample as! HKWorkout)
+        } else if sample is HKCategorySample {
+            return categorySampleToMap(sample: sample as! HKCategorySample)
+        }
+
+        if #available(iOS 10.0, *) {
+            if sample is HKDocumentSample {
+                return documentSampleToMap(sample: sample as! HKDocumentSample)
+            }
+        }
+
+        return nil
+    }
+
+    @available(iOS 10.0, *)
+    func documentSampleToMap(sample: HKDocumentSample) -> [String: Any?] {
+        var result = sampleToMap(sample: sample)
+        result["entityType"] = "document"
+        result["sampleType"] = "CDA" // there is only CDA for now
+        return result
+    }
+
+    func categorySampleToMap(sample: HKCategorySample) -> [String: Any?] {
+        var result = sampleToMap(sample: sample)
+        result["entityType"] = "category"
+        result["sampleType"] = categoryTypeToString(value: sample.categoryType)
+        result["value"] = sample.value
+        return result
+    }
+
+    func workoutToMap(sample: HKWorkout) -> [String: Any?] {
+        var result = sampleToMap(sample: sample)
+
+        result["entityType"] = "workout"
+        result["activityType"] = stringFromWorkoutActivityType(input: sample.workoutActivityType)
+        result["workoutEvents"] = workoutEventsToMap(events: sample.workoutEvents) ?? []
+        result["totalEnergyBurned"] = sample.totalEnergyBurned?.doubleValue(for: .kilocalorie())
+
+        if let totalDistance = sample.totalDistance {
+            result["totalDistance"] = totalDistance.doubleValue(for: .meter())
+        }
+
+        if #available(iOS 11.0, *) {
+            if let totalFlightsClimbed = sample.totalFlightsClimbed {
+                result["totalFlightsClimbed"] = totalFlightsClimbed.doubleValue(for: .count())
+            }
+        }
+
+        if #available(iOS 10.0, *) {
+            if let totalSwimmingStrokeCount = sample.totalSwimmingStrokeCount {
+                result["totalSwimmingStrokeCount"] = totalSwimmingStrokeCount.doubleValue(for: .count())
+            }
+        }
+
+        return result
+    }
+
+    func workoutEventsToMap(events: [HKWorkoutEvent]?) -> [[String: Any?]]? {
+        events?.map {
+            workoutEventToMap(event: $0)
+        }
+    }
+
+    func workoutEventToMap(event: HKWorkoutEvent) -> [String: Any?] {
+        var result = [
+            "type": workoutEventTypeString(workoutEvent: event.type),
+            "date": buildISO8601StringFromDate(event.date),
+        ] as [String: Any?]
+
+        if #available(iOS 10, *) {
+            result["metadata"] = event.metadata
+        }
+
+        if #available(iOS 11.0, *) {
+            result["startDate"] = buildISO8601StringFromDate(event.dateInterval.start)
+            result["endDate"] = buildISO8601StringFromDate(event.dateInterval.end)
+            result["duration"] = event.dateInterval.duration
+        }
+
+        return result
+    }
+
+    func correlationToMap(sample: HKCorrelation) -> [String: Any?] {
+        var result = sampleToMap(sample: sample)
+        result["entityType"] = "correlation"
+        result["sampleType"] = correlationTypeToString(value: sample.correlationType)
+        result["objects"] = objectsToMap(objects: sample.objects)
+        return result
+    }
+
+    func objectsToMap(objects: Set<HKSample>) -> [[String: Any?]] {
+        objects.map {
+            sampleToMap(sample: $0)
+        }.compactMap {
+            $0
+        }
+    }
+
+    func quantitySampleValue(sample: HKQuantitySample, unit: HKUnit?) -> Double? {
+        if let input = unit {
+            if sample.quantityType.is(compatibleWith: input) {
+                return sample.quantity.doubleValue(for: input)
+            }
+            print("Incompatible unit \(unit) for \(sample.quantityType.identifier)")
+        }
+        return nil
+    }
+
+    func quantitySampleToMap(sample: HKQuantitySample) -> [String: Any?]? {
+        let unit = determineUnit(type: sample.quantityType)
+        let value = quantitySampleValue(sample: sample, unit: unit)
+
+        var result = sampleToMap(sample: sample)
+        result["entityType"] = "quantity"
+        result["sampleType"] = quantityTypeToString(value: sample.quantityType)
+        result["unit"] = unit
+        result["value"] = value
+
+        if #available(iOS 12.0, *) {
+            result["count"] = sample.count
+        }
+
+        return result
+    }
+
+    @available(iOS 13.0, *)
+    func heartbeatSeriesSampleToMap(sample: HKHeartbeatSeriesSample) -> [String: Any?] {
+        var result = seriesSampleToMap(sample: sample)
+        return result
+    }
+
+    func seriesSampleToMap(sample: HKSeriesSample) -> [String: Any?] {
+        var result = sampleToMap(sample: sample)
+        result["count"] = sample.count
+
+        return result
+    }
+
+    func sourceToMap(source: HKSource) -> [String: Any?] {
+        [
+            "name": source.name,
+            "bundleIdentifier": source.bundleIdentifier
+        ]
+    }
+
+    func sourceRevisionToMap(sourceRevision: HKSourceRevision) -> [String: Any?] {
+        var result = [
+            "source": sourceToMap(source: sourceRevision.source),
+            "version": sourceRevision.version,
+        ] as [String: Any?]
+
+        if #available(iOS 11.0, *) {
+            result["productType"] = sourceRevision.productType
+            result["operatingSystemVersion"] = operatingSystemVersionToString(version: sourceRevision.operatingSystemVersion)
+        }
+
+        return result
+    }
+
+    func deviceToMap(data: HKDevice?) -> [String: Any?]? {
+        if let device = data {
+            return [
+                "name": device.name,
+                "manufacturer": device.manufacturer,
+                "model": device.model,
+                "hardwareVersion": device.hardwareVersion,
+                "firmwareVersion": device.firmwareVersion,
+                "softwareVersion": device.softwareVersion,
+                "localIdentifier": device.localIdentifier,
+                "udiDeviceIdentifier": device.udiDeviceIdentifier,
+            ]
+        }
+        return nil
+    }
+
+    func sampleToMap(sample: HKSample) -> [String: Any?] {
+        var result = objectToMap(sample: sample)
+        result["sampleType"] = sampleTypeToString(value: sample.sampleType)
+        result["startDate"] = buildISO8601StringFromDate(sample.startDate)
+        result["endDate"] = buildISO8601StringFromDate(sample.endDate)
+
+        return result
+    }
+
+    func objectToMap(sample: HKObject) -> [String: Any?] {
+        return [
+            "uuid": sample.uuid.uuidString,
+            "entityType": "quantity",
+            "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
+            "device": deviceToMap(data: sample.device),
+            "metadata": sample.metadata
+        ] as [String: Any?]
     }
 
     func determineUnit(type: HKQuantityType) -> HKUnit? {
@@ -576,244 +840,5 @@ extension KinasticHealthkit {
 
         default: return nil
         }
-    }
-
-    func locationToJson(location: CLLocation) -> [String: Any?] {
-        return [
-            "alt": location.altitude,
-            "lat": location.coordinate.latitude,
-            "lon": location.coordinate.longitude,
-            "speed": location.speed,
-            "course": location.course,
-            "time": buildISO8601StringFromDate(location.timestamp)
-        ]
-    }
-
-    func deletedObjectToMap(object: HKDeletedObject) -> [String: Any?]? {
-        var result = [
-            "uuid": object.uuid.uuidString
-        ] as [String: Any?]
-
-        if #available(iOS 11.0, *) {
-            result["metadata"] = object.metadata
-        }
-
-        return result
-    }
-
-    func sampleToMap(sample: HKSample) -> [String: Any?]? {
-        if sample is HKQuantitySample {
-            return quantitySampleToMap(sample: sample as! HKQuantitySample)
-        } else if sample is HKSeriesSample {
-            return seriesSampleToMap(sample: sample as! HKSeriesSample)
-        } else if sample is HKCorrelation {
-            return correlationToMap(sample: sample as! HKCorrelation)
-        } else if sample is HKWorkout {
-            return workoutToMap(sample: sample as! HKWorkout)
-        } else if sample is HKCategorySample {
-            return categorySampleToMap(sample: sample as! HKCategorySample)
-        }
-
-        if #available(iOS 10.0, *) {
-            if sample is HKDocumentSample {
-                return documentSampleToMap(sample: sample as! HKDocumentSample)
-            }
-        }
-
-        return nil
-    }
-
-    @available(iOS 10.0, *)
-    func documentSampleToMap(sample: HKDocumentSample) -> [String: Any?] {
-        return [
-            "uuid": sample.uuid.uuidString,
-            "entityType": "document",
-            "sampleType": sample.documentType.identifier,
-            "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
-            "device": deviceToMap(data: sample.device),
-            "metadata": sample.metadata,
-        ]
-    }
-
-    func categorySampleToMap(sample: HKCategorySample) -> [String: Any?] {
-        [
-            "uuid": sample.uuid.uuidString,
-            "entityType": "category",
-            "sampleType": sample.categoryType.identifier,
-            "value": sample.value,
-            "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
-            "device": deviceToMap(data: sample.device),
-            "metadata": sample.metadata,
-        ]
-    }
-
-    func workoutToMap(sample: HKWorkout) -> [String: Any?] {
-        var result = [
-            "uuid": sample.uuid.uuidString,
-            "entityType": "workout",
-            "activityType": stringFromWorkoutActivityType(input: sample.workoutActivityType),
-            "startDate": buildISO8601StringFromDate(sample.startDate),
-            "endDate": buildISO8601StringFromDate(sample.endDate),
-            "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
-            "device": deviceToMap(data: sample.device),
-            "workoutEvents": workoutEventsToMap(events: sample.workoutEvents) ?? [],
-            "totalEnergyBurned": sample.totalEnergyBurned?.doubleValue(for: .kilocalorie()),
-            "metadata": sample.metadata
-        ] as [String: Any?]
-
-        if let totalDistance = sample.totalDistance {
-            result["totalDistance"] = totalDistance.doubleValue(for: .meter())
-        }
-
-        if #available(iOS 11.0, *) {
-            if let totalFlightsClimbed = sample.totalFlightsClimbed {
-                result["totalFlightsClimbed"] = totalFlightsClimbed.doubleValue(for: .count())
-            }
-        }
-
-        if #available(iOS 10.0, *) {
-            if let totalSwimmingStrokeCount = sample.totalSwimmingStrokeCount {
-                result["totalSwimmingStrokeCount"] = totalSwimmingStrokeCount.doubleValue(for: .count())
-            }
-        }
-
-        return result
-    }
-
-    func workoutEventsToMap(events: [HKWorkoutEvent]?) -> [[String: Any?]]? {
-        events?.map {
-            workoutEventToMap(event: $0)
-        }
-    }
-
-    func workoutEventToMap(event: HKWorkoutEvent) -> [String: Any?] {
-        var result = [
-            "type": workoutEventTypeString(workoutEvent: event.type),
-            "date": buildISO8601StringFromDate(event.date),
-        ] as [String: Any?]
-
-        if #available(iOS 10, *) {
-            result["metadata"] = event.metadata
-        }
-
-        if #available(iOS 11.0, *) {
-            result["startDate"] = buildISO8601StringFromDate(event.dateInterval.start)
-            result["endDate"] = buildISO8601StringFromDate(event.dateInterval.end)
-            result["duration"] = event.dateInterval.duration
-        }
-
-        return result
-    }
-
-    func correlationToMap(sample: HKCorrelation) -> [String: Any?] {
-        [
-            "uuid": sample.uuid.uuidString,
-            "entityType": "correlation",
-            "sampleType": correlationTypeToString(value: sample.correlationType),
-            "startDate": buildISO8601StringFromDate(sample.startDate),
-            "endDate": buildISO8601StringFromDate(sample.endDate),
-            "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
-            "device": deviceToMap(data: sample.device),
-            "objects": objectsToMap(objects: sample.objects),
-            "metadata": sample.metadata
-        ]
-    }
-
-    func objectsToMap(objects: Set<HKSample>) -> [[String: Any?]] {
-        objects.map {
-            sampleToMap(sample: $0)
-        }.compactMap {
-            $0
-        }
-    }
-
-    func quantitySampleValue(sample: HKQuantitySample, unit: HKUnit?) -> Double? {
-        if let input = unit {
-            if sample.quantityType.is(compatibleWith: input) {
-                return sample.quantity.doubleValue(for: input)
-            }
-            print("Incompatible unit \(unit) for \(sample.quantityType.identifier)")
-        }
-        return nil
-    }
-
-    func quantitySampleToMap(sample: HKQuantitySample) -> [String: Any?]? {
-        let unit = determineUnit(type: sample.quantityType)
-        let value = quantitySampleValue(sample: sample, unit: unit)
-
-        var result = [
-            "uuid": sample.uuid.uuidString,
-            "entityType": "quantity",
-            "sampleType": sampleTypeToString(value: sample.sampleType),
-            "value": value,
-            "unit": unitString(unit: unit),
-            "startDate": buildISO8601StringFromDate(sample.startDate),
-            "endDate": buildISO8601StringFromDate(sample.endDate),
-            "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
-            "device": deviceToMap(data: sample.device),
-            "metadata": sample.metadata
-        ] as [String: Any?]
-
-        if #available(iOS 12.0, *) {
-            result["count"] = sample.count
-        }
-
-        return result
-    }
-
-    func seriesSampleToMap(sample: HKSeriesSample) -> [String: Any?]? {
-        var result = [
-            "uuid": sample.uuid.uuidString,
-            "entityType": "quantity",
-            "sampleType": sampleTypeToString(value: sample.sampleType),
-            "startDate": buildISO8601StringFromDate(sample.startDate),
-            "endDate": buildISO8601StringFromDate(sample.endDate),
-            "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
-            "device": deviceToMap(data: sample.device),
-            "metadata": sample.metadata
-        ] as [String: Any?]
-
-        if #available(iOS 12.0, *) {
-            result["count"] = sample.count
-        }
-
-        return result
-    }
-
-    func sourceToMap(source: HKSource) -> Dictionary<String, Any> {
-        [
-            "name": source.name,
-            "bundleIdentifier": source.bundleIdentifier
-        ]
-    }
-
-    func sourceRevisionToMap(sourceRevision: HKSourceRevision) -> [String: Any?] {
-        var result = [
-            "source": sourceToMap(source: sourceRevision.source),
-            "version": sourceRevision.version,
-        ] as [String: Any?]
-
-        if #available(iOS 11.0, *) {
-            result["productType"] = sourceRevision.productType
-            result["operatingSystemVersion"] = operatingSystemVersionToString(version: sourceRevision.operatingSystemVersion)
-        }
-
-        return result
-    }
-
-    func deviceToMap(data: HKDevice?) -> [String: Any?]? {
-        if let device = data {
-            return [
-                "name": device.name,
-                "manufacturer": device.manufacturer,
-                "model": device.model,
-                "hardwareVersion": device.hardwareVersion,
-                "firmwareVersion": device.firmwareVersion,
-                "softwareVersion": device.softwareVersion,
-                "localIdentifier": device.localIdentifier,
-                "udiDeviceIdentifier": device.udiDeviceIdentifier,
-            ]
-        }
-        return nil
     }
 }

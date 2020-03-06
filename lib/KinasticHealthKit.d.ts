@@ -17,6 +17,7 @@ import { HKSampleType } from './HKSampleType';
 import { NSPredicate } from './NSPredicate';
 import { HKObjectType } from './HKObjectType';
 import { HKUpdateFrequency } from './HKUpdateFrequency';
+import { HKHeartbeatSeriesSample } from './HKHeartbeatSeriesSample';
 export declare class KinasticHealthKit {
     private static emitter;
     static requestAuthorization(readPermissions: string[], writePermissions?: string[]): Promise<any>;
@@ -37,6 +38,7 @@ export declare class KinasticHealthKit {
     static queryDocument(query: HKDocumentQuery): Promise<HKDocumentSample[]>;
     static queryAnchored(query: HKAnchoredObjectQuery): Promise<HKAnchoredObjectQueryResult>;
     static queryWorkoutRoute(workoutUuid: string): Promise<CLLocation[]>;
+    static queryHeartbeatSeries(query: HKSampleQuery): Promise<HKHeartbeatSeriesSample | undefined>;
     static save(samples: HKSample[]): Promise<any>;
     static saveQuantity(samples: HKQuantitySample[]): Promise<any>;
     static saveCategory(samples: HKCategorySample[]): Promise<any>;

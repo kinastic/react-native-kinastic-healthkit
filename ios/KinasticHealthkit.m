@@ -22,6 +22,7 @@ RCT_EXTERN_METHOD(queryCorrelation:(NSDictionary *)query resolve:(RCTPromiseReso
 RCT_EXTERN_METHOD(queryDocument:(NSDictionary *)query resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock) reject)
 RCT_EXTERN_METHOD(querySource:(NSDictionary *)query resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock) reject)
 RCT_EXTERN_METHOD(queryWorkoutRoute:(NSDictionary *)query resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock) reject)
+RCT_EXTERN_METHOD(queryHeartbeatSeries:(NSDictionary *)query resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock) reject)
 RCT_EXTERN_METHOD(queryAnchored:(NSDictionary *)query resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock) reject)
 
 RCT_EXTERN_METHOD(queryObserver:(NSString *)sampleTypeString predicate:(NSDictionary *)predicate resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock) reject)

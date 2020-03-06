@@ -18,6 +18,7 @@ import { HKSampleType } from './HKSampleType';
 import { NSPredicate } from './NSPredicate';
 import { HKObjectType } from './HKObjectType';
 import { HKUpdateFrequency } from './HKUpdateFrequency';
+import { HKHeartbeatSeriesSample } from './HKHeartbeatSeriesSample';
 
 const { KinasticHealthkit: RNHealthkit } = NativeModules;
 
@@ -98,6 +99,11 @@ export class KinasticHealthKit {
   static async queryWorkoutRoute(workoutUuid: string): Promise<CLLocation[]> {
     const result = await RNHealthkit.queryWorkoutRoute({ uuid: workoutUuid });
     return (result || []).map((r: any) => new CLLocation(r));
+  }
+
+  static async queryHeartbeatSeries(query: HKSampleQuery): Promise<HKHeartbeatSeriesSample | undefined> {
+    const result = await RNHealthkit.queryHeartbeatSeries(query.toJS());
+    return result ? new HKHeartbeatSeriesSample(result) : undefined;
   }
 
   static save(samples: HKSample[]): Promise<any> {
