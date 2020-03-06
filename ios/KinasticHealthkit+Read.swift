@@ -36,7 +36,7 @@ extension KinasticHealthkit {
     }
 
     @objc(queryObserver:prediate:resolve:reject:)
-    func queryObserver(sampleTypeString: String, predicate: [String: Any]?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    func queryObserver(_ sampleTypeString: String, predicate: [String: Any]?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         
         guard let sampleType = getSampleTypeFromString(perm: sampleTypeString) else {
             reject("format", "invalid sampleType '\(sampleTypeString)'", nil)
@@ -66,7 +66,7 @@ extension KinasticHealthkit {
     }
     
     @objc(completeTask:)
-    func completeTask(taskId: String) {
+    func completeTask(_ taskId: String) {
         defer {
             backgroundTasks.removeValue(forKey: taskId)
         }
