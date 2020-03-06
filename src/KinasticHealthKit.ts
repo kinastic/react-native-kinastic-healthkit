@@ -1,5 +1,5 @@
 import { HKSample } from './HKSample';
-import { NativeModules, NativeEventEmitter, EmitterSubscription } from 'react-native';
+import { NativeModules, NativeEventEmitter, EmitterSubscription, Platform } from 'react-native';
 import { HKWorkout } from './HKWorkout';
 import { HKQuantitySample } from './HKQuantitySample';
 import { HKCorrelation } from './HKCorrelation';
@@ -30,35 +30,53 @@ export class KinasticHealthKit {
     readPermissions: string[],
     writePermissions: string[] = [],
   ): Promise<any> {
-    return RNHealthkit.requestAuthorization(readPermissions, writePermissions);
+    if (Platform.OS === 'ios') {
+      return RNHealthkit.requestAuthorization(readPermissions, writePermissions);
+    }
+    return Promise.reject('ios only');
   }
 
   static authorizationStatus(permissions: string[]): Promise<HKAuthorizationStatus[]> {
-    return RNHealthkit.authorizationStatus(permissions);
+    if (Platform.OS === 'ios') {
+      return RNHealthkit.authorizationStatus(permissions); 
+    }
+    return Promise.reject('ios only');
   }
 
   static getRequestStatusForAuthorization(readPermissions: string[], writePermissions: string[] = [],): Promise<HKAuthorizationRequestStatus> {
-    return RNHealthkit.authorizationStatus(readPermissions, writePermissions);
+    if (Platform.OS === 'ios') {
+      return RNHealthkit.authorizationStatus(readPermissions, writePermissions);
+    }
+    return Promise.reject('ios only');
   }
 
   static async querySample(query: HKSampleQuery): Promise<HKSample[]> {
-    const result = await RNHealthkit.querySample(query.toJS());
-    return (result || []).map((r: any) => HKSampleBuilder.build(r));
+    if (Platform.OS === 'ios') {
+      const result = await RNHealthkit.querySample(query.toJS());
+      return (result || []).map((r: any) => HKSampleBuilder.build(r));
+    }
+    return Promise.reject('ios only')
   }
 
   static async querySampleByWorkout(query: HKSampleQuery, workout: string | HKWorkout): Promise<HKSample[]> {
-    const json = query.toJS();
-    if (workout instanceof HKWorkout) {
-      json.workoutUuid = workout.uuid;
-    } else {
-      json.workoutUuid = workout;
+    if (Platform.OS === 'ios') {
+      const json = query.toJS();
+      if (workout instanceof HKWorkout) {
+        json.workoutUuid = workout.uuid;
+      } else {
+        json.workoutUuid = workout;
+      }
+      const result = await RNHealthkit.querySampleByWorkout(json);
+      return (result || []).map((r: any) => HKSampleBuilder.build(r));
     }
-    const result = await RNHealthkit.querySampleByWorkout(json);
-    return (result || []).map((r: any) => HKSampleBuilder.build(r));
+    return Promise.reject('ios only');
   }
 
   static async queryObserver(sampleType: HKSampleType, predicate?: NSPredicate): Promise<any> {
-    return RNHealthkit.queryObserver(sampleType, predicate?.toJS());
+    if (Platform.OS === 'ios') {
+      return RNHealthkit.queryObserver(sampleType, predicate?.toJS());
+    }
+    return Promise.reject('ios only');
   }
 
   /**
@@ -66,69 +84,110 @@ export class KinasticHealthKit {
    * @param taskId taskId provided from the event emitter
    */
   static completeTask(taskId: string) {
-    RNHealthkit.completeTask(taskId);
+    if (Platform.OS === 'ios') {
+      RNHealthkit.completeTask(taskId);
+    }
   }
 
   static async enableBackgroundDelivery(objectType: HKObjectType, frequency: HKUpdateFrequency): Promise<any> {
-    return RNHealthkit.enableBackgroundDelivery(objectType, frequency);
+    if (Platform.OS === 'ios') {
+      return RNHealthkit.enableBackgroundDelivery(objectType, frequency);
+    }
+    return Promise.reject('ios only');
   }
 
   static async disableBackgroundDelivery(objectType: HKObjectType): Promise<any> {
-    return RNHealthkit.disableBackgroundDelivery(objectType);
+    if (Platform.OS === 'ios') {
+      return RNHealthkit.disableBackgroundDelivery(objectType);
+    }
+    return Promise.reject('ios only');
   }
 
   static async disableAllBackgroundDelivery(): Promise<any> {
-    return RNHealthkit.disableAllBackgroundDelivery();
+    if (Platform.OS === 'ios') {
+      return RNHealthkit.disableAllBackgroundDelivery();
+    }
+    return Promise.reject('ios only');
   }
 
   static async queryCorrelation(query: HKCorrelationQuery): Promise<HKCorrelation[]> {
-    const result = await RNHealthkit.queryCorrelation(query.toJS());
-    return (result || []).map((r: any) => new HKCorrelation(r));
+    if (Platform.OS === 'ios') {
+      const result = await RNHealthkit.queryCorrelation(query.toJS());
+      return (result || []).map((r: any) => new HKCorrelation(r));
+    }
+    return Promise.reject('ios only');
   }
 
   static async queryDocument(query: HKDocumentQuery): Promise<HKDocumentSample[]> {
-    const result = await RNHealthkit.queryDocument(query.toJS());
-    return (result || []).map((r: any) => new HKDocumentSample(r));
+    if (Platform.OS === 'ios') {
+      const result = await RNHealthkit.queryDocument(query.toJS());
+      return (result || []).map((r: any) => new HKDocumentSample(r));
+    }
+    return Promise.reject('ios only');
   }
 
   static async queryAnchored(query: HKAnchoredObjectQuery): Promise<HKAnchoredObjectQueryResult> {
-    const result = await RNHealthkit.queryAnchored(query.toJS());
-    return new HKAnchoredObjectQueryResult(result);
+    if (Platform.OS === 'ios') {
+      const result = await RNHealthkit.queryAnchored(query.toJS());
+      return new HKAnchoredObjectQueryResult(result);
+    }
+    return Promise.reject('ios only');
   }
 
   static async queryWorkoutRoute(workoutUuid: string): Promise<CLLocation[]> {
-    const result = await RNHealthkit.queryWorkoutRoute({ uuid: workoutUuid });
-    return (result || []).map((r: any) => new CLLocation(r));
+    if (Platform.OS === 'ios') {
+      const result = await RNHealthkit.queryWorkoutRoute({ uuid: workoutUuid });
+      return (result || []).map((r: any) => new CLLocation(r));
+    }
+    return Promise.reject('ios only');
   }
 
   static async queryHeartbeatSeries(query: HKSampleQuery): Promise<HKHeartbeatSeriesSample | undefined> {
-    const result = await RNHealthkit.queryHeartbeatSeries(query.toJS());
-    return result ? new HKHeartbeatSeriesSample(result) : undefined;
+    if (Platform.OS === 'ios') {
+      const result = await RNHealthkit.queryHeartbeatSeries(query.toJS());
+      return result ? new HKHeartbeatSeriesSample(result) : undefined;
+    }
+    return Promise.reject('ios only');
   }
 
   static save(samples: HKSample[]): Promise<any> {
-    const json = samples.map((s: HKSample) => s.toJS());
-    return RNHealthkit.save(json);
+    if (Platform.OS === 'ios') {
+      const json = samples.map((s: HKSample) => s.toJS());
+      return RNHealthkit.save(json);
+    }
+    return Promise.reject('ios only');
   }
 
   static saveQuantity(samples: HKQuantitySample[]): Promise<any> {
-    const json = samples.map((s: HKSample) => s.toJS());
-    return RNHealthkit.saveQuantity(json);
+    if (Platform.OS === 'ios') {
+      const json = samples.map((s: HKSample) => s.toJS());
+      return RNHealthkit.saveQuantity(json);
+    }
+    return Promise.reject('ios only');
   }
 
   static saveCategory(samples: HKCategorySample[]): Promise<any> {
-    const json = samples.map((s: HKCategorySample) => s.toJS());
-    return RNHealthkit.saveCategory(json);
+    if (Platform.OS === 'ios') {
+      const json = samples.map((s: HKCategorySample) => s.toJS());
+      return RNHealthkit.saveCategory(json);
+    }
+    return Promise.reject('ios only');
   }
 
   static saveCorrelation(samples: HKCorrelation[]): Promise<any> {
-    const json = samples.map((s: HKCorrelation) => s.toJS());
-    return RNHealthkit.saveCorrelation(json);
+    if (Platform.OS === 'ios') {
+      const json = samples.map((s: HKCorrelation) => s.toJS());
+      return RNHealthkit.saveCorrelation(json);
+    }
+    return Promise.reject('ios only');
   }
 
   static saveWorkout(samples: HKWorkout[]): Promise<any> {
-    const json = samples.map((s: HKWorkout) => s.toJS());
-    return RNHealthkit.saveWorkout(json);
+    if (Platform.OS === 'ios') {
+      const json = samples.map((s: HKWorkout) => s.toJS());
+      return RNHealthkit.saveWorkout(json);
+    }
+    return Promise.reject('ios only');
   }
 
   static subscribe(event: string, callback: (data: any) => void): EmitterSubscription {
