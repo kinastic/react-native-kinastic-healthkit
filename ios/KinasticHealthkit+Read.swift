@@ -80,6 +80,16 @@ extension KinasticHealthkit {
         
         task()
     }
+    
+    @objc(completeAllTasks:)
+    func completeAllTasks(_ taskId: String) {
+        defer {
+            backgroundTasks = [:]
+        }
+        backgroundTasks.forEach { (key, value) in
+            value()
+        }
+    }
 
     @objc(querySample:resolve:reject:)
     func querySample(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
