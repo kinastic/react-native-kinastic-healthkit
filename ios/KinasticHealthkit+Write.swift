@@ -86,10 +86,12 @@ extension KinasticHealthkit {
         if index < objects.count {
             let object = objects[index]
             if #available(iOS 11.0, *), object.locations.count > 0 {
-                self.prepareWorkoutRoute(workout: object.workout, locations: object.locations) { routeBuilder in
-                    self.saveWorkoutObject(workout: object.workout, samples: object.samples) {
-                        routeBuilder?.finishRoute(with: object.workout, metadata: nil) { route, error in
-                            self.saveNextWorkoutObject(objects: objects, index: (index + 1), completion: completion)
+                self.prepareWorkoutRoute(workout: object.workout, locations: object.locations) { [weak self] routeBuilder in
+                    guard let strongSelf = self else { return }
+                    strongSelf.saveWorkoutObject(workout: object.workout, samples: object.samples) {
+                        routeBuilder?.finishRoute(with: object.workout, metadata: nil) { [weak self] route, error in
+                            guard let strongSelf = self else { return }
+                            strongSelf.saveNextWorkoutObject(objects: objects, index: (index + 1), completion: completion)
                         }
                     }
                 }
@@ -104,9 +106,10 @@ extension KinasticHealthkit {
     }
 
     func saveWorkoutObject(workout: HKWorkout, samples: [HKSample], completion: @escaping () -> Void) {
-        self.healthKit.save(workout) { (success: Bool, error: Error?) -> Void in
+        self.healthKit.save(workout) { [weak self] (success: Bool, error: Error?) -> Void in
+            guard let strongSelf = self else { return }
             if (success) {
-                self.saveWorkoutSamples(workout: workout, samples: samples) {
+                strongSelf.saveWorkoutSamples(workout: workout, samples: samples) {
                     completion()
                 }
             } else {

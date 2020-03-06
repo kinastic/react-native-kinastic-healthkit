@@ -35,7 +35,7 @@ extension KinasticHealthkit {
         return nil
     }
 
-    @objc(queryObserver:prediate:resolve:reject:)
+    @objc(queryObserver:predicate:resolve:reject:)
     func queryObserver(_ sampleTypeString: String, predicate: [String: Any]?, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
 
         guard let sampleType = getSampleTypeFromString(perm: sampleTypeString) else {
@@ -45,8 +45,8 @@ extension KinasticHealthkit {
 
         let predicate = parsePredicate(data: predicate)
 
-        let query = HKObserverQuery(sampleType: sampleType, predicate: predicate) { (query, completionHandler, error) in
-            guard error == nil else {
+        let query = HKObserverQuery(sampleType: sampleType, predicate: predicate) { [weak self] (query, completionHandler, error) in
+            guard error == nil, let strongSelf = self else {
                 completionHandler()
                 return
             }
@@ -57,9 +57,9 @@ extension KinasticHealthkit {
             }
             let json: [String: Any] = [
                 "taskId": UUID().uuidString,
-                "sampleType": self.sampleTypeToString(value: sampleType)
+                "sampleType": strongSelf.sampleTypeToString(value: sampleType)
             ]
-            self.sendEvent(withName: "sampleTypeChanged", body: json)
+            strongSelf.sendEvent(withName: "sampleTypeChanged", body: json)
         }
 
         self.healthKit.execute(query)
@@ -94,12 +94,13 @@ extension KinasticHealthkit {
 
         let sort = parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
 
-        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sort) { query, samples, error in
+        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sort) { [weak self] query, samples, error in
+            guard let strongSelf = self else { return }
             if nil != error {
                 reject("error", "Error: \(error?.localizedDescription)", error)
             } else if let data = samples {
                 let json = data.map {
-                    self.anySampleToMap(sample: $0)
+                    strongSelf.anySampleToMap(sample: $0)
                 }
 
                 resolve(json)
@@ -126,20 +127,22 @@ extension KinasticHealthkit {
 
         let limit = query["limit"] as? Int ?? HKObjectQueryNoLimit
 
-        predicateForObjectsWorkout(workoutUuid: workoutUuid) { (predicate) in
+        predicateForObjectsWorkout(workoutUuid: workoutUuid) { [weak self] (predicate) in
+            guard let strongSelf = self else { return }
             guard let predicate = predicate else {
                 reject("notFound", "workout with \(workoutUuid) not found", nil)
                 return
             }
 
-            let sort = self.parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
+            let sort = strongSelf.parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
 
-            let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sort) { query, samples, error in
+            let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sort) { [weak self] query, samples, error in
+                guard let strongSelf = self else { return }
                 if nil != error {
                     reject("error", "Error: \(error?.localizedDescription)", error)
                 } else if let data = samples {
                     let json = data.map {
-                        self.anySampleToMap(sample: $0)
+                        strongSelf.anySampleToMap(sample: $0)
                     }
 
                     resolve(json)
@@ -148,7 +151,7 @@ extension KinasticHealthkit {
                 }
             }
 
-            self.healthKit.execute(query)
+            strongSelf.healthKit.execute(query)
         }
     }
 
@@ -168,12 +171,13 @@ extension KinasticHealthkit {
         let predicate = parsePredicate(data: query["predicate"] as? [String: Any?])
         let samplePredicates = parsePredicates(queryParams: query)
 
-        let query = HKCorrelationQuery(type: sampleType, predicate: predicate, samplePredicates: samplePredicates) { query, samples, error in
+        let query = HKCorrelationQuery(type: sampleType, predicate: predicate, samplePredicates: samplePredicates) { [weak self] query, samples, error in
+            guard let strongSelf = self else { return }
             if nil != error {
                 reject("error", "Error: \(error?.localizedDescription)", error)
             } else if let data = samples {
                 let json = data.map {
-                    self.correlationToMap(sample: $0)
+                    strongSelf.correlationToMap(sample: $0)
                 }
                 resolve(json)
             } else {
@@ -204,7 +208,8 @@ extension KinasticHealthkit {
 
             var allDocuments: [HKDocumentSample] = []
 
-            let query = HKDocumentQuery(documentType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sort, includeDocumentData: includeDocumentData) { (query, documents, done, error) in
+            let query = HKDocumentQuery(documentType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sort, includeDocumentData: includeDocumentData) { [weak self] (query, documents, done, error) in
+                guard let strongSelf = self else { return }
                 if nil != error {
                     reject("error", "Error: \(error?.localizedDescription)", error)
                 }
@@ -214,7 +219,7 @@ extension KinasticHealthkit {
 
                 if done {
                     let json = allDocuments.map {
-                        self.documentSampleToMap(sample: $0)
+                        strongSelf.documentSampleToMap(sample: $0)
                     }
                     resolve(json)
                 }
@@ -243,15 +248,16 @@ extension KinasticHealthkit {
         let predicate = parsePredicate(data: query["predicate"] as? [String: Any?])
         let limit = query["limit"] as? Int ?? HKObjectQueryNoLimit
 
-        let query = HKAnchoredObjectQuery(type: sampleType, predicate: predicate, anchor: anchor, limit: limit) { (query, samples, deleted, anchor, error) in
+        let query = HKAnchoredObjectQuery(type: sampleType, predicate: predicate, anchor: anchor, limit: limit) { [weak self] (query, samples, deleted, anchor, error) in
+            guard let strongSelf = self else { return }
             if nil != error {
                 reject("error", "Error: \(error?.localizedDescription)", error)
             } else {
                 let newSamples = samples?.map {
-                    self.anySampleToMap(sample: $0)
+                    strongSelf.anySampleToMap(sample: $0)
                 }
                 let deletedObjects = deleted?.map {
-                    self.deletedObjectToMap(object: $0)
+                    strongSelf.deletedObjectToMap(object: $0)
                 } ?? []
 
                 let json = [
@@ -282,14 +288,13 @@ extension KinasticHealthkit {
 
         let predicate = parsePredicate(data: query["predicate"] as? [String: Any?])
 
-        let sort = parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
-
-        let query = HKSourceQuery(sampleType: sampleType, samplePredicate: predicate) { (query, sources, error) in
+        let query = HKSourceQuery(sampleType: sampleType, samplePredicate: predicate) { [weak self] (query, sources, error) in
+            guard let strongSelf = self else { return }
             if nil != error {
                 reject("error", "Error: \(error?.localizedDescription)", error)
             } else if let data = sources {
                 let json = data.map {
-                    self.sourceToMap(source: $0)
+                    strongSelf.sourceToMap(source: $0)
                 }
 
                 resolve(json)
@@ -319,7 +324,8 @@ extension KinasticHealthkit {
                 let predicate = HKQuery.predicateForObjects(from: workout)
 
                 let sort = [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]
-                let query = HKSampleQuery(sampleType: HKSeriesType.workoutRoute(), predicate: predicate, limit: 1, sortDescriptors: sort) { (query, samples, error) in
+                let query = HKSampleQuery(sampleType: HKSeriesType.workoutRoute(), predicate: predicate, limit: 1, sortDescriptors: sort) { [weak self] (query, samples, error) in
+                    guard let strongSelf = self else { return }
                     guard error == nil else {
                         reject("error", error?.localizedDescription, error)
                         return
@@ -332,7 +338,7 @@ extension KinasticHealthkit {
 
                     let first = samples[0]
                     if let routeSample = first as? HKWorkoutRoute {
-                        self.queryWorkoutRoute(route: routeSample, resolve: resolve, reject: reject)
+                        strongSelf.queryWorkoutRoute(route: routeSample, resolve: resolve, reject: reject)
                     }
                 }
                 self.healthKit.execute(query)
@@ -348,7 +354,8 @@ extension KinasticHealthkit {
             let predicate = parsePredicate(data: query["predicate"] as? [String: Any?])
             let sort = parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
 
-            let sampleQuery = HKSampleQuery(sampleType: HKSeriesType.heartbeat(), predicate: predicate, limit: 1, sortDescriptors: sort) { query, samples, error in
+            let sampleQuery = HKSampleQuery(sampleType: HKSeriesType.heartbeat(), predicate: predicate, limit: 1, sortDescriptors: sort) { [weak self] query, samples, error in
+                guard let strongSelf = self else { return }
                 guard error == nil else {
                     reject("error", error?.localizedDescription, error)
                     return
@@ -360,20 +367,21 @@ extension KinasticHealthkit {
                 }
 
                 var data: [[String: Any]] = []
-                let query = HKHeartbeatSeriesQuery(heartbeatSeries: sample) { query, interval, precededByGap, done, error in
+                let query = HKHeartbeatSeriesQuery(heartbeatSeries: sample) { [weak self] query, interval, precededByGap, done, error in
+                    guard let strongSelf = self else { return }
                     data.append([
                         "intervalSinceStart": interval,
                         "precededByGap": precededByGap
                     ])
 
                     if done {
-                        var json = self.heartbeatSeriesSampleToMap(sample: sample)
+                        var json = strongSelf.heartbeatSeriesSampleToMap(sample: sample)
                         json["data"] = data
                         resolve(json)
                     }
                 }
 
-                self.healthKit.execute(query)
+                strongSelf.healthKit.execute(query)
             }
 
             self.healthKit.execute(sampleQuery)
@@ -441,7 +449,8 @@ extension KinasticHealthkit {
     func queryWorkoutRoute(route: HKWorkoutRoute, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
         var allLocations: [CLLocation] = []
 
-        let query = HKWorkoutRouteQuery(route: route) { (query: HKWorkoutRouteQuery, locations: [CLLocation]?, done: Bool, error: Error?) in
+        let query = HKWorkoutRouteQuery(route: route) { [weak self] (query: HKWorkoutRouteQuery, locations: [CLLocation]?, done: Bool, error: Error?) in
+            guard let strongSelf = self else { return }
             if nil != error {
                 reject("error", error?.localizedDescription, error)
             } else {
@@ -451,7 +460,7 @@ extension KinasticHealthkit {
 
                 if done {
                     let json = allLocations.map {
-                        self.locationToJson(location: $0)
+                        strongSelf.locationToJson(location: $0)
                     }
                     resolve(json)
                 }
