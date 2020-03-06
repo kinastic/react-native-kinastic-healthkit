@@ -778,7 +778,7 @@ extension KinasticHealthkit {
         case .bloodPressureSystolic: return .millimeterOfMercury()
         case .bodyFatPercentage: return .percent()
         case .bodyMass: return .gramUnit(with: .kilo)
-        case .bodyMassIndex: return HKUnit(from: .kilogram)
+        case .bodyMassIndex: return .count()
         case .bodyTemperature: return .degreeCelsius()
         case .dietaryBiotin: return .gramUnit(with: .milli)
         case .dietaryCaffeine: return .gramUnit(with: .milli)
