@@ -56,7 +56,7 @@ extension KinasticHealthkit {
                 return
             }
             let taskId = UUID().uuidString
-            let json: [String: Any] = [
+            let json = [
                 "taskId": taskId,
                 "sampleType": strongSelf.sampleTypeToString(value: sampleType)
             ]
@@ -627,7 +627,7 @@ extension KinasticHealthkit {
 
     func objectsToMap(objects: Set<HKSample>) -> [[String: Any?]] {
         objects.map {
-            sampleToMap(sample: $0)
+            anySampleToMap(sample: $0)
         }.compactMap {
             $0
         }
@@ -650,7 +650,7 @@ extension KinasticHealthkit {
         var result = sampleToMap(sample: sample)
         result["entityType"] = "quantity"
         result["sampleType"] = quantityTypeToString(value: sample.quantityType)
-        result["unit"] = unit
+        result["unit"] = unit?.unitString
         result["value"] = value
 
         if #available(iOS 12.0, *) {
