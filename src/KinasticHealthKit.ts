@@ -89,6 +89,15 @@ export class KinasticHealthKit {
     }
   }
 
+  /**
+   * Use only when cleaning up everything like on a logout
+   */
+  static completeAllTasks() {
+    if (Platform.OS === 'ios') {
+      RNHealthkit.completeAllTasks();
+    }
+  }
+
   static async enableBackgroundDelivery(objectType: HKObjectType, frequency: HKUpdateFrequency): Promise<any> {
     if (Platform.OS === 'ios') {
       return RNHealthkit.enableBackgroundDelivery(objectType, frequency);

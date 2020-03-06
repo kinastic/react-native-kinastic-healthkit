@@ -31,6 +31,10 @@ export declare class KinasticHealthKit {
      * @param taskId taskId provided from the event emitter
      */
     static completeTask(taskId: string): void;
+    /**
+     * Use only when cleaning up everything like on a logout
+     */
+    static completeAllTasks(): void;
     static enableBackgroundDelivery(objectType: HKObjectType, frequency: HKUpdateFrequency): Promise<any>;
     static disableBackgroundDelivery(objectType: HKObjectType): Promise<any>;
     static disableAllBackgroundDelivery(): Promise<any>;
