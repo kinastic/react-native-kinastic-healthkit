@@ -14,6 +14,7 @@ class KinasticHealthkit: RCTEventEmitter {
     var hasSubscribers = false
     var backgroundTasks: [String: HKObserverQueryCompletionHandler] = [:]
     
+    var cachedEvents: [String: Any] = [:]
     let healthKit = HKHealthStore()
     let iso8061Format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
     let readPermissionBlacklist = [
@@ -39,6 +40,24 @@ class KinasticHealthkit: RCTEventEmitter {
         return [
             "sampleTypeChanged"
         ]
+    }
+    
+    override func startObserving() {
+        hasSubscribers = true
+    }
+    
+    override func stopObserving() {
+        hasSubscribers = false
+        cachedEvents = [:]
+    }
+    
+    @objc
+    override func addListener(_ eventName: String!) {
+        super.addListener(eventName)
+        if let event = cachedEvents[eventName] {
+            sendEvent(withName: eventName, body: event)
+            cachedEvents.removeValue(forKey: eventName)
+        }
     }
     
     @objc override class func requiresMainQueueSetup() -> Bool {

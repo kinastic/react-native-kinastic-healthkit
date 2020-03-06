@@ -60,7 +60,13 @@ extension KinasticHealthkit {
                 "taskId": taskId,
                 "sampleType": strongSelf.sampleTypeToString(value: sampleType)
             ]
-            strongSelf.sendEvent(withName: "sampleTypeChanged", body: json)
+            
+            if (strongSelf.hasSubscribers) {
+                strongSelf.sendEvent(withName: "sampleTypeChanged", body: json)
+            } else {
+                strongSelf.cachedEvents["sampleTypeChanged"] = json
+            }
+            
             strongSelf.backgroundTasks[taskId] = completionHandler
         }
 
@@ -81,8 +87,8 @@ extension KinasticHealthkit {
         task()
     }
     
-    @objc(completeAllTasks:)
-    func completeAllTasks(_ taskId: String) {
+    @objc(completeAllTasks)
+    func completeAllTasks() {
         defer {
             backgroundTasks = [:]
         }
