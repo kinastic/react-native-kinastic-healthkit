@@ -21,7 +21,7 @@ import { HKHeartbeatSeriesSample } from './HKHeartbeatSeriesSample';
 export declare class KinasticHealthKit {
     private static emitter;
     static requestAuthorization(readPermissions: string[], writePermissions?: string[]): Promise<any>;
-    static authorizationStatus(permissions: string[]): Promise<HKAuthorizationStatus>;
+    static authorizationStatus(permissions: string[]): Promise<HKAuthorizationStatus[]>;
     static getRequestStatusForAuthorization(readPermissions: string[], writePermissions?: string[]): Promise<HKAuthorizationRequestStatus>;
     static querySample(query: HKSampleQuery): Promise<HKSample[]>;
     static querySampleByWorkout(query: HKSampleQuery, workout: string | HKWorkout): Promise<HKSample[]>;
