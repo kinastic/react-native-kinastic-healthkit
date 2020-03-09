@@ -16,7 +16,7 @@ class KinasticHealthkit: RCTEventEmitter {
     
     var cachedEvents: [String: Any] = [:]
     let healthKit = HKHealthStore()
-    let iso8061Format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+    let iso8061Format = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
     let readPermissionBlacklist = [
         "food",
         "bloodPressure"
