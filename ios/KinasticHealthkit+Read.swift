@@ -738,7 +738,6 @@ extension KinasticHealthkit {
     func objectToMap(sample: HKObject) -> [String: Any?] {
         return [
             "uuid": sample.uuid.uuidString,
-            "entityType": "quantity",
             "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
             "device": deviceToMap(data: sample.device),
             "metadata": sample.metadata
