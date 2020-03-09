@@ -14,6 +14,7 @@ export class HKSample extends HKObject {
     super(json);
 
     if (json) {
+      this.entityType = json.entityType || EntityType.quantity;
       this.sampleType = json.sampleType;
       this.startDate = new Date(json.startDate);
       this.endDate = new Date(json.endDate);
