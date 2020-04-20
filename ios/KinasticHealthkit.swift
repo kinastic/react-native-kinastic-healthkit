@@ -64,9 +64,9 @@ class KinasticHealthkit: RCTEventEmitter {
         return true
     }
 
-    @objc(isAvailable:reject:)
-    func isAvailable(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
-        resolve(HKHealthStore.isHealthDataAvailable())
+    @objc
+    func isAvailable() -> Bool {
+        return HKHealthStore.isHealthDataAvailable()
     }
 
     @objc(requestAuthorization:writePermissionsString:resolve:reject:)

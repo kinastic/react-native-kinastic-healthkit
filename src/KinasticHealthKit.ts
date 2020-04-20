@@ -26,6 +26,13 @@ export class KinasticHealthKit {
 
   private static emitter = new NativeEventEmitter(RNHealthkit);
 
+  static isAvailable(): boolean {
+    if (Platform.OS === 'ios') {
+      return RNHealthkit.isAvailable();
+    }
+    return false;
+  }
+
   static requestAuthorization(
     readPermissions: string[],
     writePermissions: string[] = [],
