@@ -20,7 +20,7 @@ import { HKUpdateFrequency } from './HKUpdateFrequency';
 import { HKHeartbeatSeriesSample } from './HKHeartbeatSeriesSample';
 export declare class KinasticHealthKit {
     private static emitter;
-    static isAvailable(): boolean;
+    static isAvailable(): Promise<boolean>;
     static requestAuthorization(readPermissions: string[], writePermissions?: string[]): Promise<any>;
     static authorizationStatus(permissions: string[]): Promise<HKAuthorizationStatus[]>;
     static getRequestStatusForAuthorization(readPermissions: string[], writePermissions?: string[]): Promise<HKAuthorizationRequestStatus>;

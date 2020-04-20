@@ -2,7 +2,7 @@
 
 @interface RCT_EXTERN_MODULE(KinasticHealthkit, NSObject)
     
-RCT_EXTERN_METHOD(isAvailable)
+RCT_EXTERN_METHOD(isAvailable:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock) reject)
 RCT_EXTERN_METHOD(initHealthKit:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock) reject)
 RCT_EXTERN_METHOD(requestAuthorization:(NSArray *)readPermissionsString writePermissionsString:(NSArray *)writePermissionsString resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock) reject)
 RCT_EXTERN_METHOD(authorizationStatus:(NSArray *)permissions resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock) reject)
