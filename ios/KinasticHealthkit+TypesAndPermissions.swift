@@ -450,11 +450,11 @@ extension KinasticHealthkit {
             return correlation
         }
 
-        if #available(iOS 10.0, *) {
-            if let document = getDocumentTypeFromString(input: perm) {
-                return document
-            }
-        }
+//        if #available(iOS 10.0, *) {
+//            if let document = getDocumentTypeFromString(input: perm) {
+//                return document
+//            }
+//        }
 
         switch perm {
         case "workout": return HKObjectType.workoutType()
@@ -467,14 +467,13 @@ extension KinasticHealthkit {
         }
     }
 
-    @available(iOS 10.0, *)
-    func getDocumentTypeFromString(input: String?) -> HKDocumentType? {
-        if input == "CDA" {
-            return HKObjectType.documentType(forIdentifier: .CDA)
-        }
-        return nil
-    }
-
+//    @available(iOS 10.0, *)
+//    func getDocumentTypeFromString(input: String?) -> HKDocumentType? {
+//        if input == "CDA" {
+//            return HKObjectType.documentType(forIdentifier: .CDA)
+//        }
+//        return nil
+//    }
 
     func getWorkoutEventTypeFromString(input: String?) -> HKWorkoutEventType? {
         switch input {

@@ -329,9 +329,11 @@ extension KinasticHealthkit {
             return quantityTypeToString(value: quantity)
         } else if let category = value as? HKCategoryType {
             return categoryTypeToString(value: category)
-        } else if #available(iOS 10.0, *), let _ = value as? HKDocumentType {
-            return "CDA"
-        } else if let _ = value as? HKWorkoutType {
+        }
+//        else if #available(iOS 10.0, *), let _ = value as? HKDocumentType {
+//            return "CDA"
+//        }
+        else if let _ = value as? HKWorkoutType {
             return "workout"
         } else if #available(iOS 11.0, *), let series = value as? HKSeriesType {
             return seriesTypeToString(value: series)

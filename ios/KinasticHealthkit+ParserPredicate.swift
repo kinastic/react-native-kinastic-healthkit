@@ -34,11 +34,11 @@ extension KinasticHealthkit {
 
             switch type {
             case "categorySamples": return predicateForCategorySamples(data: predicateData)
-            case "clinicalRecords": if #available(iOS 12.0, *) {
-                return predicateForClinicalRecords(data: predicateData)
-            } else {
-                return nil
-            }
+//            case "clinicalRecords": if #available(iOS 12.0, *) {
+//                return predicateForClinicalRecords(data: predicateData)
+//            } else {
+//                return nil
+//            }
             case "object": return predicateForObject(data: predicateData)
             case "objects": return predicateForObjects(data: predicateData)
             case "objectsWithNoCorrelation": return HKQuery.predicateForObjectsWithNoCorrelation()
@@ -174,21 +174,21 @@ extension KinasticHealthkit {
         return HKQuery.predicateForCategorySamples(with: op, value: value)
     }
 
-    @available(iOS 12.0, *)
-    func predicateForClinicalRecords(data: [String: Any?]) -> NSPredicate? {
-
-        guard let fhirResourceType = parsefhirResourceType(data: data["fhirResourceType"] as? String) else {
-            print("predicate.fhirResourceType missing")
-            return nil
-        }
-
-        if let source = parseSource(data: data["source"] as? [String: Any?]), let identifier = data["identifier"] as? String {
-            return HKQuery.predicateForClinicalRecords(from: source, fhirResourceType: fhirResourceType, identifier: identifier)
-        }
-
-        return HKQuery.predicateForClinicalRecords(withFHIRResourceType: fhirResourceType)
-
-    }
+//    @available(iOS 12.0, *)
+//    func predicateForClinicalRecords(data: [String: Any?]) -> NSPredicate? {
+//
+//        guard let fhirResourceType = parsefhirResourceType(data: data["fhirResourceType"] as? String) else {
+//            print("predicate.fhirResourceType missing")
+//            return nil
+//        }
+//
+//        if let source = parseSource(data: data["source"] as? [String: Any?]), let identifier = data["identifier"] as? String {
+//            return HKQuery.predicateForClinicalRecords(from: source, fhirResourceType: fhirResourceType, identifier: identifier)
+//        }
+//
+//        return HKQuery.predicateForClinicalRecords(withFHIRResourceType: fhirResourceType)
+//
+//    }
 
     func predicateForQuantitySamples(data: [String: Any?]) -> NSPredicate? {
 

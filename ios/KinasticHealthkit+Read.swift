@@ -209,48 +209,48 @@ extension KinasticHealthkit {
         self.healthKit.execute(query)
     }
 
-    @objc(queryDocument:resolve:reject:)
-    func queryDocument(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        if #available(iOS 10.0, *) {
-            guard let typeString = query["sampleType"] as? String else {
-                reject("format", "type required", nil)
-                return
-            }
-
-            guard let sampleType = getDocumentTypeFromString(input: typeString) else {
-                reject("format", "invalid type", nil)
-                return
-            }
-
-            let limit = query["limit"] as? Int ?? HKObjectQueryNoLimit
-            let predicate = parsePredicate(data: query["predicate"] as? [String: Any?])
-            let includeDocumentData = query["includeDocumentData"] as? Bool ?? false
-            let sort = parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
-
-            var allDocuments: [HKDocumentSample] = []
-
-            let query = HKDocumentQuery(documentType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sort, includeDocumentData: includeDocumentData) { [weak self] (query, documents, done, error) in
-                guard let strongSelf = self else { return }
-                if nil != error {
-                    reject("error", "Error: \(error?.localizedDescription)", error)
-                }
-                if let data = documents {
-                    allDocuments += data
-                }
-
-                if done {
-                    let json = allDocuments.map {
-                        strongSelf.documentSampleToMap(sample: $0)
-                    }
-                    resolve(json)
-                }
-            }
-
-            self.healthKit.execute(query)
-        } else {
-            reject("unavailable", "iOS >= 10.0 required", nil)
-        }
-    }
+//    @objc(queryDocument:resolve:reject:)
+//    func queryDocument(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+//        if #available(iOS 10.0, *) {
+//            guard let typeString = query["sampleType"] as? String else {
+//                reject("format", "type required", nil)
+//                return
+//            }
+//
+//            guard let sampleType = getDocumentTypeFromString(input: typeString) else {
+//                reject("format", "invalid type", nil)
+//                return
+//            }
+//
+//            let limit = query["limit"] as? Int ?? HKObjectQueryNoLimit
+//            let predicate = parsePredicate(data: query["predicate"] as? [String: Any?])
+//            let includeDocumentData = query["includeDocumentData"] as? Bool ?? false
+//            let sort = parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
+//
+//            var allDocuments: [HKDocumentSample] = []
+//
+//            let query = HKDocumentQuery(documentType: sampleType, predicate: predicate, limit: limit, sortDescriptors: sort, includeDocumentData: includeDocumentData) { [weak self] (query, documents, done, error) in
+//                guard let strongSelf = self else { return }
+//                if nil != error {
+//                    reject("error", "Error: \(error?.localizedDescription)", error)
+//                }
+//                if let data = documents {
+//                    allDocuments += data
+//                }
+//
+//                if done {
+//                    let json = allDocuments.map {
+//                        strongSelf.documentSampleToMap(sample: $0)
+//                    }
+//                    resolve(json)
+//                }
+//            }
+//
+//            self.healthKit.execute(query)
+//        } else {
+//            reject("unavailable", "iOS >= 10.0 required", nil)
+//        }
+//    }
 
     @objc(queryAnchored:resolve:reject:)
     func queryAnchored(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
@@ -556,22 +556,22 @@ extension KinasticHealthkit {
             return categorySampleToMap(sample: sample as! HKCategorySample)
         }
 
-        if #available(iOS 10.0, *) {
-            if sample is HKDocumentSample {
-                return documentSampleToMap(sample: sample as! HKDocumentSample)
-            }
-        }
+//        if #available(iOS 10.0, *) {
+//            if sample is HKDocumentSample {
+//                return documentSampleToMap(sample: sample as! HKDocumentSample)
+//            }
+//        }
 
         return nil
     }
 
-    @available(iOS 10.0, *)
-    func documentSampleToMap(sample: HKDocumentSample) -> [String: Any?] {
-        var result = sampleToMap(sample: sample)
-        result["entityType"] = "document"
-        result["sampleType"] = "CDA" // there is only CDA for now
-        return result
-    }
+//    @available(iOS 10.0, *)
+//    func documentSampleToMap(sample: HKDocumentSample) -> [String: Any?] {
+//        var result = sampleToMap(sample: sample)
+//        result["entityType"] = "document"
+//        result["sampleType"] = "CDA" // there is only CDA for now
+//        return result
+//    }
 
     func categorySampleToMap(sample: HKCategorySample) -> [String: Any?] {
         var result = sampleToMap(sample: sample)
