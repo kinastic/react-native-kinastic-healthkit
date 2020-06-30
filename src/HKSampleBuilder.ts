@@ -4,7 +4,6 @@ import { HKWorkout } from './HKWorkout';
 import { HKQuantitySample } from './HKQuantitySample';
 import { HKCorrelation } from './HKCorrelation';
 import { HKCategorySample } from "./HKCategorySample";
-import { HKDocumentSample } from "./HKDocumentSample";
 
 export class HKSampleBuilder {
   static build(json?: any): HKSample | undefined {
@@ -14,8 +13,8 @@ export class HKSampleBuilder {
           return new HKCategorySample(json);
         case EntityType.correlation:
           return new HKCorrelation(json);
-        case EntityType.document:
-          return new HKDocumentSample(json);
+        // case EntityType.document:
+          // return new HKDocumentSample(json);
         case EntityType.workout:
           return new HKWorkout(json);
         case EntityType.quantity:

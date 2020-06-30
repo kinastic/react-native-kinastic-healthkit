@@ -6,10 +6,8 @@ import { HKCorrelation } from './HKCorrelation';
 import { HKCategorySample } from './HKCategorySample';
 import { HKSampleQuery } from './HKSampleQuery';
 import { HKSampleBuilder } from './HKSampleBuilder';
-import { HKDocumentSample } from './HKDocumentSample';
 import { CLLocation } from './CLLocation';
 import { HKCorrelationQuery } from './HKCorrelationQuery';
-import { HKDocumentQuery } from './HKDocumentQuery';
 import { HKAnchoredObjectQuery } from './HKAnchoredObjectQuery';
 import { HKAnchoredObjectQueryResult } from './HKAnchoredObjectQueryResult';
 import { HKAuthorizationStatus } from './HKAuthorizationStatus';
@@ -134,13 +132,13 @@ export class KinasticHealthKit {
     return Promise.reject('ios only');
   }
 
-  static async queryDocument(query: HKDocumentQuery): Promise<HKDocumentSample[]> {
-    if (Platform.OS === 'ios') {
-      const result = await RNHealthkit.queryDocument(query.toJS());
-      return (result || []).map((r: any) => new HKDocumentSample(r));
-    }
-    return Promise.reject('ios only');
-  }
+  // static async queryDocument(query: HKDocumentQuery): Promise<HKDocumentSample[]> {
+  //   if (Platform.OS === 'ios') {
+  //     const result = await RNHealthkit.queryDocument(query.toJS());
+  //     return (result || []).map((r: any) => new HKDocumentSample(r));
+  //   }
+  //   return Promise.reject('ios only');
+  // }
 
   static async queryAnchored(query: HKAnchoredObjectQuery): Promise<HKAnchoredObjectQueryResult> {
     if (Platform.OS === 'ios') {

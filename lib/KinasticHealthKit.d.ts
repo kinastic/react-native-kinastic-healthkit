@@ -5,10 +5,8 @@ import { HKQuantitySample } from './HKQuantitySample';
 import { HKCorrelation } from './HKCorrelation';
 import { HKCategorySample } from './HKCategorySample';
 import { HKSampleQuery } from './HKSampleQuery';
-import { HKDocumentSample } from './HKDocumentSample';
 import { CLLocation } from './CLLocation';
 import { HKCorrelationQuery } from './HKCorrelationQuery';
-import { HKDocumentQuery } from './HKDocumentQuery';
 import { HKAnchoredObjectQuery } from './HKAnchoredObjectQuery';
 import { HKAnchoredObjectQueryResult } from './HKAnchoredObjectQueryResult';
 import { HKAuthorizationStatus } from './HKAuthorizationStatus';
@@ -40,7 +38,6 @@ export declare class KinasticHealthKit {
     static disableBackgroundDelivery(objectType: HKObjectType): Promise<any>;
     static disableAllBackgroundDelivery(): Promise<any>;
     static queryCorrelation(query: HKCorrelationQuery): Promise<HKCorrelation[]>;
-    static queryDocument(query: HKDocumentQuery): Promise<HKDocumentSample[]>;
     static queryAnchored(query: HKAnchoredObjectQuery): Promise<HKAnchoredObjectQueryResult>;
     static queryWorkoutRoute(workoutUuid: string): Promise<CLLocation[]>;
     static queryHeartbeatSeries(query: HKSampleQuery): Promise<HKHeartbeatSeriesSample | undefined>;
