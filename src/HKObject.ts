@@ -1,7 +1,15 @@
 import { HKMetadata } from "./HKMetadata";
-import { HKSource } from "./HKSource";
-import { HKSourceRevision } from "./HKSourceRevision";
-import { HKDevice } from "./HKDevice";
+import { HKSource, HKSourceJson } from "./HKSource";
+import { HKSourceRevision, HKSourceRevisionJson } from "./HKSourceRevision";
+import { HKDevice, HKDeviceJson } from "./HKDevice";
+
+export type HKObjectJson = {
+    uuid: string;
+    source?: HKSourceJson;
+    sourceRevision?: HKSourceRevisionJson;
+    device?: HKDeviceJson;
+    metadata?: HKMetadata;
+}
 
 export class HKObject {
     uuid: string = '';
@@ -14,9 +22,9 @@ export class HKObject {
     device?: HKDevice;
     metadata?: HKMetadata;
 
-    constructor(json?: any) {
+    constructor(json?: Partial<HKObjectJson>) {
         if (json) {
-            this.uuid = json.uuid;
+            this.uuid = json.uuid ?? '';
             this.source = json.source ? new HKSource(json.source) : undefined;
             this.sourceRevision = json.sourceRevision ? new HKSourceRevision(json.sourceRevision) : undefined;
             this.device = json.device ? new HKDevice(json.device) : undefined;
@@ -24,7 +32,7 @@ export class HKObject {
         }
     }
 
-    toJS(): any {
+    toJS(): HKObjectJson {
         return {
             uuid: this.uuid,
             source: this.source ? this.source.toJS() : undefined,

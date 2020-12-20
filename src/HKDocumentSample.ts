@@ -1,12 +1,16 @@
-import { HKSample } from './HKSample';
+import { HKSample, HKSampleJson } from './HKSample';
 import { EntityType } from './EntityType';
 
+export type HKDocumentSampleJson = HKSampleJson & {
+
+};
+
 export class HKDocumentSample extends HKSample {
-  constructor(json?: any) {
+  constructor(json?: Partial<HKDocumentSampleJson>) {
     super(json);
   }
 
-  toJS(): any {
+  toJS(): HKDocumentSampleJson {
     return super.toJS();
   }
 

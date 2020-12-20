@@ -1,4 +1,11 @@
-import { HKSource } from './HKSource';
+import { HKSource, HKSourceJson } from './HKSource';
+
+export type HKSourceRevisionJson = {
+  source: HKSourceJson;
+  version?: string;
+  productType?: string;
+  operatingSystemVersion: string;
+}
 
 export class HKSourceRevision {
   source: HKSource = new HKSource();
@@ -6,16 +13,16 @@ export class HKSourceRevision {
   productType?: string;
   operatingSystemVersion: string = '';
 
-  constructor(json?: any) {
+  constructor(json?: Partial<HKSourceRevisionJson>) {
     if (json) {
       this.source = new HKSource(json.source);
       this.version = json.version;
       this.productType = json.productType;
-      this.operatingSystemVersion = json.operatingSystemVersion;
+      this.operatingSystemVersion = json.operatingSystemVersion ?? '';
     }
   }
 
-  toJS(): any {
+  toJS(): HKSourceRevisionJson {
     return {
       source: this.source.toJS(),
       version: this.version,

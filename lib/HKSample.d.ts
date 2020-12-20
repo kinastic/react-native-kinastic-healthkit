@@ -1,11 +1,17 @@
 import { HKSampleType } from './HKSampleType';
-import { HKObject } from './HKObject';
+import { HKObject, HKObjectJson } from './HKObject';
 import { EntityType } from './EntityType';
+export declare type HKSampleJson = HKObjectJson & {
+    sampleType?: HKSampleType;
+    entityType: EntityType;
+    startDate: string;
+    endDate: string;
+};
 export declare class HKSample extends HKObject {
     sampleType?: HKSampleType;
     entityType: EntityType;
     startDate: Date;
     endDate: Date;
-    constructor(json?: any);
-    toJS(): any;
+    constructor(json?: Partial<HKSampleJson>);
+    toJS(): HKSampleJson;
 }

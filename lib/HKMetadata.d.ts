@@ -1,3 +1,3 @@
-export interface HKMetadata {
+export declare type HKMetadata = {
     [key: string]: any;
-}
+};

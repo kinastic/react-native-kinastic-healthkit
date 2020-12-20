@@ -1,9 +1,13 @@
 import { HKSampleType } from './HKSampleType';
-import { HKQuery } from './HKQuery';
-import { NSPredicate } from './NSPredicate';
+import { HKQuery, HKQueryJson } from './HKQuery';
+import { NSPredicateJson } from './NSPredicate';
+export declare type HKAnchoredObjectQueryJson = HKQueryJson<HKSampleType> & {
+    limit: number;
+    anchor?: number;
+};
 export declare class HKAnchoredObjectQuery extends HKQuery<HKSampleType> {
     limit: number;
     anchor?: number;
-    constructor(sampleType: HKSampleType, predicate?: NSPredicate, limit?: number, anchor?: number);
-    toJS(): any;
+    constructor(sampleType: HKSampleType, predicate?: NSPredicateJson, limit?: number, anchor?: number);
+    toJS(): HKAnchoredObjectQueryJson;
 }

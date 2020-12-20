@@ -1,13 +1,13 @@
 import { HKQuery } from './HKQuery';
-import { NSSortDescriptor } from './NSSortDescriptor';
-import {HKSampleType} from "./HKSampleType";
-import { NSPredicate } from "./NSPredicate";
+import { NSSortDescriptor, NSSortDescriptorJson } from './NSSortDescriptor';
+import { HKSampleType } from "./HKSampleType";
+import { NSPredicateJson } from "./NSPredicate";
 
 export class HKSampleQuery extends HKQuery<HKSampleType> {
   limit: number = 0;
   sort?: NSSortDescriptor[];
 
-  constructor(sampleType: HKSampleType, predicate?: NSPredicate, limit?: number, sort?: NSSortDescriptor[]) {
+  constructor(sampleType: HKSampleType, predicate?: NSPredicateJson, limit?: number, sort?: NSSortDescriptorJson[]) {
     super(sampleType, predicate);
 
     this.limit = limit || 0;

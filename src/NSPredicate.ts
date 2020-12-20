@@ -1,12 +1,39 @@
 import { NSPredicateType } from './NSPredicateType';
 import { NSComparisonPredicateOperator } from './NSComparisonPredicateOperator {';
-import { HKSource } from './HKSource';
-import { HKWorkout } from './HKWorkout';
-import { HKDevice } from './HKDevice';
-import { HKSourceRevision } from './HKSourceRevision';
+import { HKSource, HKSourceJson } from './HKSource';
+import { HKWorkout, HKWorkoutJson } from './HKWorkout';
+import { HKDevice, HKDeviceJson } from './HKDevice';
+import { HKSourceRevision, HKSourceRevisionJson } from './HKSourceRevision';
 import { HKQueryOptions } from './HKQueryOptions';
 import { HKFHIRResourceType } from './HKFHIRResourceType';
 import { HKWorkoutActivityType } from './HKWorkoutActivityType';
+
+export type NSPredicateJson = {
+  type: NSPredicateType;
+  operator?: NSComparisonPredicateOperator;
+  value?: number;
+  fhirResourceType?: HKFHIRResourceType;
+  source?: HKSourceJson;
+  identifier?: string;
+  uuid?: string;
+  workout?: HKWorkoutJson;
+  device?: HKDeviceJson[];
+  sourceRevisions?: HKSourceRevisionJson[];
+  uuids?: string[];
+  deviceProperty?: string;
+  allowedValues?: string[];
+  metadataKey?: string[];
+  unit?: string;
+  startDate?: string;
+  endDate?: string;
+  options?: HKQueryOptions;
+  activityType?: HKWorkoutActivityType;
+  duration?: number;
+  totalDistance?: number;
+  totalEnergyBurned?: number;
+  totalSwimmingStrokeCount?: number;
+  totalFlightsClimbed?: number;
+}
 
 export class NSPredicate {
   type: NSPredicateType = NSPredicateType.quantitySamples;
@@ -34,9 +61,9 @@ export class NSPredicate {
   totalSwimmingStrokeCount?: number;
   totalFlightsClimbed?: number;
 
-  constructor(json?: any) {
+  constructor(json?: Partial<NSPredicateJson>) {
     if (json) {
-      this.type = json.type;
+      this.type = json.type ?? NSPredicateType.quantitySamples;
       this.operator = json.operator;
       this.value = json.value;
       this.fhirResourceType = json.fhirResourceType;
@@ -65,7 +92,7 @@ export class NSPredicate {
     }
   }
 
-  toJS(): any {
+  toJS(): NSPredicateJson {
     return {
       type: this.type,
       operator: this.operator,

@@ -1,11 +1,23 @@
 import { HKWorkoutActivityType } from './HKWorkoutActivityType';
-import { HKSample } from './HKSample';
-import { HKWorkoutEvent } from './HKWorkoutEvent';
+import { HKSample, HKSampleJson } from './HKSample';
+import { HKWorkoutEvent, HKWorkoutEventJson } from './HKWorkoutEvent';
 import { HKMetadata } from './HKMetadata';
 import { HKMetadataKey } from './HKMetadataKey';
 import { EntityType } from './EntityType';
 import { HKSampleBuilder } from './HKSampleBuilder';
-import { HKWorkoutRoute } from './HKWorkoutRoute';
+import { HKWorkoutRoute, HKWorkoutRouteJson } from './HKWorkoutRoute';
+import { notUndefined } from './notUndefined';
+
+export type HKWorkoutJson = HKSampleJson & {
+  activityType: HKWorkoutActivityType;
+  workoutEvents: HKWorkoutEventJson[];
+  totalEnergyBurned?: number;
+  totalDistance?: number;
+  totalSwimmingStrokeCount?: number;
+  totalFlightsClimbed?: number;
+  route?: HKWorkoutRouteJson;
+  samples: HKSampleJson[];
+}
 
 export class HKWorkout extends HKSample {
   activityType: HKWorkoutActivityType = HKWorkoutActivityType.americanFootball;
@@ -23,22 +35,22 @@ export class HKWorkout extends HKSample {
 
   samples: HKSample[] = [];
 
-  constructor(json?: any) {
+  constructor(json?: Partial<HKWorkoutJson>) {
     super(json);
 
     if (json) {
-      this.activityType = json.activityType;
+      this.activityType = json.activityType ?? HKWorkoutActivityType.americanFootball;
       this.workoutEvents = (json.workoutEvents || []).map((e: any) => new HKWorkoutEvent(e));
       this.totalEnergyBurned = json.totalEnergyBurned;
       this.totalDistance = json.totalDistance;
       this.totalSwimmingStrokeCount = json.totalSwimmingStrokeCount;
       this.totalFlightsClimbed = json.totalFlightsClimbed;
-      this.samples = json.samples ? json.samples.map((s: any) => HKSampleBuilder.build(s)) : [];
+      this.samples = (json.samples ?? []).map((s: any) => HKSampleBuilder.build(s)).filter(notUndefined);
       this.route = json.route ? new HKWorkoutRoute(json.route) : undefined;
     }
   }
 
-  toJS(): any {
+  toJS(): HKWorkoutJson {
     return Object.assign(super.toJS(), {
       activityType: this.activityType,
       workoutEvents: this.workoutEvents.map((e: HKWorkoutEvent) => e.toJS()),
@@ -71,13 +83,13 @@ export class HKWorkout extends HKSample {
     return new HKWorkout({
       entityType: EntityType.workout,
       activityType,
-      startDate,
-      endDate,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
       totalEnergyBurned,
       totalDistance,
       totalSwimmingStrokeCount,
       totalFlightsClimbed,
-      workoutEvents,
+      workoutEvents: workoutEvents?.map((e) => e.toJS()),
       metadata: metadataValues,
     });
   }

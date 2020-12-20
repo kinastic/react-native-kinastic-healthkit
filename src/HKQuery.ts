@@ -1,5 +1,5 @@
 import { HKObjectType } from './HKObjectType';
-import { NSPredicate } from './NSPredicate';
+import { NSPredicate, NSPredicateJson } from './NSPredicate';
 import { NSComparisonPredicateOperator } from './NSComparisonPredicateOperator {';
 import { HKFHIRResourceType } from './HKFHIRResourceType';
 import { NSPredicateType } from './NSPredicateType';
@@ -9,21 +9,27 @@ import { HKSourceRevision } from './HKSourceRevision';
 import { HKQueryOptions } from './HKQueryOptions';
 import { HKWorkoutActivityType } from './HKWorkoutActivityType';
 
+export type HKQueryJson<T> = {
+  objectType?: HKObjectType;
+  sampleType?: T;
+  predicate?: NSPredicateJson;
+}
+
 export class HKQuery<T> {
   objectType?: HKObjectType;
   sampleType?: T;
   predicate?: NSPredicate;
 
-  constructor(sampleType: T, predicate?: NSPredicate) {
+  constructor(sampleType: T, predicate?: NSPredicateJson) {
     this.sampleType = sampleType;
     this.predicate = predicate ? new NSPredicate(predicate) : undefined;
   }
 
-  toJS(): any {
+  toJS(): HKQueryJson<T> {
     return {
       objectType: this.objectType,
       sampleType: this.sampleType,
-      predicate: this.predicate ? this.predicate.toJS() : undefined,
+      predicate: this.predicate?.toJS(),
     };
   }
 
@@ -64,7 +70,7 @@ export class HKQuery<T> {
     uuids?: string[],
     deviceProperty?: string,
     allowedValues?: string[],
-    metadataKey?: string,
+    metadataKey?: string[],
     operator?: NSComparisonPredicateOperator,
     value?: any,
   ): NSPredicate {
@@ -105,8 +111,8 @@ export class HKQuery<T> {
   ): NSPredicate {
     return new NSPredicate({
       type: NSPredicateType.samples,
-      startDate,
-      endDate: endDate || Date.now(),
+      startDate: startDate.toISOString(),
+      endDate: endDate?.toISOString() ?? new Date().toISOString(),
       options,
     });
   }

@@ -1,15 +1,20 @@
+export type NSSortDescriptorJson = {
+  key: string;
+  ascending: boolean;
+}
+
 export class NSSortDescriptor {
   key: string = 'startDate';
   ascending: boolean = true;
 
-  constructor(json?: any) {
+  constructor(json?: Partial<NSSortDescriptorJson>) {
     if (json) {
-      this.key = json.key;
-      this.ascending = json.ascending;
+      this.key = json.key ?? 'startDate';
+      this.ascending = json.ascending ?? true;
     }
   }
 
-  toJS(): any {
+  toJS(): NSSortDescriptorJson {
     return {
       key: this.key,
       ascending: this.ascending,

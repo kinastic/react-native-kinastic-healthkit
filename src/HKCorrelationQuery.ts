@@ -1,9 +1,17 @@
 import { HKCorrelationType } from './HKCorrelationType';
-import { NSPredicate } from './NSPredicate';
-import { HKQuery } from './HKQuery';
+import { NSPredicate, NSPredicateJson } from './NSPredicate';
+import { HKQuery, HKQueryJson } from './HKQuery';
 
-export interface HKCorrelationQuerySamplePredicates {
+export type HKCorrelationQuerySamplePredicatesJson = {
+  [key: string]: NSPredicateJson;
+}
+
+export type HKCorrelationQuerySamplePredicates = {
   [key: string]: NSPredicate;
+}
+
+export type HKCorrelationQueryJson = HKQueryJson<HKCorrelationType> & {
+  samplePredicates?: HKCorrelationQuerySamplePredicatesJson;
 }
 
 export class HKCorrelationQuery extends HKQuery<HKCorrelationType> {
@@ -11,8 +19,8 @@ export class HKCorrelationQuery extends HKQuery<HKCorrelationType> {
 
   constructor(
     sampleType: HKCorrelationType,
-    predicate?: NSPredicate,
-    samplePredicates?: HKCorrelationQuerySamplePredicates,
+    predicate?: NSPredicateJson,
+    samplePredicates?: HKCorrelationQuerySamplePredicatesJson,
   ) {
     super(sampleType, predicate);
     this.samplePredicates = samplePredicates
@@ -26,7 +34,7 @@ export class HKCorrelationQuery extends HKQuery<HKCorrelationType> {
       : undefined;
   }
 
-  toJS(): any {
+  toJS(): HKCorrelationQueryJson {
     const { samplePredicates } = this;
     return Object.assign(super.toJS(), {
       samplePredicates: samplePredicates

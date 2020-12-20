@@ -2,21 +2,26 @@ import { HKCorrelationType } from './HKCorrelationType';
 import { HKMetadata } from './HKMetadata';
 import { HKMetadataKey } from './HKMetadataKey';
 import { EntityType } from './EntityType';
-import { HKSample } from './HKSample';
+import { HKSample, HKSampleJson } from './HKSample';
 import { HKSampleBuilder } from './HKSampleBuilder';
+import { notUndefined } from './notUndefined';
+
+export type HKCorrelationJson = HKSampleJson & {
+  objects: HKSampleJson[];
+}
 
 export class HKCorrelation extends HKSample {
   objects: HKSample[] = [];
 
-  constructor(json?: any) {
+  constructor(json?: Partial<HKCorrelationJson>) {
     super(json);
 
     if (json) {
-      this.objects = (json.objects || []).map((o: any) => HKSampleBuilder.build(o));
+      this.objects = (json.objects || []).map((o) => HKSampleBuilder.build(o)).filter(notUndefined);
     }
   }
 
-  toJS(): any {
+  toJS(): HKCorrelationJson {
     return Object.assign(super.toJS(), {
       objects: this.objects.map((o: HKSample) => o.toJS()),
     });
@@ -38,9 +43,9 @@ export class HKCorrelation extends HKSample {
     return new HKCorrelation({
       entityType: EntityType.correlation,
       sampleType,
-      startDate,
-      endDate,
-      objects,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      objects: objects.map((o) => o.toJS()),
       metadata: metadataValues,
     });
   }

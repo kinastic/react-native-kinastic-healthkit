@@ -1,23 +1,28 @@
-import { HKSample } from './HKSample';
+import { HKSample, HKSampleJson } from './HKSample';
 import { HKQuantityType } from './HKQuantityType';
 import { HKMetadata } from './HKMetadata';
 import { EntityType } from './EntityType';
 import { HKMetadataKey } from './HKMetadataKey';
 
+export type HKQuantitySampleJson = HKSampleJson & {
+  value: number;
+  unit?: string;
+}
+
 export class HKQuantitySample extends HKSample {
   value: number = 0;
   unit?: string;
 
-  constructor(json?: any) {
+  constructor(json?: Partial<HKQuantitySampleJson>) {
     super(json);
 
     if (json) {
-      this.value = json.value;
+      this.value = json.value ?? 0;
       this.unit = json.unit;
     }
   }
 
-  toJS(): any {
+  toJS(): HKQuantitySampleJson {
     return Object.assign(super.toJS(), {
       value: this.value,
       unit: this.unit,
@@ -40,8 +45,8 @@ export class HKQuantitySample extends HKSample {
     return new HKQuantitySample({
       entityType: EntityType.quantity,
       sampleType,
-      startDate,
-      endDate,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
       value,
       metadata: metadataValues,
     });

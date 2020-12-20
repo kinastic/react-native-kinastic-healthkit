@@ -1,3 +1,14 @@
+export type HKDeviceJson = {
+  name?: string;
+  manufacturer?: string;
+  model?: string;
+  hardwareVersion?: string;
+  firmwareVersion?: string;
+  softwareVersion?: string;
+  localIdentifier?: string;
+  udiDeviceIdentifier?: string;
+}
+
 export class HKDevice {
   name?: string;
   manufacturer?: string;
@@ -8,7 +19,7 @@ export class HKDevice {
   localIdentifier?: string;
   udiDeviceIdentifier?: string;
 
-  constructor(json?: any) {
+  constructor(json?: Partial<HKDeviceJson>) {
     if (json) {
       this.name = json.name;
       this.manufacturer = json.manufacturer;
@@ -20,7 +31,7 @@ export class HKDevice {
     }
   }
 
-  toJS(): any {
+  toJS(): HKDeviceJson {
     return {
       name: this.name,
       manufacturer: this.manufacturer,

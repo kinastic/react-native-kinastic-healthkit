@@ -1,6 +1,13 @@
 import { HKSampleType } from './HKSampleType';
-import { HKObject } from './HKObject';
+import { HKObject, HKObjectJson } from './HKObject';
 import { EntityType } from './EntityType';
+
+export type HKSampleJson = HKObjectJson & {
+  sampleType?: HKSampleType;
+  entityType: EntityType;
+  startDate: string;
+  endDate: string;
+}
 
 export class HKSample extends HKObject {
   sampleType?: HKSampleType;
@@ -10,18 +17,18 @@ export class HKSample extends HKObject {
   startDate: Date = new Date();
   endDate: Date = new Date();
 
-  constructor(json?: any) {
+  constructor(json?: Partial<HKSampleJson>) {
     super(json);
 
     if (json) {
       this.entityType = json.entityType || EntityType.quantity;
       this.sampleType = json.sampleType;
-      this.startDate = new Date(json.startDate);
-      this.endDate = new Date(json.endDate);
+      this.startDate = json.startDate ? new Date(json.startDate) : new Date();
+      this.endDate = json.endDate ? new Date(json.endDate) : new Date();
     }
   }
 
-  toJS(): any {
+  toJS(): HKSampleJson {
     return Object.assign(super.toJS(), {
       entityType: this.entityType,
       sampleType: this.sampleType,

@@ -1,9 +1,13 @@
-import { CLLocation } from './CLLocation';
+import { CLLocation, CLLocationJson } from './CLLocation';
 import { HKMetadata } from './HKMetadata';
-import { HKSeriesSample } from './HKSeriesSample';
+import { HKSeriesSample, HKSeriesSampleJson } from './HKSeriesSample';
+export declare type HKWorkoutRouteJson = HKSeriesSampleJson & {
+    locations: CLLocationJson[];
+    metadata?: HKMetadata;
+};
 export declare class HKWorkoutRoute extends HKSeriesSample {
     locations: CLLocation[];
     metadata?: HKMetadata;
-    constructor(json?: any);
-    toJS(): any;
+    constructor(json?: Partial<HKWorkoutRouteJson>);
+    toJS(): HKWorkoutRouteJson;
 }

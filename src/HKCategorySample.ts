@@ -1,17 +1,21 @@
 import { EntityType } from './EntityType';
-import { HKSample } from './HKSample';
+import { HKSample, HKSampleJson } from './HKSample';
+
+export type HKCategorySampleJson = HKSampleJson & {
+  value: number;
+}
 
 export class HKCategorySample extends HKSample {
   value: number = 0;
 
-  constructor(json?: any) {
+  constructor(json?: Partial<HKCategorySampleJson>) {
     super(json);
     if (json) {
-      this.value = json.value;
+      this.value = json.value ?? 0;
     }
   }
 
-  toJS(): any {
+  toJS(): HKCategorySampleJson {
     return Object.assign(super.toJS(), {
       value: this.value,
     });
