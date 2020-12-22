@@ -44,6 +44,10 @@ extension KinasticHealthkit {
         if startDate > endDate {
             endDate = startDate
         }
+        
+        if (endDate.timeIntervalSince1970 - startDate.timeIntervalSince1970 >= 345600.000000) {
+            return nil
+        }
 
         let device = parseDevice(sample["device"])
         let metadata = sample["metadata"] as? [String: Any]
