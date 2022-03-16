@@ -35,11 +35,11 @@ export class HKCorrelation extends HKSample {
     objects: HKSample[],
     metadata?: HKMetadata,
   ): HKCorrelation {
-    const metadataValues = Object.assign({}, metadata, {
+    const metadataValues = Object.assign({}, {
       HKExternalUUID: id,
       [HKMetadataKey.HKMetadataKeySyncIdentifier]: id,
       [HKMetadataKey.HKMetadataKeySyncVersion]: 1.0,
-    });
+    }, metadata ?? {});
     return new HKCorrelation({
       entityType: EntityType.correlation,
       sampleType,

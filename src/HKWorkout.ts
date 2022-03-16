@@ -75,11 +75,11 @@ export class HKWorkout extends HKSample {
     workoutEvents?: HKWorkoutEvent[],
     metadata?: HKMetadata,
   ): HKWorkout {
-    const metadataValues = Object.assign({}, metadata, {
+    const metadataValues = Object.assign({}, {
       HKExternalUUID: id,
       [HKMetadataKey.HKMetadataKeySyncIdentifier]: id,
       [HKMetadataKey.HKMetadataKeySyncVersion]: 1.0,
-    });
+    }, metadata ?? {});
     return new HKWorkout({
       entityType: EntityType.workout,
       activityType,

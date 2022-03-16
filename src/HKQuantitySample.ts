@@ -37,11 +37,11 @@ export class HKQuantitySample extends HKSample {
     value: number,
     metadata?: HKMetadata,
   ): HKQuantitySample {
-    const metadataValues = Object.assign({}, metadata, {
+    const metadataValues = Object.assign({}, {
       HKExternalUUID: id,
       [HKMetadataKey.HKMetadataKeySyncIdentifier]: id,
       [HKMetadataKey.HKMetadataKeySyncVersion]: 1.0,
-    });
+    }, metadata ?? {});
     return new HKQuantitySample({
       entityType: EntityType.quantity,
       sampleType,
