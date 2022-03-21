@@ -740,12 +740,81 @@ extension KinasticHealthkit {
             "uuid": sample.uuid.uuidString,
             "sourceRevision": sourceRevisionToMap(sourceRevision: sample.sourceRevision),
             "device": deviceToMap(data: sample.device),
-            "metadata": sample.metadata
+            "metadata": metadataToMap(metadata: sample.metadata)
         ] as [String: Any?]
+    }
+    
+    func metadataToMap(metadata: [String: Any]?) -> [String: Any?]? {
+        if let safeMetadata = metadata {
+            var newDictionary: [String: Any?] = [:]
+            for (key, value) in safeMetadata {
+                if let quantity = value as? HKQuantity {
+                    if let unit = determineUnitForMetadata(key: key) {
+                        newDictionary[key] = quantity.doubleValue(for: unit)
+                    }
+                } else if let weatherCond = value as? HKWeatherCondition {
+                    newDictionary[key] = parseWeatherCondition(condition: weatherCond)
+                } else {
+                    newDictionary[key] = value
+                }
+            }
+            return newDictionary
+        }
+        return nil
+    }
+    
+    func parseWeatherCondition(condition: HKWeatherCondition) -> String? {
+        switch condition {
+        case .none: return "none"
+        case .clear: return "clear"
+        case .fair: return "fair"
+        case .partlyCloudy: return "partlyCloudy"
+        case .mostlyCloudy: return "mostlyCloudy"
+        case .cloudy: return "cloudy"
+        case .foggy: return "foggy"
+        case .haze: return "haze"
+        case .windy: return "windy"
+        case .blustery: return "blustery"
+        case .smoky: return "smoky"
+        case .dust: return "dust"
+        case .snow: return "snow"
+        case .hail: return "hail"
+        case .sleet: return "sleet"
+        case .freezingDrizzle: return "freezingDrizzle"
+        case .freezingRain: return "freezingRain"
+        case .mixedRainAndHail: return "mixedRainAndHail"
+        case .mixedRainAndSnow: return "mixedRainAndSnow"
+        case .mixedRainAndSleet: return "mixedRainAndSleet"
+        case .mixedSnowAndSleet: return "mixedSnowAndSleet"
+        case .drizzle: return "drizzle"
+        case .scatteredShowers: return "scatteredShowers"
+        case .showers: return "showers"
+        case .thunderstorms: return "thunderstorms"
+        case .tropicalStorm: return "tropicalStorm"
+        case .hurricane: return "hurricane"
+        case .tornado: return "tornado"
+        default: return nil
+        }
     }
 
     func determineUnit(type: HKQuantityType) -> HKUnit? {
         return determineUnit(type: HKQuantityTypeIdentifier(rawValue: type.identifier))
+    }
+    
+    func determineUnitForMetadata(key: String) -> HKUnit? {
+        switch key {
+        case "HKWeatherTemperature": return .degreeCelsius()
+        case "HKAverageMETs": return .kilocalorie().unitDivided(by: .gramUnit(with: .kilo).unitMultiplied(by: .hour()))
+        case "HKWeatherHumidity": return .percent()
+        case "HKBarometricPressure": return .pascal()
+        case "HKVO2MaxValue": return .literUnit(with: .milli).unitDivided(by: .gramUnit(with: .kilo).unitMultiplied(by: .minute()))
+        case "HKAudioExposureLevel": if #available(iOS 13.0, *) {
+            return .decibelAWeightedSoundPressureLevel()
+        } else {
+            return nil
+        }
+        default: return nil
+        }
     }
 
     func determineUnit(type: HKQuantityTypeIdentifier) -> HKUnit? {
