@@ -804,6 +804,7 @@ extension KinasticHealthkit {
     func determineUnitForMetadata(key: String) -> HKUnit? {
         switch key {
         case "HKWeatherTemperature": return .degreeCelsius()
+        case "HKElevationAscended": return .meter()
         case "HKAverageMETs": return .kilocalorie().unitDivided(by: .gramUnit(with: .kilo).unitMultiplied(by: .hour()))
         case "HKWeatherHumidity": return .percent()
         case "HKBarometricPressure": return .pascal()
