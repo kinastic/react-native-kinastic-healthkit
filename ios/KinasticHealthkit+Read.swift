@@ -371,45 +371,48 @@ extension KinasticHealthkit {
 
     @objc(queryHeartbeatSeries:resolve:reject:)
     func queryHeartbeatSeries(_ query: [String: Any], resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-        if #available(iOS 13.0, *) {
-            let predicate = parsePredicate(data: query["predicate"] as? [String: Any?])
-            let sort = parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
-
-            let sampleQuery = HKSampleQuery(sampleType: HKSeriesType.heartbeat(), predicate: predicate, limit: 1, sortDescriptors: sort) { [weak self] query, samples, error in
-                guard let strongSelf = self else { return }
-                guard error == nil else {
-                    reject("error", error?.localizedDescription, error)
-                    return
-                }
-
-                guard let samples = samples, let sample = samples.first as? HKHeartbeatSeriesSample else {
-                    resolve(nil)
-                    return
-                }
-
-                var data: [[String: Any]] = []
-                let query = HKHeartbeatSeriesQuery(heartbeatSeries: sample) { [weak self] query, interval, precededByGap, done, error in
-                    guard let strongSelf = self else { return }
-                    data.append([
-                        "intervalSinceStart": interval,
-                        "precededByGap": precededByGap
-                    ])
-
-                    if done {
-                        var json = strongSelf.heartbeatSeriesSampleToMap(sample: sample)
-                        json["data"] = data
-                        resolve(json)
-                    }
-                }
-
-                strongSelf.healthKit.execute(query)
-            }
-
-            self.healthKit.execute(sampleQuery)
-
-        } else {
-            reject("unavailable", "iOS >= 13.0", nil)
-        }
+//        if #available(iOS 13.0, *) {
+//            let predicate = parsePredicate(data: query["predicate"] as? [String: Any?])
+//            let sort = parseSortArray(value: query["sort"]) ?? [NSSortDescriptor(key: "startDate", ascending: true)]
+//
+//            let sampleQuery = HKSampleQuery(sampleType: HKSeriesType.heartbeat(), predicate: predicate, limit: 1, sortDescriptors: sort) { [weak self] query, samples, error in
+//                guard let strongSelf = self else { return }
+//                guard error == nil else {
+//                    reject("error", error?.localizedDescription, error)
+//                    return
+//                }
+//
+//                guard let samples = samples, let sample = samples.first as? HKHeartbeatSeriesSample else {
+//                    resolve(nil)
+//                    return
+//                }
+//
+//                var data: [[String: Any]] = []
+//                let query = HKHeartbeatSeriesQuery(heartbeatSeries: sample) { [weak self] query, interval, precededByGap, done, error in
+//                    guard let strongSelf = self else { return }
+//                    data.append([
+//                        "intervalSinceStart": interval,
+//                        "precededByGap": precededByGap
+//                    ])
+//
+//                    if done {
+//                        var json = strongSelf.heartbeatSeriesSampleToMap(sample: sample)
+//                        json["data"] = data
+//                        resolve(json)
+//                    }
+//                }
+//
+//                strongSelf.healthKit.execute(query)
+//            }
+//
+//            self.healthKit.execute(sampleQuery)
+//
+//        } else {
+//            reject("unavailable", "iOS >= 13.0", nil)
+//        }
+        
+        // disabled for now since it crashes on iOS 12.4 and we do not need it for now
+        resolve([])
     }
 
     @objc(enableBackgroundDelivery:frequency:resolve:reject:)
