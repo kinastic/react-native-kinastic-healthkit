@@ -751,14 +751,18 @@ extension KinasticHealthkit {
         if let safeMetadata = metadata {
             var newDictionary: [String: Any?] = [:]
             for (key, value) in safeMetadata {
-                if let quantity = value as? HKQuantity {
-                    if let unit = determineUnitForMetadata(key: key) {
-                        newDictionary[key] = quantity.doubleValue(for: unit)
+                if #available(iOS 10.0, *) {
+                    if let quantity = value as? HKQuantity {
+                        if let unit = determineUnitForMetadata(key: key) {
+                            newDictionary[key] = quantity.doubleValue(for: unit)
+                        }
+                    } else if let weatherCond = value as? HKWeatherCondition {
+                        newDictionary[key] = parseWeatherCondition(condition: weatherCond)
+                    } else {
+                        newDictionary[key] = value
                     }
-                } else if let weatherCond = value as? HKWeatherCondition {
-                    newDictionary[key] = parseWeatherCondition(condition: weatherCond)
                 } else {
-                    newDictionary[key] = value
+                    // Fallback on earlier versions
                 }
             }
             return newDictionary
@@ -766,6 +770,7 @@ extension KinasticHealthkit {
         return nil
     }
     
+    @available(iOS 10.0, *)
     func parseWeatherCondition(condition: HKWeatherCondition) -> String? {
         switch condition {
         case .none: return "none"
