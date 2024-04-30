@@ -1,7 +1,7 @@
 {
   "name": "react-native-kinastic-healthkit",
   "title": "React Native Kinastic Healthkit",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "React-Native-Kinastic-HealthKit is a comprehensive integration module designed by KINASTIC to seamlessly connect React Native applications with Apple's HealthKit. This module provides developers with easy-to-use interfaces to access and manage users' health-related data securely. With react-native-kinastic-healthkit, developers can implement functionalities to read, write, and track health metrics such as heart rate, steps, and other fitness activities, enhancing app capabilities to promote better health and wellness engagement. Ideal for fitness and health apps, this integration empowers developers to create personalized and interactive health experiences on iOS devices.",
   "main": "index.js",
   "scripts": {
