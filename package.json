@@ -2,7 +2,7 @@
   "name": "react-native-kinastic-healthkit",
   "title": "React Native Kinastic Healthkit",
   "version": "1.0.0",
-  "description": "TODO",
+  "description": "React-Native-Kinastic-HealthKit is a comprehensive integration module designed by KINASTIC to seamlessly connect React Native applications with Apple's HealthKit. This module provides developers with easy-to-use interfaces to access and manage users' health-related data securely. With react-native-kinastic-healthkit, developers can implement functionalities to read, write, and track health metrics such as heart rate, steps, and other fitness activities, enhancing app capabilities to promote better health and wellness engagement. Ideal for fitness and health apps, this integration empowers developers to create personalized and interactive health experiences on iOS devices.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,21 +10,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/github_account/react-native-kinastic-healthkit.git",
-    "baseUrl": "https://github.com/github_account/react-native-kinastic-healthkit"
+    "url": "git+https://github.com/kinastic/react-native-kinastic-healthkit.git",
+    "baseUrl": "https://github.com/kinastic/react-native-kinastic-healthkit"
   },
   "keywords": [
     "react-native"
   ],
   "author": {
-    "name": "Your Name",
-    "email": "yourname@email.com"
+    "name": "José Rota",
+    "email": "development@email.com"
   },
   "license": "MIT",
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
   "peerDependencies": {
-    "react": "^16.8.1",
+    "react": "18.2.0",
     "react-native": ">=0.60.0-rc.0 <1.0.x"
   },
   "prettier": {
@@ -33,10 +33,11 @@
     "printWidth": 100
   },
   "devDependencies": {
-    "@types/react-native": "^0.61.17",
-    "prettier": "^1.19.1",
-    "react": "^16.9.0",
-    "react-native": "^0.61.5",
-    "typescript": "^3.9.5"
-  }
+    "@types/react-native": "^0.73.0",
+    "prettier": "^3.2.5",
+    "react": "18.2.0",
+    "react-native": "0.73.7",
+    "typescript": "^5.4.5"
+  },
+  "packageManager": "yarn@4.1.1"
 }
