@@ -227,7 +227,9 @@ extension KinasticHealthkit {
             } else if let quantityData = data["totalEnergyBurned"] as? Double {
                 return HKQuery.predicateForWorkouts(with: op, totalEnergyBurned: HKQuantity(unit: .kilocalorie(), doubleValue: quantityData))
             } else if let quantityData = data["totalSwimmingStrokeCount"] as? Double {
-                return HKQuery.predicateForWorkouts(with: op, totalSwimmingStrokeCount: HKQuantity(unit: .count(), doubleValue: quantityData))
+                if #available(iOS 10.0, *) {
+                    return HKQuery.predicateForWorkouts(with: op, totalSwimmingStrokeCount: HKQuantity(unit: .count(), doubleValue: quantityData))
+                }
             }
 
             if #available(iOS 11.0, *) {
